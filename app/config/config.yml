@@ -43,3 +43,5 @@ monolog:
             type: console
             channels: ['!event', '!doctrine']
 
+open_conext_user_lifecycle:
+    clients: %open_conext_user_lifecycle_clients%
