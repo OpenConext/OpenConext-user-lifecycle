@@ -20,7 +20,7 @@ namespace OpenConext\UserLifecycle\Domain\Client;
 
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-interface DeprovisionClient
+interface DeprovisionClientInterface
 {
     /**
      * Can be used to deprovision a user from the OpenConext platform.
@@ -36,4 +36,11 @@ interface DeprovisionClient
      * @param CollabPersonId|null $user
      */
     public function information(CollabPersonId $user);
+
+    /**
+     * Returns the name of the client, as configured in the parameters.yml
+     *
+     * @return string
+     */
+    public function getName();
 }

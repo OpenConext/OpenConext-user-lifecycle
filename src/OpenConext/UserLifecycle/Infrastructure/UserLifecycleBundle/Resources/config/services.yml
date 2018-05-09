@@ -1,4 +1,3 @@
 services:
-#    user_lifecycle.example:
-#        class: UserLifecycleBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    open_conext.user_lifecycle.deprovision_client_collection:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection

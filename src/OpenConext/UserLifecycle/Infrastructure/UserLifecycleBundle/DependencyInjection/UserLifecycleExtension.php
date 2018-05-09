@@ -19,12 +19,81 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection;
 
 
+use GuzzleHttp\Client;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class UserLifecycleExtension extends Extension
 {
     public function load(array $config, ContainerBuilder $container)
     {
+        $loader = new YamlFileLoader($container, new FileLocator(
+            __DIR__.'/../Resources/config'
+        ));
+        $loader->load('services.yml');
+
+        $clientConfig = $config[0]['clients'];
+        $this->loadDeprovisionClients($clientConfig, $container);
+    }
+
+    /**
+     * Loads the DeprovisionClients into the DI container.
+     * Each client is tagged so it can later be added to a
+     * collection class
+     *
+     * @param array $clients
+     * @param ContainerBuilder $container
+     */
+    private function loadDeprovisionClients(array $clients, ContainerBuilder $container)
+    {
+        foreach ($clients as $clientName => $clientConfiguration) {
+            $definition = new Definition(DeprovisionClient::class);
+            $definition->addTag('open_conext.user_lifecycle.deprovision_client');
+
+            $guzzleDefinition = $this->buildGuzzleClientDefinition($clientConfiguration, $clientName, $container);
+
+            $definition->setArgument(0, $guzzleDefinition);
+
+            $container->setDefinition(
+                sprintf("open_conext.user_lifecycle.deprovision_client.%s", $clientName),
+                $definition
+            );
+        }
+    }
+
+    /**
+     * Creates the Guzzle http client definition for a
+     * given deprovision client.
+     *
+     * @param $config
+     * @param $clientName
+     * @param ContainerBuilder $container
+     */
+    private function buildGuzzleClientDefinition($config, $clientName, ContainerBuilder $container)
+    {
+        $definition = new Definition(Client::class);
+
+        $definition->setArgument(0, [
+            'base_uri' => $config['url'],
+            'verify' => isset($config['verify_ssl']) ? $config['verify_ssl'] : true,
+            'auth' => [
+                $config['username'],
+                $config['password'],
+                'basic'
+            ],
+            'headers' => [
+                'Accept' => 'application/json'
+            ]
+        ]);
+
+        $container->setDefinition(
+            sprintf("open_conext.user_lifecycle.guzzle_client.%s", $clientName),
+            $definition
+        );
+
     }
 }
