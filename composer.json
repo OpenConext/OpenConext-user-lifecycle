@@ -5,7 +5,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Surfnet\\": "src/OpenConext"
+            "OpenConext\\": "src/OpenConext"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -14,7 +14,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Surfnet\\": "src\\OpenConext"
+            "OpenConext\\": "src\\OpenConext"
         },
         "files": [
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
