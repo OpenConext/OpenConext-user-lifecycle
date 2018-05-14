@@ -19,9 +19,10 @@
 namespace OpenConext\UserLifecycle\Application\QueryHandler;
 
 use OpenConext\UserLifecycle\Domain\Query\LastLoginByUserIdQuery;
+use OpenConext\UserLifecycle\Domain\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 
-class LastLoginByUserIdQueryHandler
+class LastLoginByUserIdQueryHandler implements LastLoginByUserIdQueryHandlerInterface
 {
     /**
      * @var LastLoginRepositoryInterface
@@ -36,5 +37,5 @@ class LastLoginByUserIdQueryHandler
     public function handle(LastLoginByUserIdQuery $query)
     {
         return $this->lastLoginRepository->findLastLoginFor($query->getPersonId());
-    }    
+    }
 }

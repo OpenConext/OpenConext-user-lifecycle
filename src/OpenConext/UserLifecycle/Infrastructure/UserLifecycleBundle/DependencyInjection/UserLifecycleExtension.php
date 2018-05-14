@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet bv
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
  */
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection;
-
 
 use GuzzleHttp\Client;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
@@ -53,7 +52,6 @@ class UserLifecycleExtension extends Extension
         foreach ($clients as $clientName => $clientConfiguration) {
             $definition = new Definition(DeprovisionClient::class);
             $definition->addTag('open_conext.user_lifecycle.deprovision_client');
-
             $guzzleDefinition = $this->buildGuzzleClientDefinition($clientConfiguration, $clientName, $container);
 
             $definition->setArgument(0, $guzzleDefinition);
@@ -72,6 +70,8 @@ class UserLifecycleExtension extends Extension
      * @param $config
      * @param $clientName
      * @param ContainerBuilder $container
+     *
+     * @return Definition
      */
     private function buildGuzzleClientDefinition($config, $clientName, ContainerBuilder $container)
     {
@@ -95,5 +95,6 @@ class UserLifecycleExtension extends Extension
             $definition
         );
 
+        return $definition;
     }
 }

@@ -31,14 +31,14 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
 
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
-        foreach ($this->clients as $client){
+        foreach ($this->clients as $client) {
             $client->deprovision($user, $dryRun);
         }
     }
 
     public function information(CollabPersonId $user)
     {
-        foreach ($this->clients as $client){
+        foreach ($this->clients as $client) {
             $client->information($user);
         }
     }

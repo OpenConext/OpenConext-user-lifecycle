@@ -1,3 +1,22 @@
 services:
+
+    OpenConext\UserLifecycle\Application\:
+        resource: '../../../../Application/'
+        autoconfigure: true
+        autowire: true
+
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
+        arguments:
+            - '@OpenConext\UserLifecycle\Application\Service\LastLoginService'
+            - '@logger'
+        tags:
+            - 'console.command'
+
+    OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - OpenConext\UserLifecycle\Domain\Entity\LastLogin
+
     open_conext.user_lifecycle.deprovision_client_collection:
         class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection

@@ -44,7 +44,7 @@ class DeprovisionClientCollectionPass implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds('open_conext.user_lifecycle.deprovision_client');
 
         foreach ($taggedServices as $id => $tags) {
-            $definition->addMethodCall('addHealthCheck', array(new Reference($id)));
+            $definition->addMethodCall('addClient', array(new Reference($id)));
         }
     }
 }

@@ -36,12 +36,10 @@ class DeprovisionClient implements DeprovisionClientInterface
 
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
-
     }
 
     public function information(CollabPersonId $user)
     {
-
     }
 
     public function getName()

@@ -55,5 +55,4 @@ class DatabaseTestFixtures extends Fixture
 
         $manager->flush();
     }
-
 }

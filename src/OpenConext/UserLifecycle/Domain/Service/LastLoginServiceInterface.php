@@ -16,20 +16,13 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Repository;
+namespace OpenConext\UserLifecycle\Domain\Service;
 
-use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
-
-interface LastLoginRepositoryInterface
+interface LastLoginServiceInterface
 {
     /**
-     * Finds the last login entry for a given person.
-     *
-     * If the entry does not exist, null is returned.
-     *
-     * @param CollabPersonId $collabPersonId
-     * @return LastLogin|null
+     * @param string $personId
+     * @return string
      */
-    public function findLastLoginFor(CollabPersonId $collabPersonId);
+    public function readInformationFor($personId);
 }

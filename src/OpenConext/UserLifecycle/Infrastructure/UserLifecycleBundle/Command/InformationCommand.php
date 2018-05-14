@@ -18,6 +18,9 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
+use InvalidArgumentException;
+use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,6 +28,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InformationCommand extends Command
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var LastLoginServiceInterface
+     */
+    private $service;
+
+    public function __construct(LastLoginServiceInterface $lastLoginService, LoggerInterface $logger)
+    {
+        parent::__construct(null);
+        $this->service = $lastLoginService;
+        $this->logger = $logger;
+    }
+
     protected function configure()
     {
         $this
@@ -42,7 +62,28 @@ class InformationCommand extends Command
             );
     }
 
+    /**
+     * Execute the information command
+     *
+     * The command will:
+     *  - Validate the requested user is a user of the platform, by querying the last_login data source
+     *  - Retrieve information from the registered services by calling their information endpoint for the specified user
+     *  - Return JSON string with the results
+     *
+     * In case of an error, the command will output the error in text format
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $userIdInput = $input->getOption('user');
+        $this->logger->info(sprintf('Received an information request for user: "%s"', $userIdInput));
+        try {
+            $output->write($this->service->readInformationFor($userIdInput));
+        } catch (InvalidArgumentException $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 }
