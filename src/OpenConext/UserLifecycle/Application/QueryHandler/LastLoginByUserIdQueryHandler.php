@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Application\Service;
+namespace OpenConext\UserLifecycle\Application\QueryHandler;
 
 use OpenConext\UserLifecycle\Domain\Query\LastLoginByUserIdQuery;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 
-class LastLoginService
+class LastLoginByUserIdQueryHandler
 {
     /**
      * @var LastLoginRepositoryInterface
@@ -33,7 +33,7 @@ class LastLoginService
         $this->lastLoginRepository = $lastLoginRepository;
     }
 
-    public function readInformation(LastLoginByUserIdQuery $query)
+    public function handle(LastLoginByUserIdQuery $query)
     {
         return $this->lastLoginRepository->findLastLoginFor($query->getPersonId());
     }    
