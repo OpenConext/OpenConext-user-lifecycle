@@ -14,7 +14,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "OpenConext\\": "src\\OpenConext"
+            "OpenConext\\": "src\\OpenConext",
+            "OpenConext\\UserLifecycle\\Tests\\Integration\\": "tests/integration"
         },
         "files": [
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"

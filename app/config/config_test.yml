@@ -4,7 +4,7 @@ imports:
 doctrine:
     dbal:
         driver: pdo_sqlite
-        path: "/tmp/user-lifecycle-webtests.sqlite"
+        path: "/tmp/user-lifecycle-test.sqlite"
 
 framework:
     test: ~

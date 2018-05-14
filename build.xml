@@ -65,7 +65,7 @@
         </exec>
     </target>
 
-    <target name="integration-tests-no-coverage">
+    <target name="integration-tests-no-coverage" depends="create-test-db">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite integration" />
         </exec>
@@ -77,7 +77,7 @@
         </exec>
     </target>
 
-    <target name="integration-tests">
+    <target name="integration-tests" depends="create-test-db">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite integration" />
         </exec>

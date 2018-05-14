@@ -47,6 +47,8 @@ layer most of the time but might also occur in the application layer (for instan
 with the Symfony validation component). Controllers will not be covered by integration tests, however. The integration
 tests will be run as part of every CI build.
 
+Some integration tests rely on database interaction. These tests should be run with the `create-test-db` ant task.
+
 Tools: PHPUnit
 
 ## Security testing
