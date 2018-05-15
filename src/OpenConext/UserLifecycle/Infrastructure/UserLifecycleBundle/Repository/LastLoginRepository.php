@@ -26,6 +26,6 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
 {
     public function findLastLoginFor(CollabPersonId $collabPersonId)
     {
-        return $this->findOneBy(['collabPersonId' => $collabPersonId->getCollabUserId()]);
+        return $this->findOneBy(['collabPersonId' => $collabPersonId->getCollabPersonId()]);
     }
 }

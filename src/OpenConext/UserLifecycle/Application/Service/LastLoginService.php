@@ -72,7 +72,7 @@ class LastLoginService implements LastLoginServiceInterface
 
         Assert::notNull(
             $lastLogin,
-            sprintf('No last_login entry found for user with collabPersonId "%s"', $collabPersonId->getCollabUserId())
+            sprintf('No last_login entry found for user with collabPersonId "%s"', $collabPersonId->getCollabPersonId())
         );
 
         $this->logger->debug('Retrieve the information from the APIs for the user.');

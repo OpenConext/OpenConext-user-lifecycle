@@ -1,5 +1,7 @@
 imports:
     - { resource: config_dev.yml }
+    - { resource: '../../tests/integration/UserLifecycleBundle/Resources/config/services.yml' }
+    - { resource: parameters.test.yml }
 
 doctrine:
     dbal:

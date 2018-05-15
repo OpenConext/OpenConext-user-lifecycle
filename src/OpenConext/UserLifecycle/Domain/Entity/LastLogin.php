@@ -29,7 +29,7 @@ class LastLogin
 {
     public function __construct(CollabPersonId $collabPersonId, DateTime $lastLoginDate)
     {
-        $this->collabPersonId = $collabPersonId->getCollabUserId();
+        $this->collabPersonId = $collabPersonId->getCollabPersonId();
         $this->lastLoginDate = $lastLoginDate;
     }
 

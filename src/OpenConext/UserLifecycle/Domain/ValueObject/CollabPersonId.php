@@ -25,7 +25,7 @@ class CollabPersonId
     /**
      * @var string
      */
-    private $collabUserId;
+    private $collabPersonId;
 
     public function __construct($collabUserId)
     {
@@ -33,14 +33,14 @@ class CollabPersonId
             $collabUserId = trim($collabUserId);
         }
         Assert::stringNotEmpty($collabUserId, 'The collabUserId must be a non empty string');
-        $this->collabUserId = $collabUserId;
+        $this->collabPersonId = $collabUserId;
     }
 
     /**
      * @return mixed
      */
-    public function getCollabUserId()
+    public function getCollabPersonId()
     {
-        return $this->collabUserId;
+        return $this->collabPersonId;
     }
 }

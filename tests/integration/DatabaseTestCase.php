@@ -24,12 +24,24 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Tests\Integration\DataFixtures\ORM\DatabaseTestFixtures;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * The DatabaseTestCase exposes the Kernel and enables
+ * the loading of database fixtures. This test case can
+ * be used to create repository and console command
+ * tests.
+ */
 class DatabaseTestCase extends KernelTestCase
 {
+    /**
+     * @var KernelInterface
+     */
+    protected static $kernel;
+
     public function setUp()
     {
-        self::bootKernel();
+        self::$kernel = self::bootKernel();
     }
     
     protected function loadFixtures()
