@@ -138,7 +138,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
     private function getOkStatus($serviceName, $collabPersonId)
     {
         return sprintf(
-            '{"status": "OK", "name": "%s","data": [ { "name": "foobar", "value": "%s" } ] }',
+            '{"status": "OK", "name": "%s", "data": [ { "name": "foobar", "value": "%s" } ] }',
             $serviceName,
             $collabPersonId
         );

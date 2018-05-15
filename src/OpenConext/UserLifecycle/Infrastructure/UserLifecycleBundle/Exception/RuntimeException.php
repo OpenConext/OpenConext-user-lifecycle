@@ -20,6 +20,6 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception;
 
 use RuntimeException as CoreRuntimeException;
 
-class RuntimeException extends CoreRuntimeException implements OpenConextEngineBlockApiClientException
+class RuntimeException extends CoreRuntimeException
 {
 }

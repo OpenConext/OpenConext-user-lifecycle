@@ -20,6 +20,6 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception;
 
 use LogicException as CoreLogicException;
 
-class LogicException extends CoreLogicException implements OpenConextEngineBlockApiClientException
+class LogicException extends CoreLogicException
 {
 }

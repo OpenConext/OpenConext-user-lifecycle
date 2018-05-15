@@ -19,8 +19,10 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client;
 
 use GuzzleHttp\ClientInterface;
+use InvalidArgumentException as CoreInvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+use OpenConext\UserLifecycle\Domain\ValueObject\InformationResponse;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidArgumentException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidResponseException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\MalformedResponseException;
@@ -128,10 +130,10 @@ class DeprovisionClient implements DeprovisionClientInterface
         }
 
         try {
-            $data = $this->parseJson((string) $response->getBody());
+            $data = $this->parseJson((string)$response->getBody());
         } catch (InvalidArgumentException $e) {
             throw new MalformedResponseException(
-                sprintf('Cannot read resource "%s": malformed JSON returned', $resource)
+                sprintf('Cannot read resource "%s": malformed JSON returned. %s', $resource, $e->getMessage())
             );
         }
 
@@ -149,11 +151,11 @@ class DeprovisionClient implements DeprovisionClientInterface
     private function parseJson($json)
     {
         static $jsonErrors = [
-            JSON_ERROR_DEPTH          => 'JSON_ERROR_DEPTH - Maximum stack depth exceeded',
+            JSON_ERROR_DEPTH => 'JSON_ERROR_DEPTH - Maximum stack depth exceeded',
             JSON_ERROR_STATE_MISMATCH => 'JSON_ERROR_STATE_MISMATCH - Underflow or the modes mismatch',
-            JSON_ERROR_CTRL_CHAR      => 'JSON_ERROR_CTRL_CHAR - Unexpected control character found',
-            JSON_ERROR_SYNTAX         => 'JSON_ERROR_SYNTAX - Syntax error, malformed JSON',
-            JSON_ERROR_UTF8           => 'JSON_ERROR_UTF8 - Malformed UTF-8 characters, possibly incorrectly encoded',
+            JSON_ERROR_CTRL_CHAR => 'JSON_ERROR_CTRL_CHAR - Unexpected control character found',
+            JSON_ERROR_SYNTAX => 'JSON_ERROR_SYNTAX - Syntax error, malformed JSON',
+            JSON_ERROR_UTF8 => 'JSON_ERROR_UTF8 - Malformed UTF-8 characters, possibly incorrectly encoded',
         ];
 
         $data = json_decode($json, true);
@@ -170,6 +172,17 @@ class DeprovisionClient implements DeprovisionClientInterface
             throw new InvalidArgumentException(sprintf('Unable to parse JSON data: %s', $errorMessage));
         }
 
-        return InformationResponse::fromApiResponse($data);
+        try {
+            $response = InformationResponse::fromApiResponse($data);
+        } catch (CoreInvalidArgumentException $e) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Unable to parse the JSON response into an InformationResponse object: %s',
+                    $e->getMessage()
+                )
+            );
+        }
+
+        return $response;
     }
 }
