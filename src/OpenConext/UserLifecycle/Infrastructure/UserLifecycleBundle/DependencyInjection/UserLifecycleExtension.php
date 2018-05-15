@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Webmozart\Assert\Assert;
 
 class UserLifecycleExtension extends Extension
 {
@@ -35,8 +36,12 @@ class UserLifecycleExtension extends Extension
         ));
         $loader->load('services.yml');
 
-        $clientConfig = $config[0]['clients'];
-        $this->loadDeprovisionClients($clientConfig, $container);
+        if (isset($config[0]['clients'])) {
+            Assert::notEmpty($config[0]['clients'], 'Configure at least one deprovision API in parameters.yml');
+
+            $clientConfig = $config[0]['clients'];
+            $this->loadDeprovisionClients($clientConfig, $container);
+        }
     }
 
     /**
@@ -80,6 +85,17 @@ class UserLifecycleExtension extends Extension
     private function buildGuzzleClientDefinition($config, $clientName, ContainerBuilder $container)
     {
         $definition = new Definition(Client::class);
+
+        // Perform input validation on the config
+        $requiredKeys = ['url', 'username', 'password'];
+        $message = 'Expected the key "%s" to exist in deprovision API client configuration "%s".';
+        foreach ($requiredKeys as $key) {
+            Assert::keyExists(
+                $config,
+                $key,
+                sprintf($message, $key, $clientName)
+            );
+        }
 
         // Configure Guzzle
         $definition->setArgument(0, [
