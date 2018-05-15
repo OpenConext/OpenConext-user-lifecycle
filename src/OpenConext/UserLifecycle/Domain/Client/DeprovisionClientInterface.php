@@ -33,7 +33,10 @@ interface DeprovisionClientInterface
     /**
      * Can be used to gather information about a user on the OpenConext platform.
      *
+     * Returns a Json encoded string containing the user information provided by the different deprovision API's.
+     *
      * @param CollabPersonId|null $user
+     * @return string
      */
     public function information(CollabPersonId $user);
 

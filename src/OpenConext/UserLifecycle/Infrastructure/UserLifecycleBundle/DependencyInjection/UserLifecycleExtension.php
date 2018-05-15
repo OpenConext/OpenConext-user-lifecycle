@@ -54,7 +54,11 @@ class UserLifecycleExtension extends Extension
             $definition->addTag('open_conext.user_lifecycle.deprovision_client');
             $guzzleDefinition = $this->buildGuzzleClientDefinition($clientConfiguration, $clientName, $container);
 
+            // Set the guzzle client on the DeprovisionClient
             $definition->setArgument(0, $guzzleDefinition);
+
+            // Set the client name on the DeprovisionClient
+            $definition->setArgument(1, $clientName);
 
             $container->setDefinition(
                 sprintf("open_conext.user_lifecycle.deprovision_client.%s", $clientName),
@@ -77,6 +81,7 @@ class UserLifecycleExtension extends Extension
     {
         $definition = new Definition(Client::class);
 
+        // Configure Guzzle
         $definition->setArgument(0, [
             'base_uri' => $config['url'],
             'verify' => isset($config['verify_ssl']) ? $config['verify_ssl'] : true,
