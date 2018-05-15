@@ -19,6 +19,7 @@
 namespace OpenConext\UserLifecycle\Domain\Client;
 
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\ValueObject\InformationResponse;
 
 interface DeprovisionClientInterface
 {
@@ -36,7 +37,7 @@ interface DeprovisionClientInterface
      * Returns a Json encoded string containing the user information provided by the different deprovision API's.
      *
      * @param CollabPersonId|null $user
-     * @return string
+     * @return InformationResponse
      */
     public function information(CollabPersonId $user);
 

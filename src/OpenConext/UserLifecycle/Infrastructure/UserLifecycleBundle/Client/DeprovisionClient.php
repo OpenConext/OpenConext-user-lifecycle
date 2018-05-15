@@ -30,7 +30,7 @@ use Webmozart\Assert\Assert;
 
 class DeprovisionClient implements DeprovisionClientInterface
 {
-    const INFORMATION_ENDPOINT = '/information/%s';
+    const DEPROVISION_ENDPOINT = '/deprovision/%s';
 
     /**
      * @var ClientInterface
@@ -60,7 +60,7 @@ class DeprovisionClient implements DeprovisionClientInterface
 
     public function information(CollabPersonId $user)
     {
-        return $this->httpClient->read(self::INFORMATION_ENDPOINT, [$user->getCollabUserId()]);
+        return $this->read(self::DEPROVISION_ENDPOINT, [$user->getCollabPersonId()]);
     }
 
     public function getName()
@@ -105,7 +105,7 @@ class DeprovisionClient implements DeprovisionClientInterface
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function read($path, array $parameters = [])
+    private function read($path, array $parameters = [])
     {
         $resource = $this->buildResourcePath($path, $parameters);
 
@@ -170,6 +170,6 @@ class DeprovisionClient implements DeprovisionClientInterface
             throw new InvalidArgumentException(sprintf('Unable to parse JSON data: %s', $errorMessage));
         }
 
-        return $data;
+        return InformationResponse::fromApiResponse($data);
     }
 }

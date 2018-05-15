@@ -36,16 +36,14 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
         }
     }
 
-    // @todo: create a better solution for merging the json documents together
     public function information(CollabPersonId $user)
     {
-        $output = '';
-
+        $output = [];
         foreach ($this->clients as $client) {
-            $output .= $client->information($user);
+            $output[] = $client->information($user);
         }
 
-        return $output;
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     public function getName()
