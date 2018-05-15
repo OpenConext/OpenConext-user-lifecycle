@@ -47,9 +47,16 @@ layer most of the time but might also occur in the application layer (for instan
 with the Symfony validation component). Controllers will not be covered by integration tests, however. The integration
 tests will be run as part of every CI build.
 
-Some integration tests rely on database interaction. These tests should be run with the `create-test-db` ant task.
+Some integration tests rely on database interaction. These tests should be run with the `create-test-db` ant task. And
+should utilize the DatabaseTestCase. This test case can also be used for testing console commands as it is based on the
+Symfony KernelTestCase.
+
+For an example on how to test console commands, see the excellent documentation <sup>[1]</sup> provided by Symfony. Or see the tests
+already included in the project.  
 
 Tools: PHPUnit
+
+[1] https://symfony.com/doc/3.4/console.html#testing-commands
 
 ## Security testing
 
