@@ -5,6 +5,11 @@ services:
         autoconfigure: true
         autowire: true
 
+    OpenConext\UserLifecycle\Domain\:
+        resource: '../../../../Domain/'
+        autoconfigure: true
+        autowire: false
+
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
         arguments:
             - '@OpenConext\UserLifecycle\Application\Service\LastLoginService'

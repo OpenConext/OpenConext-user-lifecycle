@@ -20,9 +20,9 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\QueryHandler;
 
 use Mockery as m;
 use Mockery\Mock;
+use OpenConext\UserLifecycle\Application\Query\LastLoginByUserIdQuery;
 use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandler;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
-use OpenConext\UserLifecycle\Domain\Query\LastLoginByUserIdQuery;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use PHPUnit\Framework\TestCase;

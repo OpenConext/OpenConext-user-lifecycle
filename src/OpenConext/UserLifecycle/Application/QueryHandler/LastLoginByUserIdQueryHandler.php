@@ -18,8 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Application\QueryHandler;
 
-use OpenConext\UserLifecycle\Domain\Query\LastLoginByUserIdQuery;
-use OpenConext\UserLifecycle\Domain\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
+use OpenConext\UserLifecycle\Application\Query\LastLoginByUserIdQuery;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 
 class LastLoginByUserIdQueryHandler implements LastLoginByUserIdQueryHandlerInterface

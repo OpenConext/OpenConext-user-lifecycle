@@ -19,9 +19,9 @@
 namespace OpenConext\UserLifecycle\Application\Service;
 
 use InvalidArgumentException;
+use OpenConext\UserLifecycle\Application\Query\LastLoginByUserIdQuery;
+use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Query\LastLoginByUserIdQuery;
-use OpenConext\UserLifecycle\Domain\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;

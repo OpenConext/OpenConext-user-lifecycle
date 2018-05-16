@@ -21,14 +21,10 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 use InvalidArgumentException;
 use Mockery as m;
 use Mockery\Mock;
-use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandler;
+use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
 use OpenConext\UserLifecycle\Application\Service\LastLoginService;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
-use OpenConext\UserLifecycle\Domain\Query\LastLoginByUserIdQuery;
-use OpenConext\UserLifecycle\Domain\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
-use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 

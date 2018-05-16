@@ -16,11 +16,24 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\QueryHandler;
+namespace OpenConext\UserLifecycle\Application\Query;
 
-use OpenConext\UserLifecycle\Domain\Query\LastLoginByUserIdQuery;
+use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-interface LastLoginByUserIdQueryHandlerInterface
+class LastLoginByUserIdQuery
 {
-    public function handle(LastLoginByUserIdQuery $query);
+    /**
+     * @var CollabPersonId
+     */
+    private $personId;
+
+    public function __construct(CollabPersonId $userId)
+    {
+        $this->personId = $userId;
+    }
+
+    public function getPersonId()
+    {
+        return $this->personId;
+    }
 }
