@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * be used to create repository and console command
  * tests.
  */
-class DatabaseTestCase extends KernelTestCase
+abstract class DatabaseTestCase extends KernelTestCase
 {
     /**
      * @var KernelInterface

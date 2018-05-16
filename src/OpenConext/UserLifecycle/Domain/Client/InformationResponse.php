@@ -16,41 +16,39 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\ValueObject;
+namespace OpenConext\UserLifecycle\Domain\Client;
 
 use InvalidArgumentException;
 use JsonSerializable;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 use Webmozart\Assert\Assert;
 
 class InformationResponse implements JsonSerializable
 {
-    const STATUS_OK = 'OK';
-    const STATUS_FAILED = 'FAILED';
-
-    const VALID_DATA_FIELD_NAME = 'name';
-    const VALID_DATA_FIELD_VALUE = 'value';
-
     /**
-     * @var string
+     * @var ResponseStatus
      */
     private $status;
 
     /**
-     * @var string
+     * @var Name
      */
     private $name;
 
     /**
-     * @var array
+     * @var Data
      */
     private $data;
 
     /**
-     * @var null|string
+     * @var ErrorMessage
      */
     private $errorMessage;
 
-    private function __construct($status, $name, array $data, $errorMessage = null)
+    private function __construct(ResponseStatus $status, Name $name, Data $data, ErrorMessage $errorMessage = null)
     {
         $this->status = $status;
         $this->name = $name;
@@ -71,6 +69,7 @@ class InformationResponse implements JsonSerializable
      */
     public static function fromApiResponse(array $response)
     {
+        // Test if the required fields are set in the response
         $requiredFields = ['name', 'status', 'data'];
         $errorMessage = null;
 
@@ -78,37 +77,14 @@ class InformationResponse implements JsonSerializable
             Assert::keyExists($response, $field);
         }
 
-        Assert::stringNotEmpty($response['name']);
-
-        Assert::stringNotEmpty($response['status']);
-        Assert::oneOf($response['status'], [self::STATUS_FAILED, self::STATUS_OK]);
-
-        // If status failed, we need an error message
-        if ($response['status'] === self::STATUS_FAILED) {
-            Assert::notEmpty($response['message']);
-        }
-
-        // If status OK, we do not want an error message
-        if ($response['status'] === self::STATUS_OK && isset($response['message'])) {
-            Assert::nullOrIsEmpty($response['message']);
-        }
-
         Assert::isArray($response['data']);
 
-        if (!empty($response['data'])) {
-            foreach ($response['data'] as $entry) {
-                Assert::isArray($entry);
-                Assert::allOneOf(array_keys($entry), [self::VALID_DATA_FIELD_NAME, self::VALID_DATA_FIELD_VALUE]);
-            }
-        }
+        // Build the individual value objects that make up the response object
+        $status = new ResponseStatus($response['status']);
+        $name = new Name($response['name']);
+        $data = new Data($response['data']);
+        $errorMessage = ErrorMessage::fromResponse($response, $status);
 
-        $name = $response['name'];
-        $status = $response['status'];
-        $data = $response['data'];
-
-        if (isset($response['message']) && !empty($response['message'])) {
-            $errorMessage = $response['message'];
-        }
         return new InformationResponse($status, $name, $data, $errorMessage);
     }
 
@@ -127,11 +103,6 @@ class InformationResponse implements JsonSerializable
         return $this->data;
     }
 
-    public function hasError()
-    {
-        return !is_null($this->errorMessage);
-    }
-
     public function getErrorMessage()
     {
         return $this->errorMessage;
@@ -140,13 +111,13 @@ class InformationResponse implements JsonSerializable
     public function jsonSerialize()
     {
         $response = [
-            'name' => $this->getName(),
-            'status' => $this->getStatus(),
-            'data' => $this->getData(),
+            'name' => (string) $this->getName(),
+            'status' => (string) $this->getStatus(),
+            'data' => $this->getData()->getData(),
         ];
 
-        if ($this->hasError()) {
-            $response['message'] = $this->getErrorMessage();
+        if ($this->getErrorMessage()->hasErrorMessage()) {
+            $response['message'] = (string) $this->getErrorMessage();
         }
 
         return json_encode($response);

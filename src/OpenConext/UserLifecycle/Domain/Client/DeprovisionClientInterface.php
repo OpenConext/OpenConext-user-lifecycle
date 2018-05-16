@@ -19,7 +19,6 @@
 namespace OpenConext\UserLifecycle\Domain\Client;
 
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\ValueObject\InformationResponse;
 
 interface DeprovisionClientInterface
 {

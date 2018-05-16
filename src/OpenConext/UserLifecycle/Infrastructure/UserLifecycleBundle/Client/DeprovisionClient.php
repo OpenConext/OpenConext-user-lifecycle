@@ -19,10 +19,11 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException as CoreInvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
-use OpenConext\UserLifecycle\Domain\ValueObject\InformationResponse;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidArgumentException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidResponseException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\MalformedResponseException;
@@ -60,6 +61,15 @@ class DeprovisionClient implements DeprovisionClientInterface
     {
     }
 
+    /**
+     * @param CollabPersonId $user
+     *
+     * @return InformationResponse
+     *
+     * @throws GuzzleException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
+     */
     public function information(CollabPersonId $user)
     {
         return $this->read(self::DEPROVISION_ENDPOINT, [$user->getCollabPersonId()]);
@@ -105,7 +115,7 @@ class DeprovisionClient implements DeprovisionClientInterface
      * @throws InvalidResponseException
      * @throws MalformedResponseException
      * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function read($path, array $parameters = [])
     {

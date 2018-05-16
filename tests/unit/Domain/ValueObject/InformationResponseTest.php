@@ -19,7 +19,8 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Domain\ValueObject;
 
 use InvalidArgumentException;
-use OpenConext\UserLifecycle\Domain\ValueObject\InformationResponse;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 use PHPUnit\Framework\TestCase;
 
 class InformationResponseTest extends TestCase
@@ -37,9 +38,9 @@ class InformationResponseTest extends TestCase
         );
         $this->assertInstanceOf(InformationResponse::class, $response);
         $this->assertEquals('my-service-name', $response->getName());
-        $this->assertEquals(InformationResponse::STATUS_OK, $response->getStatus());
-        $this->assertEquals($data, $response->getData());
-        $this->assertNull($response->getErrorMessage());
+        $this->assertEquals(ResponseStatus::STATUS_OK, (string) $response->getStatus());
+        $this->assertEquals($data, $response->getData()->getData());
+        $this->assertFalse($response->getErrorMessage()->hasErrorMessage());
     }
 
     public function test_build_from_failed_api_response()
@@ -53,10 +54,10 @@ class InformationResponseTest extends TestCase
             )
         );
         $this->assertInstanceOf(InformationResponse::class, $response);
-        $this->assertEquals('my-service-name', $response->getName());
-        $this->assertEquals(InformationResponse::STATUS_FAILED, $response->getStatus());
-        $this->assertEmpty($response->getData());
-        $this->assertEquals('my message', $response->getErrorMessage());
+        $this->assertEquals('my-service-name', (string) $response->getName());
+        $this->assertEquals(ResponseStatus::STATUS_FAILED, (string) $response->getStatus());
+        $this->assertEmpty($response->getData()->getData());
+        $this->assertEquals('my message', (string) $response->getErrorMessage());
     }
 
     public function test_build_from_failed_api_response_nested_data()
@@ -78,10 +79,10 @@ class InformationResponseTest extends TestCase
             )
         );
         $this->assertInstanceOf(InformationResponse::class, $response);
-        $this->assertEquals('my-service-name', $response->getName());
-        $this->assertEquals(InformationResponse::STATUS_OK, $response->getStatus());
-        $this->assertEquals($data, $response->getData());
-        $this->assertNull($response->getErrorMessage());
+        $this->assertEquals('my-service-name', (string) $response->getName());
+        $this->assertEquals(ResponseStatus::STATUS_OK, (string) $response->getStatus());
+        $this->assertEquals($data, $response->getData()->getData());
+        $this->assertFalse($response->getErrorMessage()->hasErrorMessage());
     }
 
     /**
