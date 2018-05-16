@@ -26,7 +26,7 @@ class CollabPersonIdTest extends TestCase
     public function test_can_be_created()
     {
         $user = new CollabPersonId('urn:mace:example.com:jan');
-        $this->assertEquals('urn:mace:example.com:jan', $user->getCollabUserId());
+        $this->assertEquals('urn:mace:example.com:jan', $user->getCollabPersonId());
     }
 
     /**

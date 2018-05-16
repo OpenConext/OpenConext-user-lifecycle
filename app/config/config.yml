@@ -49,4 +49,4 @@ monolog:
             channels: ['!event', '!doctrine']
 
 user_lifecycle:
-     clients: %open_conext_user_lifecycle_clients%
+     clients: '%open_conext_user_lifecycle_clients%'

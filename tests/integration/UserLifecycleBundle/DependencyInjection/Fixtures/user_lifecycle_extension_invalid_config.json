@@ -1,0 +1,9 @@
+{
+  "clients": {
+    "my_service_name": {
+      "url": "https:\/\/my-service-url\/api\/",
+      "username": "my-user-name",
+      "verify_ssl": false
+    }
+  }
+}

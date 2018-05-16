@@ -1,0 +1,47 @@
+services:
+
+    open_conext.user_lifecycle.test.deprovision_client_collection:
+        public: true
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
+
+    OpenConext\UserLifecycle\Application\Service\LastLoginService:
+        public: true
+        class: OpenConext\UserLifecycle\Application\Service\LastLoginService
+        arguments:
+            - '@OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandler'
+            - '@open_conext.user_lifecycle.test.deprovision_client_collection'
+            - '@logger'
+
+    open_conext.user_lifecycle.deprovision_client.test.my_service_name:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient
+        public: true
+        arguments:
+            - '@open_conext.user_lifecycle.guzzle_client.my_service_name'
+            - 'my_service_name'
+
+    open_conext.user_lifecycle.deprovision_client.test.my_second_name:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient
+        public: true
+        arguments:
+            - '@open_conext.user_lifecycle.guzzle_client.my_second_name'
+            - 'my_second_name'
+
+    open_conext.user_lifecycle.guzzle_mock_handler.my_service_name:
+        class: GuzzleHttp\Handler\MockHandler
+        public: true
+
+    open_conext.user_lifecycle.guzzle_mock_handler.my_second_name:
+        class: GuzzleHttp\Handler\MockHandler
+        public: true
+
+    open_conext.user_lifecycle.guzzle_client.my_service_name:
+        public: true
+        class: GuzzleHttp\Client
+        arguments:
+            - handler: '@open_conext.user_lifecycle.guzzle_mock_handler.my_service_name'
+
+    open_conext.user_lifecycle.guzzle_client.my_second_name:
+        public: true
+        class: GuzzleHttp\Client
+        arguments:
+            - handler: '@open_conext.user_lifecycle.guzzle_mock_handler.my_second_name'

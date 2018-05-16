@@ -31,16 +31,19 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
 
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
-        foreach ($this->clients as $client){
+        foreach ($this->clients as $client) {
             $client->deprovision($user, $dryRun);
         }
     }
 
     public function information(CollabPersonId $user)
     {
-        foreach ($this->clients as $client){
-            $client->information($user);
+        $output = [];
+        foreach ($this->clients as $client) {
+            $output[] = $client->information($user);
         }
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     public function getName()

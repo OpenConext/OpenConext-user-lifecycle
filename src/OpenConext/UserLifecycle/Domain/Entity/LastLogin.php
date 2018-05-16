@@ -20,22 +20,29 @@ namespace OpenConext\UserLifecycle\Domain\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository")
  */
 class LastLogin
 {
+    public function __construct(CollabPersonId $collabPersonId, DateTime $lastLoginDate)
+    {
+        $this->collabPersonId = $collabPersonId->getCollabPersonId();
+        $this->lastLoginDate = $lastLoginDate;
+    }
+
     /**
      * @var string
      * @ORM\Id()
-     * @ORM\Column(length=150, unique=true)
+     * @ORM\Column(length=150, unique=true, name="userid")
      */
     private $collabPersonId;
 
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="lastseen")
      */
     private $lastLoginDate;
 

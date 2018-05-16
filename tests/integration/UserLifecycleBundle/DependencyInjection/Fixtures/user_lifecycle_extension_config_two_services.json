@@ -1,0 +1,15 @@
+{
+  "clients": {
+    "my_service_name": {
+      "url": "https:\/\/my-service-url\/api\/",
+      "username": "my-user-name",
+      "password": "secret",
+      "verify_ssl": false
+    },
+    "my_second_name": {
+      "url": "https:\/\/my-second-service-url\/api\/",
+      "username": "my-user-name",
+      "password": "secret"
+    }
+  }
+}

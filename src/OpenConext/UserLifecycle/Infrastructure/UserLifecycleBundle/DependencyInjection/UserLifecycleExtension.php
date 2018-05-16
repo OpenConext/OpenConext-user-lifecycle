@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet bv
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection;
 
-
 use GuzzleHttp\Client;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
 use Symfony\Component\Config\FileLocator;
@@ -26,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Webmozart\Assert\Assert;
 
 class UserLifecycleExtension extends Extension
 {
@@ -36,8 +36,12 @@ class UserLifecycleExtension extends Extension
         ));
         $loader->load('services.yml');
 
-        $clientConfig = $config[0]['clients'];
-        $this->loadDeprovisionClients($clientConfig, $container);
+        if (isset($config[0]['clients'])) {
+            Assert::notEmpty($config[0]['clients'], 'Configure at least one deprovision API in parameters.yml');
+
+            $clientConfig = $config[0]['clients'];
+            $this->loadDeprovisionClients($clientConfig, $container);
+        }
     }
 
     /**
@@ -53,10 +57,13 @@ class UserLifecycleExtension extends Extension
         foreach ($clients as $clientName => $clientConfiguration) {
             $definition = new Definition(DeprovisionClient::class);
             $definition->addTag('open_conext.user_lifecycle.deprovision_client');
-
             $guzzleDefinition = $this->buildGuzzleClientDefinition($clientConfiguration, $clientName, $container);
 
+            // Set the guzzle client on the DeprovisionClient
             $definition->setArgument(0, $guzzleDefinition);
+
+            // Set the client name on the DeprovisionClient
+            $definition->setArgument(1, $clientName);
 
             $container->setDefinition(
                 sprintf("open_conext.user_lifecycle.deprovision_client.%s", $clientName),
@@ -72,11 +79,25 @@ class UserLifecycleExtension extends Extension
      * @param $config
      * @param $clientName
      * @param ContainerBuilder $container
+     *
+     * @return Definition
      */
     private function buildGuzzleClientDefinition($config, $clientName, ContainerBuilder $container)
     {
         $definition = new Definition(Client::class);
 
+        // Perform input validation on the config
+        $requiredKeys = ['url', 'username', 'password'];
+        $message = 'Expected the key "%s" to exist in deprovision API client configuration "%s".';
+        foreach ($requiredKeys as $key) {
+            Assert::keyExists(
+                $config,
+                $key,
+                sprintf($message, $key, $clientName)
+            );
+        }
+
+        // Configure Guzzle
         $definition->setArgument(0, [
             'base_uri' => $config['url'],
             'verify' => isset($config['verify_ssl']) ? $config['verify_ssl'] : true,
@@ -95,5 +116,6 @@ class UserLifecycleExtension extends Extension
             $definition
         );
 
+        return $definition;
     }
 }
