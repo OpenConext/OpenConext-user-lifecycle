@@ -47,10 +47,9 @@ class LastLoginServiceTest extends TestCase
 
     public function setUp()
     {
-        $this->queryHandler = m::mock(LastLoginByUserIdQueryHandlerInterface::class);
         $this->apiCollection = m::mock(DeprovisionClientCollectionInterface::class);
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->service = new LastLoginService($this->queryHandler, $this->apiCollection, $logger);
+        $this->service = new LastLoginService($this->apiCollection, $logger);
     }
 
     public function test_read_information_for()
@@ -59,10 +58,6 @@ class LastLoginServiceTest extends TestCase
         $personId = 'jay-leno';
 
         $lastLogin = m::mock(LastLogin::class)->makePartial();
-
-        $this->queryHandler
-            ->shouldReceive('handle')
-            ->andReturn($lastLogin);
 
         $this->apiCollection
             ->shouldReceive('information')
@@ -79,21 +74,6 @@ class LastLoginServiceTest extends TestCase
         $personId = '';
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Please pass a non empty collabPersonId');
-
-        $this->service->readInformationFor($personId);
-    }
-
-    public function test_read_information_for_no_last_login_entry()
-    {
-        // Setup the test using test doubles
-        $personId = 'janis_joplin';
-
-        $this->queryHandler
-            ->shouldReceive('handle')
-            ->andReturn(null);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('No last_login entry found for user with collabPersonId "janis_joplin"');
 
         $this->service->readInformationFor($personId);
     }

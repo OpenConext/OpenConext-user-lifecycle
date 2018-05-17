@@ -8,7 +8,6 @@ services:
         public: true
         class: OpenConext\UserLifecycle\Application\Service\LastLoginService
         arguments:
-            - '@OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandler'
             - '@open_conext.user_lifecycle.test.deprovision_client_collection'
             - '@logger'
 
