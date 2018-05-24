@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Domain\ValueObject\Client;
 
 use Mockery as m;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
+use OpenConext\UserLifecycle\Domain\Exception\InvalidDataException;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
 use PHPUnit\Framework\TestCase;
 
@@ -53,15 +54,15 @@ class DataTest extends TestCase
 
     public function test_it_reject_invalid_data_expects_array_of_entries()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected an array. Got: string');
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionMessage('The data must be of the type array');
         new Data(['name' => 'my name', 'value' => 'my value']);
     }
 
     public function test_it_reject_invalid_data_expects_valid_entries()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected one of: "name", "value". Got: "key"');
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionMessage('Expected one of: "name", "value"');
         new Data([['key' => 'my name', 'value' => 'my value']]);
     }
 }

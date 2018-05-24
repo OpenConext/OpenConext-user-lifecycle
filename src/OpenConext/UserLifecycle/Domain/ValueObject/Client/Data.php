@@ -18,9 +18,8 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
-use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
-use Webmozart\Assert\Assert;
+use OpenConext\UserLifecycle\Domain\Exception\InvalidDataException;
 
 class Data
 {
@@ -39,7 +38,7 @@ class Data
     {
         if (!empty($data)) {
             foreach ($data as $entry) {
-                $this->isValidEntry($entry);
+                $this->assertValidEntry($entry);
             }
         }
 
@@ -61,7 +60,7 @@ class Data
 
     public function addDataEntry(array $entry)
     {
-        $this->isValidEntry($entry);
+        $this->assertValidEntry($entry);
         $this->data[] = $entry;
     }
 
@@ -78,11 +77,17 @@ class Data
     /**
      * Tests if the entry is valid. If not an exception is thrown.
      * @param $entry
-     * @throws InvalidArgumentException
+     * @throws InvalidDataException
      */
-    private function isValidEntry($entry)
+    private function assertValidEntry($entry)
     {
-        Assert::isArray($entry);
-        Assert::allOneOf(array_keys($entry), [self::VALID_DATA_FIELD_NAME, self::VALID_DATA_FIELD_VALUE]);
+        if (!is_array($entry)) {
+            throw new InvalidDataException('The data must be of the type array');
+        }
+        if (!array_key_exists(self::VALID_DATA_FIELD_NAME, $entry) ||
+            !array_key_exists(self::VALID_DATA_FIELD_VALUE, $entry)
+        ) {
+            throw new InvalidDataException('Expected one of: "name", "value"');
+        }
     }
 }
