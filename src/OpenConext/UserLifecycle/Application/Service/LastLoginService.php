@@ -76,6 +76,13 @@ class LastLoginService implements LastLoginServiceInterface
         );
 
         $this->logger->debug('Retrieve the information from the APIs for the user.');
-        return $this->deprovisionClientCollection->information($collabPersonId);
+        $information = $this->deprovisionClientCollection->information($collabPersonId);
+
+        $this->logger->info(
+            sprintf('Received information for user "%s" with the following data.', $personId),
+            ['information_response' => $information]
+        );
+
+        return $information;
     }
 }
