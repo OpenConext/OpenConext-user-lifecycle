@@ -19,9 +19,8 @@
 namespace OpenConext\UserLifecycle\Application\Service;
 
 use InvalidArgumentException;
-use OpenConext\UserLifecycle\Application\Query\LastLoginByUserIdQuery;
-use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
@@ -29,11 +28,6 @@ use Webmozart\Assert\Assert;
 
 class LastLoginService implements LastLoginServiceInterface
 {
-    /**
-     * @var LastLoginByUserIdQueryHandlerInterface
-     */
-    private $lastLoginByUserIdQueryHandler;
-
     /**
      * @var DeprovisionClientCollectionInterface
      */
@@ -45,11 +39,9 @@ class LastLoginService implements LastLoginServiceInterface
     private $logger;
 
     public function __construct(
-        LastLoginByUserIdQueryHandlerInterface $queryHandler,
         DeprovisionClientCollectionInterface $deprovisionClientCollection,
         LoggerInterface $logger
     ) {
-        $this->lastLoginByUserIdQueryHandler = $queryHandler;
         $this->deprovisionClientCollection = $deprovisionClientCollection;
         $this->logger = $logger;
     }
@@ -57,6 +49,7 @@ class LastLoginService implements LastLoginServiceInterface
     /**
      * @param string $personId
      * @throws InvalidArgumentException
+     * @return InformationResponse
      */
     public function readInformationFor($personId)
     {
@@ -65,15 +58,6 @@ class LastLoginService implements LastLoginServiceInterface
         Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
 
         $collabPersonId = new CollabPersonId($personId);
-        $query = new LastLoginByUserIdQuery($collabPersonId);
-
-        $this->logger->debug('Finding the last login entry for the user.');
-        $lastLogin = $this->lastLoginByUserIdQueryHandler->handle($query);
-
-        Assert::notNull(
-            $lastLogin,
-            sprintf('No last_login entry found for user with collabPersonId "%s"', $collabPersonId->getCollabPersonId())
-        );
 
         $this->logger->debug('Retrieve the information from the APIs for the user.');
         return $this->deprovisionClientCollection->information($collabPersonId);
