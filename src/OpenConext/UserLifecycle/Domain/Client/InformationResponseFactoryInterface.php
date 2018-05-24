@@ -18,13 +18,6 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use InvalidArgumentException;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
-use Webmozart\Assert\Assert;
-
 interface InformationResponseFactoryInterface
 {
     public function fromApiResponse(array $response);
