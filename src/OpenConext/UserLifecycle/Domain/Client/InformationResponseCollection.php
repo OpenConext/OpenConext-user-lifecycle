@@ -141,7 +141,7 @@ class InformationResponseCollection implements InformationResponseInterface
             'data' => $this->getData()->getData(),
         ];
 
-        if ($this->getErrorMessage()->hasErrorMessage()) {
+        if ($this->getErrorMessage() && $this->getErrorMessage()->hasErrorMessage()) {
             $response['message'] = (string)$this->getErrorMessage();
         }
 
