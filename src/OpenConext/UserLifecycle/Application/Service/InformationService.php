@@ -20,7 +20,7 @@ namespace OpenConext\UserLifecycle\Application\Service;
 
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
@@ -49,7 +49,7 @@ class InformationService implements InformationServiceInterface
     /**
      * @param string $personId
      * @throws InvalidArgumentException
-     * @return InformationResponse
+     * @return InformationResponseInterface
      */
     public function readInformationFor($personId)
     {

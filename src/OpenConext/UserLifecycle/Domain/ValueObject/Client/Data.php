@@ -18,6 +18,8 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
+use InvalidArgumentException;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use Webmozart\Assert\Assert;
 
 class Data
@@ -37,16 +39,50 @@ class Data
     {
         if (!empty($data)) {
             foreach ($data as $entry) {
-                Assert::isArray($entry);
-                Assert::allOneOf(array_keys($entry), [self::VALID_DATA_FIELD_NAME, self::VALID_DATA_FIELD_VALUE]);
+                $this->isValidEntry($entry);
             }
         }
 
         $this->data = $data;
     }
 
+    public static function buildEmpty()
+    {
+        $instance = new self([[self::VALID_DATA_FIELD_NAME => '', self::VALID_DATA_FIELD_VALUE => '']]);
+        $instance->data = [];
+
+        return $instance;
+    }
+
     public function getData()
     {
         return $this->data;
+    }
+
+    public function addDataEntry(array $entry)
+    {
+        $this->isValidEntry($entry);
+        $this->data[] = $entry;
+    }
+
+    public function addInformationResponse($name, InformationResponseInterface $informationResponse)
+    {
+        $entry = [
+            self::VALID_DATA_FIELD_NAME => $name,
+            self::VALID_DATA_FIELD_VALUE => $informationResponse,
+        ];
+
+        $this->addDataEntry($entry);
+    }
+
+    /**
+     * Tests if the entry is valid. If not an exception is thrown.
+     * @param $entry
+     * @throws InvalidArgumentException
+     */
+    private function isValidEntry($entry)
+    {
+        Assert::isArray($entry);
+        Assert::allOneOf(array_keys($entry), [self::VALID_DATA_FIELD_NAME, self::VALID_DATA_FIELD_VALUE]);
     }
 }

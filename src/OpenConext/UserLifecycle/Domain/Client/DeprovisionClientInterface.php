@@ -36,7 +36,7 @@ interface DeprovisionClientInterface
      * Returns a Json encoded string containing the user information provided by the different deprovision API's.
      *
      * @param CollabPersonId|null $user
-     * @return InformationResponse
+     * @return InformationResponseInterface
      */
     public function information(CollabPersonId $user);
 

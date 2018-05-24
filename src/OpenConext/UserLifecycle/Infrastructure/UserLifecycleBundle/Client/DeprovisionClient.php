@@ -23,6 +23,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException as CoreInvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidArgumentException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidResponseException;
@@ -64,7 +65,7 @@ class DeprovisionClient implements DeprovisionClientInterface
     /**
      * @param CollabPersonId $user
      *
-     * @return InformationResponse
+     * @return InformationResponseInterface
      *
      * @throws GuzzleException
      * @throws InvalidArgumentException
@@ -111,7 +112,7 @@ class DeprovisionClient implements DeprovisionClientInterface
      *               will be URL encoded and formatted into the path string.
      *               Example: "information/%s"
      * @param array $parameters
-     * @return InformationResponse $data
+     * @return InformationResponseInterface $data
      * @throws InvalidResponseException
      * @throws MalformedResponseException
      * @throws ResourceNotFoundException
@@ -155,7 +156,7 @@ class DeprovisionClient implements DeprovisionClientInterface
      * without config options as they are not needed.
      *
      * @param string $json
-     * @return InformationResponse
+     * @return InformationResponseInterface
      * @throws InvalidArgumentException
      */
     private function parseJson($json)

@@ -19,14 +19,13 @@
 namespace OpenConext\UserLifecycle\Domain\Client;
 
 use InvalidArgumentException;
-use JsonSerializable;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 use Webmozart\Assert\Assert;
 
-class InformationResponse implements JsonSerializable
+class InformationResponse implements InformationResponseInterface
 {
     /**
      * @var ResponseStatus
