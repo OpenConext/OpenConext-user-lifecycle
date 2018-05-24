@@ -18,7 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject;
 
-use Webmozart\Assert\Assert;
+use OpenConext\UserLifecycle\Domain\Exception\InvalidCollabPersonIdException;
 
 class CollabPersonId
 {
@@ -32,7 +32,10 @@ class CollabPersonId
         if (is_string($collabUserId)) {
             $collabUserId = trim($collabUserId);
         }
-        Assert::stringNotEmpty($collabUserId, 'The collabUserId must be a non empty string');
+        if (empty($collabUserId) || !is_string($collabUserId)) {
+            throw new InvalidCollabPersonIdException('The collabUserId must be a non empty string');
+        }
+
         $this->collabPersonId = $collabUserId;
     }
 
