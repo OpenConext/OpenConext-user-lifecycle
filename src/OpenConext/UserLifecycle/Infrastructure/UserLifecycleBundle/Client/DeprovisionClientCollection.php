@@ -47,11 +47,6 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
         return $collection;
     }
 
-    public function getName()
-    {
-        return 'DeprovisionClientCollection';
-    }
-
     public function addClient(DeprovisionClientInterface $client)
     {
         $this->clients[$client->getName()] = $client;

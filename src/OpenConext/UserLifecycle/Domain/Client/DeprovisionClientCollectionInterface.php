@@ -18,7 +18,23 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-interface DeprovisionClientCollectionInterface extends DeprovisionClientInterface
+use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+
+interface DeprovisionClientCollectionInterface
 {
     public function addClient(DeprovisionClientInterface $client);
+
+    /**
+     * @param CollabPersonId $user
+     * @param bool $dryRun
+     *
+     * @return InformationResponseCollectionInterface
+     */
+    public function deprovision(CollabPersonId $user, $dryRun = false);
+
+    /**
+     * @param CollabPersonId $user
+     * @return InformationResponseCollectionInterface
+     */
+    public function information(CollabPersonId $user);
 }
