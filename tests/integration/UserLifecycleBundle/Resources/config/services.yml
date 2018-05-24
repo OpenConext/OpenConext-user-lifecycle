@@ -4,9 +4,9 @@ services:
         public: true
         class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
 
-    OpenConext\UserLifecycle\Application\Service\LastLoginService:
+    OpenConext\UserLifecycle\Application\Service\InformationService:
         public: true
-        class: OpenConext\UserLifecycle\Application\Service\LastLoginService
+        class: OpenConext\UserLifecycle\Application\Service\InformationService
         arguments:
             - '@open_conext.user_lifecycle.test.deprovision_client_collection'
             - '@logger'

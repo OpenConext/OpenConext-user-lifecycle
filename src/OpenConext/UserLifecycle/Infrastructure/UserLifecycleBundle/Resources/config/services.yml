@@ -12,7 +12,7 @@ services:
 
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
         arguments:
-            - '@OpenConext\UserLifecycle\Application\Service\LastLoginService'
+            - '@OpenConext\UserLifecycle\Application\Service\InformationService'
             - '@logger'
         tags:
             - 'console.command'

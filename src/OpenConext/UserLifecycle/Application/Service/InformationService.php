@@ -21,12 +21,12 @@ namespace OpenConext\UserLifecycle\Application\Service;
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
-use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
 
-class LastLoginService implements LastLoginServiceInterface
+class InformationService implements InformationServiceInterface
 {
     /**
      * @var DeprovisionClientCollectionInterface

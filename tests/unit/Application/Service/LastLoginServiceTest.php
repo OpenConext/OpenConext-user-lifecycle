@@ -22,7 +22,7 @@ use InvalidArgumentException;
 use Mockery as m;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
-use OpenConext\UserLifecycle\Application\Service\LastLoginService;
+use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ use Psr\Log\LoggerInterface;
 class LastLoginServiceTest extends TestCase
 {
     /**
-     * @var LastLoginService
+     * @var InformationService
      */
     private $service;
 
@@ -49,7 +49,7 @@ class LastLoginServiceTest extends TestCase
     {
         $this->apiCollection = m::mock(DeprovisionClientCollectionInterface::class);
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->service = new LastLoginService($this->apiCollection, $logger);
+        $this->service = new InformationService($this->apiCollection, $logger);
     }
 
     public function test_read_information_for()

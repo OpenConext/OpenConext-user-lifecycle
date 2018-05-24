@@ -18,7 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Domain\Service;
 
-interface LastLoginServiceInterface
+interface InformationServiceInterface
 {
     /**
      * @param string $personId

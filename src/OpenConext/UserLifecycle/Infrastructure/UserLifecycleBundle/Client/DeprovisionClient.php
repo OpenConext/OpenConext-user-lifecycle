@@ -111,7 +111,7 @@ class DeprovisionClient implements DeprovisionClientInterface
      *               will be URL encoded and formatted into the path string.
      *               Example: "information/%s"
      * @param array $parameters
-     * @return mixed $data
+     * @return InformationResponse $data
      * @throws InvalidResponseException
      * @throws MalformedResponseException
      * @throws ResourceNotFoundException
@@ -155,7 +155,7 @@ class DeprovisionClient implements DeprovisionClientInterface
      * without config options as they are not needed.
      *
      * @param string $json
-     * @return mixed
+     * @return InformationResponse
      * @throws InvalidArgumentException
      */
     private function parseJson($json)

@@ -19,7 +19,8 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use InvalidArgumentException;
-use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,14 +35,15 @@ class InformationCommand extends Command
     private $logger;
 
     /**
-     * @var LastLoginServiceInterface
+     * @var InformationService
      */
     private $service;
 
-    public function __construct(LastLoginServiceInterface $lastLoginService, LoggerInterface $logger)
+
+    public function __construct(InformationServiceInterface $informationService, LoggerInterface $logger)
     {
         parent::__construct(null);
-        $this->service = $lastLoginService;
+        $this->service = $informationService;
         $this->logger = $logger;
     }
 
