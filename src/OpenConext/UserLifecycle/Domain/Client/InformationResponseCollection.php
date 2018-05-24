@@ -18,130 +18,44 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use OpenConext\UserLifecycle\Domain\Exception\InformationResponseNotFoundException;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 
-/**
- * A collection of InformationResponse objects
- *
- * The data is a collection of InformationResponseCollection objects
- * stored in a Data value object. The entries are indexed on the
- * information response name of the child entry.
- *
- * By default the response status of the collection is OK, when an
- * information response with the FAILED response status is appended
- * to the collection, the status of the collection is also set to
- * FAILED, as one of it's children failed.
- *
- * The name of the collection object is hard coded to
- * 'InformationResponseCollection' as the name of the collection is
- * irrelevant for now.
- *
- * The errorMessage field will be filled with the last error message
- * that was encountered while adding an InformationResponse to the
- * collection.
- */
-class InformationResponseCollection implements InformationResponseInterface
+class InformationResponseCollection implements InformationResponseCollectionInterface
 {
     /**
-     * @var ResponseStatus
+     * @var InformationResponseInterface[]
      */
-    private $status;
-
-    /**
-     * @var Name
-     */
-    private $name;
-
-    /**
-     * @var Data
-     */
-    private $data;
-
-    /**
-     * @var ErrorMessage
-     */
-    private $errorMessage;
-
-    public function __construct()
-    {
-        $this->status = new ResponseStatus(ResponseStatus::STATUS_OK);
-        $this->name = new Name('InformationResponseCollection');
-        $this->data = Data::buildEmpty();
-    }
+    private $data = [];
 
     public function addInformationResponse(InformationResponseInterface $informationResponse)
     {
-        if ($informationResponse->getStatus()->getStatus() != ResponseStatus::STATUS_OK) {
-            $this->status = $informationResponse->getStatus();
-        }
-
-        if ($informationResponse->getErrorMessage()->hasErrorMessage()) {
-            $this->errorMessage = $informationResponse->getErrorMessage();
-        }
-
-        $this->data->addInformationResponse(
-            (string)$informationResponse->getName(),
-            $informationResponse
-        );
+        $this->data[(string) $informationResponse->getName()] = $informationResponse;
     }
 
     /**
-     * @param $name
-     * @return InformationResponseInterface
-     *
-     * @throws InformationResponseNotFoundException
+     * @return InformationResponseInterface[]
      */
-    public function getByName($name)
-    {
-        foreach ($this->getData()->getData() as $entry) {
-            if ($entry[Data::VALID_DATA_FIELD_NAME] == $name) {
-                return $entry[Data::VALID_DATA_FIELD_VALUE];
-            }
-        }
-        throw new InformationResponseNotFoundException(
-            sprintf(
-                'InformationResponse with name "%s" cannot be found in collection',
-                $name
-            )
-        );
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getData()
+    public function getInformationResponses()
     {
         return $this->data;
     }
 
-    public function getErrorMessage()
+    /**
+     * @return ErrorMessage[]
+     */
+    public function getErrorMessages()
     {
-        return $this->errorMessage;
+        $messages = [];
+        foreach ($this->data as $entry) {
+            if ($entry->getErrorMessage() && $entry->getErrorMessage()->hasErrorMessage()) {
+                $messages[(string) $entry->getName()] = (string) $entry->getErrorMessage();
+            }
+        }
+        return $messages;
     }
 
     public function jsonSerialize()
     {
-        $response = [
-            'name' => (string)$this->getName(),
-            'status' => (string)$this->getStatus(),
-            'data' => $this->getData()->getData(),
-        ];
-
-        if ($this->getErrorMessage() && $this->getErrorMessage()->hasErrorMessage()) {
-            $response['message'] = (string)$this->getErrorMessage();
-        }
-
-        return json_encode($response);
+        return json_encode($this->data, JSON_PRETTY_PRINT);
     }
 }

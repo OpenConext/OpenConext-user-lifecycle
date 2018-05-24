@@ -32,10 +32,8 @@ class InformationResponseCollectionTest extends TestCase
     public function test_can_be_created()
     {
         $collection = new InformationResponseCollection();
-        $this->assertEmpty($collection->getData()->getData());
-        $this->assertEquals(ResponseStatus::STATUS_OK, (string)$collection->getStatus());
-        $this->assertEquals('InformationResponseCollection', (string)$collection->getName());
-        $this->assertNull($collection->getErrorMessage());
+        $this->assertEmpty($collection->getInformationResponses());
+        $this->assertEmpty($collection->getErrorMessages());
     }
 
     public function test_can_be_set_with_information_responses()
@@ -47,10 +45,8 @@ class InformationResponseCollectionTest extends TestCase
         $collection->addInformationResponse($info1);
         $collection->addInformationResponse($info2);
 
-        $this->assertCount(2, $collection->getData()->getData());
-        $this->assertEquals(ResponseStatus::STATUS_OK, $collection->getStatus()->getStatus());
-        $this->assertEquals('InformationResponseCollection', $collection->getName()->getName());
-        $this->assertNull($collection->getErrorMessage());
+        $this->assertCount(2, $collection->getInformationResponses());
+        $this->assertEmpty($collection->getErrorMessages());
     }
 
     public function test_it_sets_last_error_message()
@@ -67,23 +63,11 @@ class InformationResponseCollectionTest extends TestCase
         $collection->addInformationResponse($info1);
         $collection->addInformationResponse($info2);
 
-        $this->assertCount(2, $collection->getData()->getData());
-        $this->assertEquals(ResponseStatus::STATUS_FAILED, $collection->getStatus()->getStatus());
-        $this->assertEquals('InformationResponseCollection', $collection->getName()->getName());
-        $this->assertEquals('Service unavailable', $collection->getErrorMessage()->getErrorMessage());
-    }
+        $this->assertCount(2, $collection->getInformationResponses());
+        $errorMessages = $collection->getErrorMessages();
 
-    public function test_an_information_response_can_be_retrieved_by_name_of_response()
-    {
-        $info1 = $this->buildMockInformationResponse('OK', 'engine', [['name' => 'user', 'value' => 'JK']]);
-        $info2 = $this->buildMockInformationResponse('OK', 'teams', [['name' => 'user', 'value' => 'JK']]);
-
-        $collection = new InformationResponseCollection();
-        $collection->addInformationResponse($info1);
-        $collection->addInformationResponse($info2);
-
-        $informationResponse = $collection->getByName('engine');
-        $this->assertEquals($informationResponse, $info1);
+        $this->assertArrayHasKey('teams', $errorMessages);
+        $this->assertEquals('Service unavailable', $errorMessages['teams']);
     }
 
     private function buildMockInformationResponse($status, $name, $data, $errorMessage = null)
@@ -115,6 +99,10 @@ class InformationResponseCollectionTest extends TestCase
         if ($errorMessage) {
             $errorMessageMock
                 ->shouldReceive('getErrorMessage')
+                ->andReturn($errorMessage);
+
+            $errorMessageMock
+                ->shouldReceive('__toString')
                 ->andReturn($errorMessage);
 
             $hasErrorMessage = true;
