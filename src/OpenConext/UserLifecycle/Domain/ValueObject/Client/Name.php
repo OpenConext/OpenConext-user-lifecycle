@@ -18,7 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
-use Webmozart\Assert\Assert;
+use OpenConext\UserLifecycle\Domain\Exception\InvalidNameException;
 
 class Name
 {
@@ -32,7 +32,9 @@ class Name
      */
     public function __construct($name)
     {
-        Assert::stringNotEmpty($name);
+        if (!is_string($name) || empty(trim($name))) {
+            throw new InvalidNameException('Name must be of the type string, and can not be empty.');
+        }
         $this->name = $name;
     }
 
