@@ -19,6 +19,7 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection;
 
 use GuzzleHttp\Client;
+use OpenConext\UserLifecycle\Application\Client\InformationResponseFactory;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -59,11 +60,16 @@ class UserLifecycleExtension extends Extension
             $definition->addTag('open_conext.user_lifecycle.deprovision_client');
             $guzzleDefinition = $this->buildGuzzleClientDefinition($clientConfiguration, $clientName, $container);
 
+            $factoryDefinition = new Definition(InformationResponseFactory::class);
+
             // Set the guzzle client on the DeprovisionClient
             $definition->setArgument(0, $guzzleDefinition);
 
+            // Set the information response factory on the DeprovisionClient
+            $definition->setArgument(1, $factoryDefinition);
+
             // Set the client name on the DeprovisionClient
-            $definition->setArgument(1, $clientName);
+            $definition->setArgument(2, $clientName);
 
             $container->setDefinition(
                 sprintf("open_conext.user_lifecycle.deprovision_client.%s", $clientName),

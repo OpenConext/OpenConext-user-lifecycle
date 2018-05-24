@@ -22,7 +22,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException as CoreInvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidArgumentException;
@@ -42,20 +42,27 @@ class DeprovisionClient implements DeprovisionClientInterface
     private $httpClient;
 
     /**
+     * @var InformationResponseFactoryInterface
+     */
+    private $informationResponseFactory;
+
+    /**
      * @var string
      */
     private $name;
 
     /**
      * @param ClientInterface $httpClient
+     * @param InformationResponseFactoryInterface $factory
      * @param string $name
      */
-    public function __construct(ClientInterface $httpClient, $name)
+    public function __construct(ClientInterface $httpClient, InformationResponseFactoryInterface $factory, $name)
     {
         Assert::string($name);
         $this->name = $name;
 
         $this->httpClient = $httpClient;
+        $this->informationResponseFactory = $factory;
     }
 
     public function deprovision(CollabPersonId $user, $dryRun = false)
@@ -184,7 +191,7 @@ class DeprovisionClient implements DeprovisionClientInterface
         }
 
         try {
-            $response = InformationResponse::fromApiResponse($data);
+            $response = $this->informationResponseFactory->fromApiResponse($data);
         } catch (CoreInvalidArgumentException $e) {
             throw new InvalidArgumentException(
                 sprintf(
