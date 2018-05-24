@@ -56,8 +56,27 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
         $status = new ResponseStatus($response['status']);
         $name = new Name($response['name']);
         $data = new Data($response['data']);
-        $errorMessage = ErrorMessage::fromResponse($response, $status);
+        $errorMessage = $this->buildErrorMessage($response, $status);
 
         return new InformationResponse($status, $name, $data, $errorMessage);
+    }
+
+    private function buildErrorMessage(array $response, ResponseStatus $status)
+    {
+        // If status failed, we need an error message
+        if ($status->getStatus() === ResponseStatus::STATUS_FAILED) {
+            Assert::notEmpty($response['message']);
+        }
+
+        // If status OK, we do not want an error message
+        if ($status->getStatus() === ResponseStatus::STATUS_OK && isset($response['message'])) {
+            Assert::nullOrIsEmpty($response['message']);
+        }
+
+        if (isset($response['message']) && !empty($response['message'])) {
+            return new ErrorMessage($response['message']);
+        }
+        // If the message is not set, return an empty error message object
+        return new ErrorMessage();
     }
 }

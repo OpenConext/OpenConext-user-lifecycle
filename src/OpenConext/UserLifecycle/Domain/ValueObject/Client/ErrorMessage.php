@@ -18,8 +18,6 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
-use Webmozart\Assert\Assert;
-
 class ErrorMessage
 {
     /**
@@ -30,28 +28,9 @@ class ErrorMessage
     /**
      * @param string $errorMessage
      */
-    private function __construct($errorMessage = null)
+    public function __construct($errorMessage = null)
     {
         $this->errorMessage = $errorMessage;
-    }
-
-    public static function fromResponse(array $response, ResponseStatus $status)
-    {
-        // If status failed, we need an error message
-        if ($status->getStatus() === ResponseStatus::STATUS_FAILED) {
-            Assert::notEmpty($response['message']);
-        }
-
-        // If status OK, we do not want an error message
-        if ($status->getStatus() === ResponseStatus::STATUS_OK && isset($response['message'])) {
-            Assert::nullOrIsEmpty($response['message']);
-        }
-
-        if (isset($response['message']) && !empty($response['message'])) {
-            return new self($response['message']);
-        }
-        // If the message is not set, return an empty error message object
-        return new self();
     }
 
     public function hasErrorMessage()
