@@ -16,25 +16,11 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Client;
+namespace OpenConext\UserLifecycle\Domain\Exception;
 
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+use InvalidArgumentException;
 
-interface DeprovisionClientCollectionInterface
+class InvalidResponseStatusException extends InvalidArgumentException
 {
-    public function addClient(DeprovisionClientInterface $client);
 
-    /**
-     * @param CollabPersonId $user
-     * @param bool $dryRun
-     *
-     * @return InformationResponseCollectionInterface
-     */
-    public function deprovision(CollabPersonId $user, $dryRun = false);
-
-    /**
-     * @param CollabPersonId $user
-     * @return InformationResponseCollectionInterface
-     */
-    public function information(CollabPersonId $user);
 }

@@ -21,7 +21,7 @@ namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Command
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
-use OpenConext\UserLifecycle\Application\Service\LastLoginService;
+use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
@@ -78,7 +78,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         // Create the application and add the information command
         $this->application = new Application(self::$kernel);
 
-        $lastLoginService = self::$kernel->getContainer()->get(LastLoginService::class);
+        $lastLoginService = self::$kernel->getContainer()->get(InformationService::class);
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();

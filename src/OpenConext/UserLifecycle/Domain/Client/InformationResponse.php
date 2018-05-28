@@ -18,15 +18,12 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use InvalidArgumentException;
-use JsonSerializable;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
-use Webmozart\Assert\Assert;
 
-class InformationResponse implements JsonSerializable
+class InformationResponse implements InformationResponseInterface
 {
     /**
      * @var ResponseStatus
@@ -48,44 +45,12 @@ class InformationResponse implements JsonSerializable
      */
     private $errorMessage;
 
-    private function __construct(ResponseStatus $status, Name $name, Data $data, ErrorMessage $errorMessage = null)
+    public function __construct(ResponseStatus $status, Name $name, Data $data, ErrorMessage $errorMessage = null)
     {
         $this->status = $status;
         $this->name = $name;
         $this->data = $data;
         $this->errorMessage = $errorMessage;
-    }
-
-    /**
-     * Build an InformationResponse object from api response
-     *
-     * Input validation is applied based on there rules:
-     *  - name must be set (non empty string)
-     *  - status can be OK or FAILED (non empty string)
-     *  - data must be an array filled with at least name and value keys
-     *  - message must be set if status FAILED and must not be set if status OK
-     *
-     * @throws InvalidArgumentException
-     */
-    public static function fromApiResponse(array $response)
-    {
-        // Test if the required fields are set in the response
-        $requiredFields = ['name', 'status', 'data'];
-        $errorMessage = null;
-
-        foreach ($requiredFields as $field) {
-            Assert::keyExists($response, $field);
-        }
-
-        Assert::isArray($response['data']);
-
-        // Build the individual value objects that make up the response object
-        $status = new ResponseStatus($response['status']);
-        $name = new Name($response['name']);
-        $data = new Data($response['data']);
-        $errorMessage = ErrorMessage::fromResponse($response, $status);
-
-        return new InformationResponse($status, $name, $data, $errorMessage);
     }
 
     public function getStatus()

@@ -16,13 +16,11 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Service;
+namespace OpenConext\UserLifecycle\Domain\Exception;
 
-interface LastLoginServiceInterface
+use InvalidArgumentException;
+
+class InvalidDataException extends InvalidArgumentException
 {
-    /**
-     * @param string $personId
-     * @return string
-     */
-    public function readInformationFor($personId);
+
 }

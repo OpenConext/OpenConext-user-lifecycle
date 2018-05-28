@@ -16,35 +16,13 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
+namespace OpenConext\UserLifecycle\Domain\Service;
 
-use OpenConext\UserLifecycle\Domain\Exception\InvalidNameException;
-
-class Name
+interface InformationServiceInterface
 {
     /**
-     * @var string
+     * @param string $personId
+     * @return string
      */
-    private $name;
-
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        if (!is_string($name) || empty(trim($name))) {
-            throw new InvalidNameException('Name must be of the type string, and can not be empty.');
-        }
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function __toString()
-    {
-        return $this->getName();
-    }
+    public function readInformationFor($personId);
 }

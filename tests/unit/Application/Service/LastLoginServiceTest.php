@@ -22,8 +22,9 @@ use InvalidArgumentException;
 use Mockery as m;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
-use OpenConext\UserLifecycle\Application\Service\LastLoginService;
+use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -31,14 +32,9 @@ use Psr\Log\LoggerInterface;
 class LastLoginServiceTest extends TestCase
 {
     /**
-     * @var LastLoginService
+     * @var InformationService
      */
     private $service;
-
-    /**
-     * @var LastLoginByUserIdQueryHandlerInterface|Mock
-     */
-    private $queryHandler;
 
     /**
      * @var DeprovisionClientCollectionInterface|Mock
@@ -49,7 +45,7 @@ class LastLoginServiceTest extends TestCase
     {
         $this->apiCollection = m::mock(DeprovisionClientCollectionInterface::class);
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->service = new LastLoginService($this->apiCollection, $logger);
+        $this->service = new InformationService($this->apiCollection, $logger);
     }
 
     public function test_read_information_for()
@@ -57,11 +53,14 @@ class LastLoginServiceTest extends TestCase
         // Setup the test using test doubles
         $personId = 'jay-leno';
 
-        $lastLogin = m::mock(LastLogin::class)->makePartial();
+        $collection = m::mock(InformationResponseCollection::class);
+        $collection
+            ->shouldReceive('jsonSerialize')
+            ->andReturn('{"only": "test"}');
 
         $this->apiCollection
             ->shouldReceive('information')
-            ->andReturn('{"status": "OK"}');
+            ->andReturn($collection);
 
         // Call the readInformationFor method
         $response = $this->service->readInformationFor($personId);

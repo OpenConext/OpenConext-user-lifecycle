@@ -18,7 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
-use Webmozart\Assert\Assert;
+use OpenConext\UserLifecycle\Domain\Exception\InvalidResponseStatusException;
 
 class ResponseStatus
 {
@@ -35,8 +35,14 @@ class ResponseStatus
      */
     public function __construct($status)
     {
-        Assert::stringNotEmpty($status);
-        Assert::oneOf($status, [ResponseStatus::STATUS_FAILED, ResponseStatus::STATUS_OK]);
+        if (!is_string($status) || empty(trim($status))) {
+            throw new InvalidResponseStatusException('ResponseStatus must be of the type string, and can not be empty.');
+        }
+        $validStatuses = [ResponseStatus::STATUS_FAILED, ResponseStatus::STATUS_OK];
+
+        if (!in_array($status, $validStatuses)) {
+            throw new InvalidResponseStatusException('The ResponseStatus must be either "OK" or "FAILED".');
+        }
 
         $this->status = $status;
     }

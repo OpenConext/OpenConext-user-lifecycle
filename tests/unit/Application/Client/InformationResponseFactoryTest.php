@@ -19,16 +19,24 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Domain\ValueObject;
 
 use InvalidArgumentException;
+use OpenConext\UserLifecycle\Application\Client\InformationResponseFactory;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 use PHPUnit\Framework\TestCase;
 
-class InformationResponseTest extends TestCase
+class InformationResponseFactoryTest extends TestCase
 {
+    private $informationResponseFactory;
+
+    public function setUp()
+    {
+        $this->informationResponseFactory = new InformationResponseFactory();
+    }
+
     public function test_build_from_ok_api_response()
     {
         $data = [['name' => 'fieldname', 'value' => 'fieldvalue']];
-        $response = InformationResponse::fromApiResponse(
+        $response = $this->informationResponseFactory->fromApiResponse(
             $this->buildResponse(
                 'my-service-name',
                 'OK',
@@ -45,7 +53,7 @@ class InformationResponseTest extends TestCase
 
     public function test_build_from_failed_api_response()
     {
-        $response = InformationResponse::fromApiResponse(
+        $response = $this->informationResponseFactory->fromApiResponse(
             $this->buildResponse(
                 'my-service-name',
                 'FAILED',
@@ -70,7 +78,7 @@ class InformationResponseTest extends TestCase
             ]
         ]];
 
-        $response = InformationResponse::fromApiResponse(
+        $response = $this->informationResponseFactory->fromApiResponse(
             $this->buildResponse(
                 'my-service-name',
                 'OK',
@@ -91,7 +99,7 @@ class InformationResponseTest extends TestCase
     public function test_fails_on_invalid_response($invalidResponse)
     {
         $this->expectException(InvalidArgumentException::class);
-        InformationResponse::fromApiResponse($invalidResponse);
+        $this->informationResponseFactory->fromApiResponse($invalidResponse);
     }
 
     public function buildInvalidResponses()

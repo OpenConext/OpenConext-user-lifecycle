@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client;
 
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 class DeprovisionClientCollection implements DeprovisionClientCollectionInterface
@@ -38,17 +39,12 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
 
     public function information(CollabPersonId $user)
     {
-        $output = [];
+        $collection = new InformationResponseCollection();
         foreach ($this->clients as $client) {
-            $output[] = $client->information($user);
+            $collection->addInformationResponse($client->information($user));
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
-    }
-
-    public function getName()
-    {
-        return 'DeprovisionClientCollection';
+        return $collection;
     }
 
     public function addClient(DeprovisionClientInterface $client)

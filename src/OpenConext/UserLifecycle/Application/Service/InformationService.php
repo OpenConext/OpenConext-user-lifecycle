@@ -20,13 +20,13 @@ namespace OpenConext\UserLifecycle\Application\Service;
 
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
-use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
+use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
 
-class LastLoginService implements LastLoginServiceInterface
+class InformationService implements InformationServiceInterface
 {
     /**
      * @var DeprovisionClientCollectionInterface
@@ -49,7 +49,7 @@ class LastLoginService implements LastLoginServiceInterface
     /**
      * @param string $personId
      * @throws InvalidArgumentException
-     * @return InformationResponse
+     * @return InformationResponseInterface
      */
     public function readInformationFor($personId)
     {
@@ -60,7 +60,7 @@ class LastLoginService implements LastLoginServiceInterface
         $collabPersonId = new CollabPersonId($personId);
 
         $this->logger->debug('Retrieve the information from the APIs for the user.');
-        $information = $this->deprovisionClientCollection->information($collabPersonId);
+        $information = $this->deprovisionClientCollection->information($collabPersonId)->jsonSerialize();
 
         $this->logger->info(
             sprintf('Received information for user "%s" with the following data.', $personId),

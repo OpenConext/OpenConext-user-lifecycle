@@ -18,6 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Tests\Unit\Domain\ValueObject;
 
+use OpenConext\UserLifecycle\Domain\Exception\InvalidCollabPersonIdException;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +36,7 @@ class CollabPersonIdTest extends TestCase
      */
     public function test_must_be_non_empty_string($invalidArgument)
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidCollabPersonIdException::class);
         $this->expectExceptionMessage('The collabUserId must be a non empty string');
 
         new CollabPersonId($invalidArgument);

@@ -18,23 +18,36 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+use JsonSerializable;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
+use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 
-interface DeprovisionClientCollectionInterface
+interface InformationResponseInterface extends JsonSerializable
 {
-    public function addClient(DeprovisionClientInterface $client);
+    /**
+     * @return ResponseStatus
+     */
+    public function getStatus();
 
     /**
-     * @param CollabPersonId $user
-     * @param bool $dryRun
-     *
-     * @return InformationResponseCollectionInterface
+     * @return Name
      */
-    public function deprovision(CollabPersonId $user, $dryRun = false);
+    public function getName();
 
     /**
-     * @param CollabPersonId $user
-     * @return InformationResponseCollectionInterface
+     * @return Data
      */
-    public function information(CollabPersonId $user);
+    public function getData();
+
+    /**
+     * @return ErrorMessage
+     */
+    public function getErrorMessage();
+
+    /**
+     * @return string
+     */
+    public function jsonSerialize();
 }

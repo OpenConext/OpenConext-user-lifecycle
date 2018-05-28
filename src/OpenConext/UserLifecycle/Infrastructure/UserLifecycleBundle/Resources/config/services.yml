@@ -12,7 +12,7 @@ services:
 
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
         arguments:
-            - '@OpenConext\UserLifecycle\Application\Service\LastLoginService'
+            - '@OpenConext\UserLifecycle\Application\Service\InformationService'
             - '@logger'
         tags:
             - 'console.command'
@@ -22,6 +22,8 @@ services:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
             - OpenConext\UserLifecycle\Domain\Entity\LastLogin
+
+    OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface: '@OpenConext\UserLifecycle\Application\Client\InformationResponseFactory'
 
     open_conext.user_lifecycle.deprovision_client_collection:
         class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection

@@ -4,9 +4,9 @@ services:
         public: true
         class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
 
-    OpenConext\UserLifecycle\Application\Service\LastLoginService:
+    OpenConext\UserLifecycle\Application\Service\InformationService:
         public: true
-        class: OpenConext\UserLifecycle\Application\Service\LastLoginService
+        class: OpenConext\UserLifecycle\Application\Service\InformationService
         arguments:
             - '@open_conext.user_lifecycle.test.deprovision_client_collection'
             - '@logger'
@@ -16,6 +16,7 @@ services:
         public: true
         arguments:
             - '@open_conext.user_lifecycle.guzzle_client.my_service_name'
+            - '@OpenConext\UserLifecycle\Application\Client\InformationResponseFactory'
             - 'my_service_name'
 
     open_conext.user_lifecycle.deprovision_client.test.my_second_name:
@@ -23,6 +24,7 @@ services:
         public: true
         arguments:
             - '@open_conext.user_lifecycle.guzzle_client.my_second_name'
+            - '@OpenConext\UserLifecycle\Application\Client\InformationResponseFactory'
             - 'my_second_name'
 
     open_conext.user_lifecycle.guzzle_mock_handler.my_service_name:
