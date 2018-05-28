@@ -18,7 +18,6 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\Exception\InvalidDataException;
 
 class Data
@@ -45,33 +44,9 @@ class Data
         $this->data = $data;
     }
 
-    public static function buildEmpty()
-    {
-        $instance = new self([[self::VALID_DATA_FIELD_NAME => '', self::VALID_DATA_FIELD_VALUE => '']]);
-        $instance->data = [];
-
-        return $instance;
-    }
-
     public function getData()
     {
         return $this->data;
-    }
-
-    public function addDataEntry(array $entry)
-    {
-        $this->assertValidEntry($entry);
-        $this->data[] = $entry;
-    }
-
-    public function addInformationResponse($name, InformationResponseInterface $informationResponse)
-    {
-        $entry = [
-            self::VALID_DATA_FIELD_NAME => $name,
-            self::VALID_DATA_FIELD_VALUE => $informationResponse,
-        ];
-
-        $this->addDataEntry($entry);
     }
 
     /**
