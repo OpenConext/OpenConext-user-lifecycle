@@ -17,6 +17,13 @@ services:
         tags:
             - 'console.command'
 
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand:
+        arguments:
+            - '@OpenConext\UserLifecycle\Application\Service\DeprovisionService'
+            - '@logger'
+        tags:
+            - 'console.command'
+
     OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface:
         class: Doctrine\ORM\EntityRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]

@@ -11,6 +11,13 @@ services:
             - '@open_conext.user_lifecycle.test.deprovision_client_collection'
             - '@logger'
 
+    OpenConext\UserLifecycle\Application\Service\DeprovisionService:
+        public: true
+        class: OpenConext\UserLifecycle\Application\Service\DeprovisionService
+        arguments:
+            - '@open_conext.user_lifecycle.test.deprovision_client_collection'
+            - '@logger'
+
     open_conext.user_lifecycle.deprovision_client.test.my_service_name:
         class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient
         public: true
