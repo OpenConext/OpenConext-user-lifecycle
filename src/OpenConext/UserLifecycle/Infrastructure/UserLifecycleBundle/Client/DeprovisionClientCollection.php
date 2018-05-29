@@ -32,9 +32,12 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
 
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
+        $collection = new InformationResponseCollection();
         foreach ($this->clients as $client) {
-            $client->deprovision($user, $dryRun);
+            $collection->addInformationResponse($client->deprovision($user, $dryRun));
         }
+
+        return $collection;
     }
 
     public function information(CollabPersonId $user)
