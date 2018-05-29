@@ -107,11 +107,37 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $command = $this->application->find('user-lifecycle:deprovision');
         $commandTester = new CommandTester($command);
 
+        $commandTester->setInputs(['yes']);
         $commandTester->execute(['user' => $collabPersonId]);
 
         $output = $commandTester->getDisplay();
+
         $this->assertContains($collabPersonId, $output);
         $this->assertContains('OK', $output);
+    }
+
+    public function test_execute_cancels_when_no_is_confirmed()
+    {
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+
+        $this->handlerMyService->append(
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+        );
+
+        $this->handlerMySecondService->append(
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+        );
+
+        $command = $this->application->find('user-lifecycle:deprovision');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->setInputs(['no']);
+        $commandTester->execute(['user' => $collabPersonId]);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertContains($collabPersonId, $output);
+        $this->assertNotContains('OK', $output);
     }
 
     public function test_execute_dry_run()
@@ -129,7 +155,30 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $command = $this->application->find('user-lifecycle:deprovision');
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['user' => $collabPersonId, '--dry-run']);
+        $commandTester->setInputs(['yes']);
+        $commandTester->execute(['user' => $collabPersonId, '--dry-run' => true]);
+
+        $output = $commandTester->getDisplay();
+        $this->assertContains($collabPersonId, $output);
+        $this->assertContains('OK', $output);
+    }
+
+    public function test_execute_forced()
+    {
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+
+        $this->handlerMyService->append(
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+        );
+
+        $this->handlerMySecondService->append(
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+        );
+
+        $command = $this->application->find('user-lifecycle:deprovision');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['user' => $collabPersonId, '--force' => true]);
 
         $output = $commandTester->getDisplay();
         $this->assertContains($collabPersonId, $output);

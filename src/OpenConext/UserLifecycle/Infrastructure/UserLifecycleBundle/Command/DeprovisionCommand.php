@@ -26,6 +26,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class DeprovisionCommand extends Command
 {
@@ -63,6 +64,10 @@ class DeprovisionCommand extends Command
                 'The collabPersonId of the user to deprovision.'
             )
             ->addOption(
+                'force',
+                'f'
+            )
+            ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
@@ -74,6 +79,17 @@ class DeprovisionCommand extends Command
     {
         $userIdInput = $input->getArgument('user');
         $dryRun = $input->hasOption('dryRun');
+        $forced = $input->getOption('force');
+
+        if (!$forced) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion(sprintf('Continue with deprovisioning of "%s"? (y/n)', $userIdInput), false);
+
+            if (!$helper->ask($input, $output, $question)) {
+                return;
+            }
+        }
+
         $this->logger->info(
             sprintf(
                 'Received a deprovision request for user: "%s", with dryRun turned %s',
