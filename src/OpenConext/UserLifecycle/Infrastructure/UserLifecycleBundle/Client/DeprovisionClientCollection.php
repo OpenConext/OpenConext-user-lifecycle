@@ -32,6 +32,11 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
 
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
+        // When dry run, only return the user information
+        if ($dryRun) {
+            return $this->information($user);
+        }
+
         $collection = new InformationResponseCollection();
         foreach ($this->clients as $client) {
             $collection->addInformationResponse($client->deprovision($user, $dryRun));

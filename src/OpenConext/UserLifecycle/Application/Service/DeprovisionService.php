@@ -61,6 +61,7 @@ class DeprovisionService implements DeprovisionServiceInterface
         $collabPersonId = new CollabPersonId($personId);
 
         $this->logger->debug('Delegate deprovisioning to the registered services.');
+
         $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun)->jsonSerialize();
 
         $this->logger->info(
