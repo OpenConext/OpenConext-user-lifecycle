@@ -63,18 +63,17 @@ class DeprovisionCommand extends Command
                 'The collabPersonId of the user to deprovision.'
             )
             ->addOption(
-                'dryRun',
+                'dry-run',
                 null,
-                InputOption::VALUE_OPTIONAL,
-                'Should the command be run in dry run mode?',
-                false
+                InputOption::VALUE_NONE,
+                'Should the command be run in dry run mode?'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $userIdInput = $input->getArgument('user');
-        $dryRun = $input->getOption('dryRun');
+        $dryRun = $input->hasOption('dryRun');
         $this->logger->info(
             sprintf(
                 'Received a deprovision request for user: "%s", with dryRun turned %s',

@@ -29,6 +29,7 @@ use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class DeprovisionCommandTest extends DatabaseTestCase
@@ -107,6 +108,28 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['user' => $collabPersonId]);
+
+        $output = $commandTester->getDisplay();
+        $this->assertContains($collabPersonId, $output);
+        $this->assertContains('OK', $output);
+    }
+
+    public function test_execute_dry_run()
+    {
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+
+        $this->handlerMyService->append(
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+        );
+
+        $this->handlerMySecondService->append(
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+        );
+
+        $command = $this->application->find('user-lifecycle:deprovision');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['user' => $collabPersonId, '--dry-run']);
 
         $output = $commandTester->getDisplay();
         $this->assertContains($collabPersonId, $output);
