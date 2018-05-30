@@ -46,6 +46,12 @@ class SanityCheckServiceTest extends TestCase
         );
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
     public function test_check()
     {
         $lastLoginCollection = m::mock(LastLoginCollectionInterface::class);

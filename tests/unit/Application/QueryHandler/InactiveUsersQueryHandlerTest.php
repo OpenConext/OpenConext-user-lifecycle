@@ -45,6 +45,12 @@ class InactiveUsersQueryHandlerTest extends TestCase
         $this->queryHandler = new InactiveUsersQueryHandler($this->repository);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
     public function test_handle()
     {
 

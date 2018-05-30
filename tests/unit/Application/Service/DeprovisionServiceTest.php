@@ -67,6 +67,12 @@ class DeprovisionServiceTest extends TestCase
         );
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
     public function test_deprovision()
     {
         // Setup the test using test doubles

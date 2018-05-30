@@ -29,6 +29,12 @@ use PHPUnit\Framework\TestCase;
 
 class InformationResponseCollectionTest extends TestCase
 {
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
     public function test_can_be_created()
     {
         $collection = new InformationResponseCollection();

@@ -26,6 +26,12 @@ use PHPUnit\Framework\TestCase;
 
 class DataTest extends TestCase
 {
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
     public function test_build_empty()
     {
         $data = Data::buildEmpty();
