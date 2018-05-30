@@ -5,6 +5,11 @@ services:
         autoconfigure: true
         autowire: true
 
+    OpenConext\UserLifecycle\Application\Service\SanityCheckService:
+        arguments:
+            - '%user_quota%'
+            - '@logger'
+
     OpenConext\UserLifecycle\Domain\:
         resource: '../../../../Domain/'
         autoconfigure: true

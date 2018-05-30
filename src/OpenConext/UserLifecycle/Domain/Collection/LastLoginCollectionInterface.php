@@ -31,4 +31,9 @@ interface LastLoginCollectionInterface
      * @return LastLogin[]
      */
     public function getData();
+
+    /**
+     * @return int
+     */
+    public function count();
 }
