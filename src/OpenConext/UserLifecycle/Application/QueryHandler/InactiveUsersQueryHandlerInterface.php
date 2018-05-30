@@ -18,23 +18,9 @@
 
 namespace OpenConext\UserLifecycle\Application\QueryHandler;
 
-use OpenConext\UserLifecycle\Application\Query\LastLoginByUserIdQuery;
-use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
+use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
 
-class LastLoginByUserIdQueryHandler implements LastLoginByUserIdQueryHandlerInterface
+interface InactiveUsersQueryHandlerInterface
 {
-    /**
-     * @var LastLoginRepositoryInterface
-     */
-    private $lastLoginRepository;
-
-    public function __construct(LastLoginRepositoryInterface $lastLoginRepository)
-    {
-        $this->lastLoginRepository = $lastLoginRepository;
-    }
-
-    public function handle(LastLoginByUserIdQuery $query)
-    {
-        return $this->lastLoginRepository->findLastLoginFor($query->getPersonId());
-    }
+    public function handle(InactiveUsersQuery $query);
 }

@@ -18,55 +18,49 @@
 
 namespace OpenConext\UserLifecycle\Application\Service;
 
-use InvalidArgumentException;
-use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
-use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandlerInterface;
+use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
 use Psr\Log\LoggerInterface;
-use Webmozart\Assert\Assert;
 
-class InformationService implements InformationServiceInterface
+class LastLoginService implements LastLoginServiceInterface
 {
     /**
-     * @var DeprovisionClientCollectionInterface
+     * @var int
      */
-    private $deprovisionClientCollection;
+    private $inactivityPeriod;
+
+    /**
+     * @var InactiveUsersQueryHandlerInterface
+     */
+    private $queryHandler;
 
     /**
      * @var LoggerInterface
      */
     private $logger;
 
+    /**
+     * @param int $inactivityPeriod
+     * @param InactiveUsersQueryHandlerInterface $queryHandler
+     * @param LoggerInterface $logger
+     */
     public function __construct(
-        DeprovisionClientCollectionInterface $deprovisionClientCollection,
+        $inactivityPeriod,
+        InactiveUsersQueryHandlerInterface $queryHandler,
         LoggerInterface $logger
     ) {
-        $this->deprovisionClientCollection = $deprovisionClientCollection;
+        $this->inactivityPeriod = $inactivityPeriod;
+        $this->queryHandler = $queryHandler;
         $this->logger = $logger;
     }
 
     /**
-     * @param string $personId
-     * @throws InvalidArgumentException
-     * @return InformationResponseInterface
+     * Search for users that are up for deprovisioning
+     *
+     * @return LastLoginCollectionInterface
      */
-    public function readInformationFor($personId)
+    public function findUsersForDeprovision()
     {
-        $this->logger->debug('Received a request for user information');
-
-        Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
-
-        $collabPersonId = new CollabPersonId($personId);
-
-        $this->logger->debug('Retrieve the information from the APIs for the user.');
-        $information = $this->deprovisionClientCollection->information($collabPersonId)->jsonSerialize();
-
-        $this->logger->info(
-            sprintf('Received information for user "%s" with the following data.', $personId),
-            ['information_response' => $information]
-        );
-
-        return $information;
     }
 }
