@@ -17,6 +17,7 @@ services:
         arguments:
             - '@open_conext.user_lifecycle.test.deprovision_client_collection'
             - '@OpenConext\UserLifecycle\Application\Service\SanityCheckService'
+            - '@OpenConext\UserLifecycle\Application\Service\LastLoginService'
             - '@logger'
 
     open_conext.user_lifecycle.deprovision_client.test.my_service_name:
