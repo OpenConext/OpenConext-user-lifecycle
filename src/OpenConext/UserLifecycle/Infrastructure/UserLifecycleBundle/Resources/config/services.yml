@@ -2,12 +2,19 @@ services:
 
     OpenConext\UserLifecycle\Application\:
         resource: '../../../../Application/'
+        exclude: '../../../../Application/Query'
         autoconfigure: true
         autowire: true
 
     OpenConext\UserLifecycle\Application\Service\SanityCheckService:
         arguments:
             - '%user_quota%'
+            - '@logger'
+
+    OpenConext\UserLifecycle\Application\Service\LastLoginService:
+        arguments:
+            - '%inactivity_period%'
+            - '@OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandlerInterface'
             - '@logger'
 
     OpenConext\UserLifecycle\Domain\:

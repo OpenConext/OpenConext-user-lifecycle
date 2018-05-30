@@ -18,6 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Application\Service;
 
+use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
 use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandlerInterface;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
@@ -62,5 +63,13 @@ class LastLoginService implements LastLoginServiceInterface
      */
     public function findUsersForDeprovision()
     {
+        $this->logger->debug(
+            sprintf(
+                'Received a request to find deprovision candidates with inactivity period of %d months.',
+                $this->inactivityPeriod
+            )
+        );
+        $query = new InactiveUsersQuery($this->inactivityPeriod);
+        return $this->queryHandler->handle($query);
     }
 }

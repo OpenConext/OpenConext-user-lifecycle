@@ -21,10 +21,10 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 use InvalidArgumentException;
 use Mockery as m;
 use Mockery\Mock;
+use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
 use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandler;
-use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Application\Service\LastLoginService;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
+use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -40,39 +40,40 @@ class LastLoginServiceTest extends TestCase
      */
     private $queryHandler;
 
+    /**
+     * @var LoggerInterface|Mock
+     */
+    private $logger;
+
     public function setUp()
     {
         $this->queryHandler = m::mock(InactiveUsersQueryHandler::class);
-        $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->service = new InformationService($this->apiCollection, $logger);
+        $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
+        $this->service = new LastLoginService(2, $this->queryHandler, $this->logger);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
     }
 
     public function test_read_information_for()
     {
-        // Setup the test using test doubles
-        $personId = 'jay-leno';
+        $this->queryHandler
+            ->shouldReceive('handle')
+            ->andReturnUsing(
+                function (InactiveUsersQuery $query) {
+                    $this->assertEquals(2,$query->getInactivityPeriod());
+                    return m::mock(LastLoginCollectionInterface::class);
+                }
+            );
 
-        $collection = m::mock(InformationResponseCollection::class);
-        $collection
-            ->shouldReceive('jsonSerialize')
-            ->andReturn('{"only": "test"}');
+        $this->logger
+            ->shouldReceive('debug')
+            ->with('Received a request to find deprovision candidates with inactivity period of 2 months.')
+            ->once();
 
-        $this->apiCollection
-            ->shouldReceive('information')
-            ->andReturn($collection);
-
-        // Call the readInformationFor method
-        $response = $this->service->readInformationFor($personId);
-        $this->assertJson($response);
-    }
-
-    public function test_read_information_empty_person_id()
-    {
-        // Setup the test using test doubles
-        $personId = '';
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Please pass a non empty collabPersonId');
-
-        $this->service->readInformationFor($personId);
+        $this->service->findUsersForDeprovision();
     }
 }

@@ -26,3 +26,6 @@ parameters:
             verify_ssl: false
     # The maximum number of users that can be deprovisioned during the batch deprovision run.
     user_quota: 1500
+
+    # The inactivity period after which a user is deprovisioned. The period is in months.
+    inactivity_period: 37
