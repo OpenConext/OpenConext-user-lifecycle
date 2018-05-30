@@ -168,7 +168,6 @@ class DeprovisionServiceTest extends TestCase
             );
 
         $this->service->batchDeprovision();
-
     }
 
     public function test_batch_deprovision_dry_run()
@@ -207,7 +206,6 @@ class DeprovisionServiceTest extends TestCase
             );
 
         $this->service->batchDeprovision(true);
-
     }
 
     private function buildMockLastLoginEntry($personId)
@@ -219,5 +217,4 @@ class DeprovisionServiceTest extends TestCase
 
         return $lastLogin;
     }
-
 }

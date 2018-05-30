@@ -64,7 +64,7 @@ class LastLoginServiceTest extends TestCase
             ->shouldReceive('handle')
             ->andReturnUsing(
                 function (InactiveUsersQuery $query) {
-                    $this->assertEquals(2,$query->getInactivityPeriod());
+                    $this->assertEquals(2, $query->getInactivityPeriod());
                     return m::mock(LastLoginCollectionInterface::class);
                 }
             );

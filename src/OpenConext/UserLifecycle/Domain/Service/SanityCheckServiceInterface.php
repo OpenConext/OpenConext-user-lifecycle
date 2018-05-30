@@ -36,5 +36,4 @@ interface SanityCheckServiceInterface
      * @throws EmptyLastLoginCollectionException
      */
     public function check(LastLoginCollectionInterface $lastLoginCollection);
-
 }

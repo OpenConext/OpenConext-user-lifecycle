@@ -94,5 +94,4 @@ class SanityCheckServiceTest extends TestCase
 
         $this->service->check($lastLoginCollection);
     }
-
 }
