@@ -18,20 +18,14 @@
 
 namespace OpenConext\UserLifecycle\Domain\Service;
 
-interface DeprovisionServiceInterface
+use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+
+interface LastLoginServiceInterface
 {
     /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return string
-     */
-    public function deprovision($personId, $dryRun = false);
-
-    /**
-     * Finds the users marked for deprovisioning, and deprovisions them.
+     * Search for users that are up for deprovisioning
      *
-     * @param bool $dryRun
-     * @return string
+     * @return LastLoginCollectionInterface
      */
-    public function batchDeprovision($dryRun = false);
+    public function findUsersForDeprovision();
 }

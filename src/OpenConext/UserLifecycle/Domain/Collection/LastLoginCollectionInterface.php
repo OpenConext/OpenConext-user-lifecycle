@@ -16,22 +16,19 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Service;
+namespace OpenConext\UserLifecycle\Domain\Collection;
 
-interface DeprovisionServiceInterface
+use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
+
+interface LastLoginCollectionInterface
 {
     /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return string
+     * @param LastLogin $lastLogin
      */
-    public function deprovision($personId, $dryRun = false);
+    public function add(LastLogin $lastLogin);
 
     /**
-     * Finds the users marked for deprovisioning, and deprovisions them.
-     *
-     * @param bool $dryRun
-     * @return string
+     * @return LastLogin[]
      */
-    public function batchDeprovision($dryRun = false);
+    public function getData();
 }
