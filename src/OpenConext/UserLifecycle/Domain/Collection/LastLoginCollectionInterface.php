@@ -23,6 +23,12 @@ use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 interface LastLoginCollectionInterface
 {
     /**
+     * @param array $results
+     * @return LastLoginCollectionInterface
+     */
+    public static function from(array $results);
+
+    /**
      * @param LastLogin $lastLogin
      */
     public function add(LastLogin $lastLogin);

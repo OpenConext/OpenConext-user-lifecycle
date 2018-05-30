@@ -27,6 +27,16 @@ class LastLoginCollection implements LastLoginCollectionInterface
      */
     private $data = [];
 
+    public static function from(array $results)
+    {
+        $collection = new self();
+        foreach ($results as $lastLogin) {
+            $collection->add($lastLogin);
+        }
+
+        return $collection;
+    }
+
     /**
      * @param LastLogin $lastLogin
      */

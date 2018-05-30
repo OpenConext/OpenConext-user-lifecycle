@@ -18,7 +18,8 @@
 
 namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Repository;
 
-use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
+use DateTime;
+use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
@@ -35,22 +36,31 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         parent::setUp();
         $this->loadFixtures();
         $this->repository = $this->getLastLoginRepository();
+        $this->repository->setNow(new DateTime('2018-01-01'));
     }
 
-    public function test_it_reads_by_user_id()
+    public function test_it_reads_deprovision_candidates()
     {
-        $userId = new CollabPersonId('urn:collab:org:surf.nl:james_watson');
-        $watson = $this->repository->findLastLoginFor($userId);
-
-        $this->assertInstanceOf(LastLogin::class, $watson);
-        $this->assertEquals('urn:collab:org:surf.nl:james_watson', $watson->getCollabPersonId());
-        $this->assertEquals('2015-01-01', $watson->getLastLoginDate()->format('Y-m-d'));
+        $candidates = $this->repository->findDeprovisionCandidates(2);
+        $this->assertInstanceOf(LastLoginCollectionInterface::class, $candidates);
+        // see the database fixture for more details on the last login set we are querying
+        $this->assertEquals(3, $candidates->count());
     }
+
+    public function test_deprovision_candidates_returns_empty_collection()
+    {
+        $this->repository->setNow(new DateTime('1900-01-01'));
+        $candidates = $this->repository->findDeprovisionCandidates(2);
+        $this->assertInstanceOf(LastLoginCollectionInterface::class, $candidates);
+        // see the database fixture for more details on the last login set we are querying
+        $this->assertEquals(0, $candidates->count());
+    }
+
 
     public function test_it_returns_null_if_user_does_not_exist()
     {
         $userId = new CollabPersonId('urn:collab:org:surf.nl:jimmy_jones');
-        $result = $this->repository->findLastLoginFor($userId);
+        $result = $this->repository->findDeprovisionCandidates($userId);
 
         $this->assertNull($result);
     }
