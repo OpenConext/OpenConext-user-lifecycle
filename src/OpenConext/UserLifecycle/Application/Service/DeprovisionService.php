@@ -18,11 +18,11 @@
 
 namespace OpenConext\UserLifecycle\Application\Service;
 
-use InvalidArgumentException;
+use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
-use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
@@ -35,30 +35,42 @@ class DeprovisionService implements DeprovisionServiceInterface
     private $deprovisionClientCollection;
 
     /**
+     * @var SanityCheckServiceInterface
+     */
+    private $sanityCheckService;
+
+    /**
+     * @var LastLoginServiceInterface
+     */
+    private $lastLoginService;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
         DeprovisionClientCollectionInterface $deprovisionClientCollection,
+        SanityCheckServiceInterface $sanityCheckService,
+        LastLoginServiceInterface $lastLoginService,
         LoggerInterface $logger
     ) {
         $this->deprovisionClientCollection = $deprovisionClientCollection;
+        $this->sanityCheckService = $sanityCheckService;
+        $this->lastLoginService = $lastLoginService;
         $this->logger = $logger;
     }
 
     /**
      * @param string $personId
      * @param bool $dryRun
-     * @return InformationResponseInterface
+     * @return string
      */
     public function deprovision($personId, $dryRun = false)
     {
         $this->logger->debug('Received a request to deprovision a user.');
 
-        Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
-
-        $collabPersonId = new CollabPersonId($personId);
+        $collabPersonId = $this->buildCollabPersonId($personId);
 
         $this->logger->debug('Delegate deprovisioning to the registered services.');
 
@@ -70,5 +82,44 @@ class DeprovisionService implements DeprovisionServiceInterface
         );
 
         return $information;
+    }
+
+    /**
+     * Finds the users marked for deprovisioning, and deprovisions them.
+     *
+     * @param bool $dryRun
+     * @return string
+     */
+    public function batchDeprovision($dryRun = false)
+    {
+        $this->logger->debug('Retrieve the users that are marked for deprovisioning.');
+        $users = $this->lastLoginService->findUsersForDeprovision();
+
+        $this->logger->debug('Perform sanity checks on the response from the last login service.');
+        $this->sanityCheckService->check($users);
+
+        $batchInformationCollection = new BatchInformationResponseCollection();
+        foreach ($users->getData() as $lastLogin) {
+            $collabPersonId = $this->buildCollabPersonId($lastLogin->getCollabPersonId());
+            $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun);
+            $batchInformationCollection->add($collabPersonId, $information);
+
+            $this->logger->info(
+                sprintf(
+                    'Received deprovision information for user "%s" with the following data.',
+                    $lastLogin->getCollabPersonId()
+                ),
+                ['information_response' => $information]
+            );
+        }
+
+        return $batchInformationCollection->jsonSerialize();
+    }
+
+    private function buildCollabPersonId($personId)
+    {
+        Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
+
+        return new CollabPersonId($personId);
     }
 }
