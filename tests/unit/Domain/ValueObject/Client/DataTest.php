@@ -28,28 +28,16 @@ class DataTest extends TestCase
 {
     public function test_build_empty()
     {
-        $data = Data::buildEmpty();
+        $data = new Data([]);
         $this->assertEmpty($data->getData());
     }
 
     public function test_add_entry()
     {
-        $data = Data::buildEmpty();
         $entry = ['name' => 'collabPersonId', 'value' => 'urn:collab:person:jesse.james'];
         $entryTeams = ['name' => 'teams', 'value' => 'admins'];
-        $data->addDataEntry($entry);
-        $data->addDataEntry($entryTeams);
+        $data = new Data([$entry, $entryTeams]);
         $this->assertEquals([$entry, $entryTeams], $data->getData());
-    }
-
-    public function test_add_information_response()
-    {
-        $data = Data::buildEmpty();
-
-        $informationResponse = m::mock(InformationResponseInterface::class);
-
-        $data->addInformationResponse('foobar', $informationResponse);
-        $this->assertEquals([['name' => 'foobar', 'value' => $informationResponse]], $data->getData());
     }
 
     public function test_it_reject_invalid_data_expects_array_of_entries()
