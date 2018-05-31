@@ -118,7 +118,7 @@ class DeprovisionServiceTest extends TestCase
         // Call the readInformationFor method
         $response = $this->service->deprovision($personId);
 
-        $this->assertJson($response);
+        $this->assertInstanceOf(InformationResponseCollectionInterface::class, $response);
     }
 
     public function test_deprovision_dry_run()
@@ -141,7 +141,7 @@ class DeprovisionServiceTest extends TestCase
         // Call the readInformationFor method
         $response = $this->service->deprovision($personId, true);
 
-        $this->assertJson($response);
+        $this->assertInstanceOf(InformationResponseCollectionInterface::class, $response);
     }
 
     public function test_deprovision_empty_person_id()

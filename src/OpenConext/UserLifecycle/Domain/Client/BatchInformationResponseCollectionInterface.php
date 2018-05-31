@@ -34,7 +34,18 @@ interface BatchInformationResponseCollectionInterface extends JsonSerializable
     public function add(CollabPersonId $personId, InformationResponseCollectionInterface $collection);
 
     /**
+     * @return int
+     */
+    public function count();
+
+    /**
      * @return array
      */
     public function jsonSerialize();
+
+    /**
+     * Get an array of error messages in string format
+     * @return string[]
+     */
+    public function getErrorMessages();
 }

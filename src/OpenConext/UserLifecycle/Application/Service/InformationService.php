@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Application\Service;
 
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
@@ -49,7 +50,7 @@ class InformationService implements InformationServiceInterface
     /**
      * @param string $personId
      * @throws InvalidArgumentException
-     * @return InformationResponseInterface
+     * @return InformationResponseCollectionInterface
      */
     public function readInformationFor($personId)
     {
@@ -60,11 +61,11 @@ class InformationService implements InformationServiceInterface
         $collabPersonId = new CollabPersonId($personId);
 
         $this->logger->debug('Retrieve the information from the APIs for the user.');
-        $information = json_encode($this->deprovisionClientCollection->information($collabPersonId)->jsonSerialize());
+        $information = $this->deprovisionClientCollection->information($collabPersonId);
 
         $this->logger->info(
             sprintf('Received information for user "%s" with the following data.', $personId),
-            ['information_response' => $information]
+            ['information_response' => json_encode($information->jsonSerialize())]
         );
 
         return $information;

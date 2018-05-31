@@ -23,6 +23,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
+use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
@@ -87,6 +88,8 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $deprovisionService = $this->container->get(DeprovisionService::class);
 
+        $summaryService = new SummaryService();
+
         // Set the time on the LastLoginRepository
         $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
         $this->repository->setNow(new DateTime('2018-01-01'));
@@ -94,7 +97,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
 
-        $this->application->add(new DeprovisionCommand($deprovisionService, $logger));
+        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $logger));
 
         // Load the database fixtures
         $this->loadFixtures();
@@ -188,8 +191,11 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $commandTester->setInputs(['yes']);
         $commandTester->execute([]);
 
+        $output = $commandTester->getDisplay();
+
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(1, $this->repository->findAll());
+        $this->assertContains('"Something went awfully wrong" for user "urn:collab:org:surf.nl:jason_mraz"', $output);
     }
 
     private function getOkStatus($serviceName, $collabPersonId)

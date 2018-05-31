@@ -20,7 +20,9 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,11 +41,20 @@ class InformationCommand extends Command
      */
     private $service;
 
+    /**
+     * @var SummaryServiceInterface
+     */
+    private $summaryService;
 
-    public function __construct(InformationServiceInterface $informationService, LoggerInterface $logger)
-    {
+    public function __construct(
+        InformationServiceInterface $informationDeprovisionService,
+        SummaryServiceInterface $summaryService,
+        LoggerInterface $logger
+    ) {
         parent::__construct(null);
-        $this->service = $informationService;
+        $this->service = $informationDeprovisionService;
+        $this->summaryService = $summaryService;
+        $this->summaryService->setContext(SummaryService::CONTEXT_INFORMATION);
         $this->logger = $logger;
     }
 
@@ -53,7 +64,7 @@ class InformationCommand extends Command
             ->setName('user-lifecycle:information')
             ->setDescription('Read privacy information for a given user identified by a collabPersonId.')
             ->setHelp(
-                'This command allows you to read information of a given user identified by a collabPersonId. ' .
+                'This command allows you to read information of a given user identified by a collabPersonId. '.
                 'The command will ask all registered applications what information is available for the user.'
             )
             ->addArgument(
@@ -79,9 +90,18 @@ class InformationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $userIdInput = $input->getArgument('user');
+        $isQuiet = $input->getOption('quiet');
         $this->logger->info(sprintf('Received an information request for user: "%s"', $userIdInput));
         try {
-            $output->write($this->service->readInformationFor($userIdInput));
+            $information = $this->service->readInformationFor($userIdInput);
+
+            if (!$isQuiet) {
+                $output->writeln(PHP_EOL);
+                $output->write($this->summaryService->summarize($information), true);
+                $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
+            }
+
+            $output->write(json_encode($information->jsonSerialize()), true);
         } catch (InvalidArgumentException $e) {
             $this->logger->error($e->getMessage());
         }

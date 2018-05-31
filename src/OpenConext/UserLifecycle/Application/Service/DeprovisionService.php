@@ -21,7 +21,9 @@ namespace OpenConext\UserLifecycle\Application\Service;
 use OpenConext\UserLifecycle\Application\Command\RemoveFromLastLoginCommand;
 use OpenConext\UserLifecycle\Application\CommandHandler\RemoveFromLastLoginCommandHandler;
 use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollection;
+use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\RemovalCheckServiceInterface;
@@ -81,7 +83,7 @@ class DeprovisionService implements DeprovisionServiceInterface
     /**
      * @param string $personId
      * @param bool $dryRun
-     * @return string
+     * @return InformationResponseCollectionInterface
      */
     public function deprovision($personId, $dryRun = false)
     {
@@ -105,14 +107,14 @@ class DeprovisionService implements DeprovisionServiceInterface
             $this->removeFromLastLoginCommandHandler->handle($command);
         }
 
-        return json_encode($information->jsonSerialize());
+        return $information;
     }
 
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.
      *
      * @param bool $dryRun
-     * @return string
+     * @return BatchInformationResponseCollectionInterface
      */
     public function batchDeprovision($dryRun = false)
     {
@@ -144,7 +146,7 @@ class DeprovisionService implements DeprovisionServiceInterface
             }
         }
 
-        return json_encode($batchInformationCollection->jsonSerialize());
+        return $batchInformationCollection;
     }
 
     private function buildCollabPersonId($personId)

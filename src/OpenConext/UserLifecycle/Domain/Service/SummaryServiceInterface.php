@@ -18,23 +18,21 @@
 
 namespace OpenConext\UserLifecycle\Domain\Service;
 
-use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
-
-interface DeprovisionServiceInterface
+interface SummaryServiceInterface
 {
     /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return InformationResponseCollectionInterface
+     * Summarize the information response from a deprovision or
+     * information call.
+     *
+     * @param
+     * @return string
      */
-    public function deprovision($personId, $dryRun = false);
+    public function summarize($collection);
 
     /**
-     * Finds the users marked for deprovisioning, and deprovisions them.
+     * Set the context to deprovision or information outputting
      *
-     * @param bool $dryRun
-     * @return BatchInformationResponseCollectionInterface
+     * @param $context
      */
-    public function batchDeprovision($dryRun = false);
+    public function setContext($context);
 }

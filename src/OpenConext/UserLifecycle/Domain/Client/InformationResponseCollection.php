@@ -41,7 +41,7 @@ class InformationResponseCollection implements InformationResponseCollectionInte
     }
 
     /**
-     * @return ErrorMessage[]
+     * @return string[]
      */
     public function getErrorMessages()
     {
@@ -57,5 +57,13 @@ class InformationResponseCollection implements InformationResponseCollectionInte
     public function jsonSerialize()
     {
         return $this->data;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->data);
     }
 }

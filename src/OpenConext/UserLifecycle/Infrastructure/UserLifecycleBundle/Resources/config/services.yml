@@ -25,6 +25,7 @@ services:
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
         arguments:
             - '@OpenConext\UserLifecycle\Application\Service\InformationService'
+            - '@OpenConext\UserLifecycle\Application\Service\SummaryService'
             - '@logger'
         tags:
             - 'console.command'
@@ -32,6 +33,7 @@ services:
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand:
         arguments:
             - '@OpenConext\UserLifecycle\Application\Service\DeprovisionService'
+            - '@OpenConext\UserLifecycle\Application\Service\SummaryService'
             - '@logger'
         tags:
             - 'console.command'

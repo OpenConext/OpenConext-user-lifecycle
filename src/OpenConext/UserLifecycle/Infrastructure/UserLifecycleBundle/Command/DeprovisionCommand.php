@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,11 +41,19 @@ class DeprovisionCommand extends Command
      */
     private $service;
 
+    /**
+     * @var SummaryServiceInterface
+     */
+    private $summaryService;
 
-    public function __construct(DeprovisionServiceInterface $service, LoggerInterface $logger)
-    {
+    public function __construct(
+        DeprovisionServiceInterface $deprovisionService,
+        SummaryServiceInterface $summaryService,
+        LoggerInterface $logger
+    ) {
         parent::__construct(null);
-        $this->service = $service;
+        $this->service = $deprovisionService;
+        $this->summaryService = $summaryService;
         $this->logger = $logger;
     }
 
@@ -87,19 +96,29 @@ class DeprovisionCommand extends Command
         $userIdInput = $input->getArgument('user');
         $dryRun = $input->getOption('dry-run');
         $forced = $input->getOption('force');
+        $isQuiet = $input->getOption('quiet');
 
         if (is_null($userIdInput)) {
-            $this->executeBatch($input, $output, $userIdInput, $dryRun, $forced);
+            $this->executeBatch($input, $output, $userIdInput, $dryRun, $forced, $isQuiet);
         } else {
-            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $forced);
+            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $forced, $isQuiet);
         }
     }
 
-    private function executeBatch(InputInterface $input, OutputInterface $output, $userIdInput, $dryRun, $forced)
-    {
+    private function executeBatch(
+        InputInterface $input,
+        OutputInterface $output,
+        $userIdInput,
+        $dryRun,
+        $forced,
+        $isQuiet
+    ) {
         if (!$forced) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion(sprintf('<question>Continue with deprovisioning? (y/n)</question> ', $userIdInput), false);
+            $question = new ConfirmationQuestion(
+                sprintf('<question>Continue with deprovisioning? (y/n)</question> ', $userIdInput),
+                false
+            );
 
             if (!$helper->ask($input, $output, $question)) {
                 return;
@@ -114,17 +133,34 @@ class DeprovisionCommand extends Command
         );
 
         try {
-            $output->write($this->service->batchDeprovision($dryRun));
+            $information = $this->service->batchDeprovision($dryRun);
+
+            if (!$isQuiet) {
+                $output->writeln(PHP_EOL);
+                $output->write($this->summaryService->summarize($information), true);
+                $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
+            }
+
+            $output->write(json_encode($information->jsonSerialize()), true);
         } catch (InvalidArgumentException $e) {
             $this->logger->error($e->getMessage());
         }
     }
 
-    private function executeSingleUser(InputInterface $input, OutputInterface $output, $userIdInput, $dryRun, $forced)
-    {
+    private function executeSingleUser(
+        InputInterface $input,
+        OutputInterface $output,
+        $userIdInput,
+        $dryRun,
+        $forced,
+        $isQuiet
+    ) {
         if (!$forced) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion(sprintf('<question>Continue with deprovisioning of "%s"? (y/n)</question> ', $userIdInput), false);
+            $question = new ConfirmationQuestion(
+                sprintf('<question>Continue with deprovisioning of "%s"? (y/n)</question> ', $userIdInput),
+                false
+            );
 
             if (!$helper->ask($input, $output, $question)) {
                 return;
@@ -139,7 +175,15 @@ class DeprovisionCommand extends Command
             )
         );
         try {
-            $output->write($this->service->deprovision($userIdInput, $dryRun));
+            $information = $this->service->deprovision($userIdInput, $dryRun);
+
+            if (!$isQuiet) {
+                $output->writeln(PHP_EOL);
+                $output->write($this->summaryService->summarize($information), true);
+                $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
+            }
+
+            $output->write(json_encode($information->jsonSerialize()), true);
         } catch (InvalidArgumentException $e) {
             $this->logger->error($e->getMessage());
         }
