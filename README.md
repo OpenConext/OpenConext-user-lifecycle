@@ -27,16 +27,80 @@ open_conext_user_lifecycle_clients:
 
 For more information about setting up the clients, see the `parameters.yml.dist` file.
 
-## Deprovisioning a user
-TODO: describe DELETE feature and its --dry-run option.
+## Deprovisioning users
+Deprovisioning users can be done on a user basis, providing the user collab person id. Or automatically
+after a period of inactiviy. This period can be configured in the `parameters.yml`. Both options use
+the `bin/console user-lifecycle:deprovision` console command.
+
+### Single user
+The `bin/console user-lifecycle:deprovision` takes an user argument and several other options.
+
+The `user` argument should be the one and only argument of the command. 
+
+**Options**
+
+| Name   | Shortcut | Description |
+|---|---|---|
+| `--dry-run` | __none__ | Enables dry run mode, simulates a deprovision action, returning the output a regular run would, but without actually deprovisioning the user. |
+| `--json` | __none__ | Only outputs JSON. Must be used in combination with the --no-interaction option.|
+| `--no-interaction` | `-n` | Prevents the confirmation question. |
+
+**Example usage**
+
+```bash
+$ bin/console user-lifecycle:deprovision urn:collab:org:surf.nl:janis_joplin
+Continue with deprovisioning of "urn:collab:org:surf.nl:janis_joplin"? (y/n)
+# Will start deprovisioning after a positive answer to the confirmation.
+```
+
+```bash
+$ bin/console user-lifecycle:deprovision urn:collab:org:surf.nl:janis_joplin --dry-run
+# Asks confirmation, will not deprovision actual user data
+```
+
+```bash
+$ bin/console user-lifecycle:deprovision urn:collab:org:surf.nl:janis_joplin --no-interaction --json
+# Starts deprovisioning right away, will only output the JSON returned from the services.
+```
+
+### Batch deprovisioning
+When the user argument is omitted, the deprovision command will start deprovisioning the users that have exceeded the
+inactivity period set in the `inactivity_period` parameter in `parameters.yml`. This parameter must be an integer value
+representing the months of inactivity before a user must be deprovisioned.
+
+> By default 37 months used as the inactivity period.
+
+**Options**
+
+The same options can be used as described in the `Single user` section above.
+
+**Example usage**
+
+```bash
+$ bin/console user-lifecycle:deprovision
+Continue with deprovisioning? (y/n)
+# Will start deprovisioning after a positive answer to the confirmation.
+```
+
+```bash
+$ bin/console user-lifecycle:deprovision --dry-run --no-interaction
+Continue with deprovisioning? (y/n)
+# Will start a dry run without asking for confirmation.
+```
 
 ## Gather information about a user
 To read user information you can use the `user-lifecycle:information` console command.
 
 The `user-lifecycle:information` command takes one argument which is the collabPersonId.
 
-Example:
 
+**Options**
+| Name   | Shortcut | Description |
+|---|---|---|
+| `--json` | __none__ | Only outputs JSON.|
+
+
+**Example usage**
 ```bash
 $ bin/console user-lifecycle:information urn:collab:example.org:user_id
 ```
