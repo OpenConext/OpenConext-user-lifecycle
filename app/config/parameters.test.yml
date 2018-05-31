@@ -17,3 +17,5 @@ parameters:
             url: 'https://my-second-service-url/api/'
             username: my-user-name
             password: secret
+    user_quota: 1500
+    inactivity_period: 37

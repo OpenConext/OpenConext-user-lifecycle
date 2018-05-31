@@ -18,21 +18,21 @@
 
 namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Command;
 
+use DateTime;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
-use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class DeprovisionCommandTest extends DatabaseTestCase
+class BatchDeprovisionCommandTest extends DatabaseTestCase
 {
 
     /**
@@ -54,6 +54,11 @@ class DeprovisionCommandTest extends DatabaseTestCase
      * @var Application
      */
     private $application;
+
+    /**
+     * @var LastLoginRepository
+     */
+    private $repository;
 
     public function setUp()
     {
@@ -81,7 +86,11 @@ class DeprovisionCommandTest extends DatabaseTestCase
         // Create the application and add the information command
         $this->application = new Application(self::$kernel);
 
-        $deprovisionService = self::$kernel->getContainer()->get(DeprovisionService::class);
+        $deprovisionService = $this->container->get(DeprovisionService::class);
+
+        // Set the time on the LastLoginRepository
+        $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
+        $this->repository->setNow(new DateTime('2018-01-01'));
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
@@ -94,8 +103,10 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
     public function test_execute()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        // Ascertain we start of with 4 entries in the last login repository
+        $this->assertCount(4, $this->repository->findAll());
 
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
@@ -108,82 +119,17 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);
-        $commandTester->execute(['user' => $collabPersonId]);
+        $commandTester->execute([]);
 
         $output = $commandTester->getDisplay();
 
         $this->assertContains($collabPersonId, $output);
         $this->assertContains('OK', $output);
+
+        // After deprovisioning the user should have been removed from the last login table
+        //$this->assertCount(3, $this->repository->findAll());
     }
 
-    public function test_execute_cancels_when_no_is_confirmed()
-    {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
-
-        $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
-        );
-
-        $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
-        );
-
-        $command = $this->application->find('user-lifecycle:deprovision');
-        $commandTester = new CommandTester($command);
-
-        $commandTester->setInputs(['no']);
-        $commandTester->execute(['user' => $collabPersonId]);
-
-        $output = $commandTester->getDisplay();
-
-        $this->assertContains($collabPersonId, $output);
-        $this->assertNotContains('OK', $output);
-    }
-
-    public function test_execute_dry_run()
-    {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
-
-        $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
-        );
-
-        $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
-        );
-
-        $command = $this->application->find('user-lifecycle:deprovision');
-        $commandTester = new CommandTester($command);
-
-        $commandTester->setInputs(['yes']);
-        $commandTester->execute(['user' => $collabPersonId, '--dry-run' => true]);
-
-        $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
-    }
-
-    public function test_execute_forced()
-    {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
-
-        $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
-        );
-
-        $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
-        );
-
-        $command = $this->application->find('user-lifecycle:deprovision');
-        $commandTester = new CommandTester($command);
-
-        $commandTester->execute(['user' => $collabPersonId, '--force' => true]);
-
-        $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
-    }
 
     private function getOkStatus($serviceName, $collabPersonId)
     {
