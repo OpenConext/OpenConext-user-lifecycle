@@ -56,6 +56,6 @@ class InformationResponseCollection implements InformationResponseCollectionInte
 
     public function jsonSerialize()
     {
-        return json_encode($this->data, JSON_PRETTY_PRINT);
+        return $this->data;
     }
 }

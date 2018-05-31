@@ -85,6 +85,6 @@ class InformationResponse implements InformationResponseInterface
             $response['message'] = (string) $this->getErrorMessage();
         }
 
-        return json_encode($response);
+        return $response;
     }
 }

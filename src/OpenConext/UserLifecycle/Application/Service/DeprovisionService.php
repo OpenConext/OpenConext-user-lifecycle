@@ -95,7 +95,7 @@ class DeprovisionService implements DeprovisionServiceInterface
 
         $this->logger->info(
             sprintf('Received deprovision information for user "%s" with the following data.', $personId),
-            ['information_response' => $information->jsonSerialize()]
+            ['information_response' => json_encode($information->jsonSerialize())]
         );
 
         if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
@@ -105,7 +105,7 @@ class DeprovisionService implements DeprovisionServiceInterface
             $this->removeFromLastLoginCommandHandler->handle($command);
         }
 
-        return $information->jsonSerialize();
+        return json_encode($information->jsonSerialize());
     }
 
     /**
@@ -133,7 +133,7 @@ class DeprovisionService implements DeprovisionServiceInterface
                     'Received deprovision information for user "%s" with the following data.',
                     $lastLogin->getCollabPersonId()
                 ),
-                ['information_response' => $information->jsonSerialize()]
+                ['information_response' => json_encode($information->jsonSerialize())]
             );
 
             if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
@@ -144,7 +144,7 @@ class DeprovisionService implements DeprovisionServiceInterface
             }
         }
 
-        return $batchInformationCollection->jsonSerialize();
+        return json_encode($batchInformationCollection->jsonSerialize());
     }
 
     private function buildCollabPersonId($personId)

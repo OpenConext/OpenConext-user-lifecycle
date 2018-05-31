@@ -60,7 +60,7 @@ class InformationService implements InformationServiceInterface
         $collabPersonId = new CollabPersonId($personId);
 
         $this->logger->debug('Retrieve the information from the APIs for the user.');
-        $information = $this->deprovisionClientCollection->information($collabPersonId)->jsonSerialize();
+        $information = json_encode($this->deprovisionClientCollection->information($collabPersonId)->jsonSerialize());
 
         $this->logger->info(
             sprintf('Received information for user "%s" with the following data.', $personId),
