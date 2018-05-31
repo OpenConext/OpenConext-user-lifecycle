@@ -16,30 +16,14 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Client;
+namespace OpenConext\UserLifecycle\Domain\Service;
 
-use JsonSerializable;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
-
-interface InformationResponseCollectionInterface extends JsonSerializable
+interface DeprovisionServiceInterface
 {
     /**
-     * @param InformationResponseInterface $informationResponse
-     */
-    public function addInformationResponse(InformationResponseInterface $informationResponse);
-
-    /**
-     * @return InformationResponseInterface[]
-     */
-    public function getInformationResponses();
-
-    /**
-     * @return ErrorMessage[]
-     */
-    public function getErrorMessages();
-
-    /**
+     * @param string $personId
+     * @param bool $dryRun
      * @return string
      */
-    public function jsonSerialize();
+    public function deprovision($personId, $dryRun = false);
 }

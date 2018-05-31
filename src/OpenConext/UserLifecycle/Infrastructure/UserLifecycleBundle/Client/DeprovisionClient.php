@@ -65,8 +65,14 @@ class DeprovisionClient implements DeprovisionClientInterface
         $this->informationResponseFactory = $factory;
     }
 
+    /**
+     * @param CollabPersonId $user
+     * @param bool $dryRun
+     * @return mixed
+     */
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
+        return $this->delete(self::DEPROVISION_ENDPOINT, [$user->getCollabPersonId()]);
     }
 
     /**
@@ -130,6 +136,39 @@ class DeprovisionClient implements DeprovisionClientInterface
         $resource = $this->buildResourcePath($path, $parameters);
 
         $response = $this->httpClient->request('GET', $resource, ['exceptions' => false]);
+
+        $statusCode = $response->getStatusCode();
+
+        if ($statusCode === 404) {
+            throw new ResourceNotFoundException(sprintf('Resource "%s" not found', $resource));
+        }
+
+        if ($statusCode !== 200) {
+            throw new InvalidResponseException(
+                sprintf(
+                    'Request to resource "%s" returned an invalid response with status code %s',
+                    $resource,
+                    $statusCode
+                )
+            );
+        }
+
+        try {
+            $data = $this->parseJson((string)$response->getBody());
+        } catch (InvalidArgumentException $e) {
+            throw new MalformedResponseException(
+                sprintf('Cannot read resource "%s": malformed JSON returned. %s', $resource, $e->getMessage())
+            );
+        }
+
+        return $data;
+    }
+
+    private function delete($path, array $parameters = [])
+    {
+        $resource = $this->buildResourcePath($path, $parameters);
+
+        $response = $this->httpClient->request('DELETE', $resource, ['exceptions' => false]);
 
         $statusCode = $response->getStatusCode();
 

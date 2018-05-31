@@ -29,7 +29,7 @@ use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class LastLoginServiceTest extends TestCase
+class InformationServiceTest extends TestCase
 {
     /**
      * @var InformationService
