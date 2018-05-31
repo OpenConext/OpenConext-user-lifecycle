@@ -21,11 +21,13 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 use InvalidArgumentException;
 use Mockery as m;
 use Mockery\Mock;
+use OpenConext\UserLifecycle\Application\CommandHandler\RemoveFromLastLoginCommandHandler;
 use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\RemovalCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection;
 use PHPUnit\Framework\TestCase;
@@ -53,16 +55,30 @@ class DeprovisionServiceTest extends TestCase
      */
     private $lastLoginService;
 
+    /**
+     * @var RemovalCheckServiceInterface|Mock
+     */
+    private $removalCheckService;
+
+    /**
+     * @var RemoveFromLastLoginCommandHandler|Mock
+     */
+    private $removeFromLastLoginCommandHandler;
+
     public function setUp()
     {
         $this->apiCollection = m::mock(DeprovisionClientCollection::class);
         $this->sanityChecker = m::mock(SanityCheckServiceInterface::class);
         $this->lastLoginService = m::mock(LastLoginServiceInterface::class);
+        $this->removalCheckService = m::mock(RemovalCheckServiceInterface::class);
+        $this->removeFromLastLoginCommandHandler = m::mock(RemoveFromLastLoginCommandHandler::class);
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
         $this->service = new DeprovisionService(
             $this->apiCollection,
             $this->sanityChecker,
             $this->lastLoginService,
+            $this->removalCheckService,
+            $this->removeFromLastLoginCommandHandler,
             $logger
         );
     }
@@ -92,6 +108,15 @@ class DeprovisionServiceTest extends TestCase
                     return $collection;
                 }
             );
+
+        $this->removalCheckService
+            ->shouldReceive('mayBeRemoved')
+            ->once()
+            ->andReturn(true);
+
+        $this->removeFromLastLoginCommandHandler
+            ->shouldReceive('handle')
+            ->once();
 
         // Call the readInformationFor method
         $response = $this->service->deprovision($personId);
@@ -166,6 +191,15 @@ class DeprovisionServiceTest extends TestCase
                     return $collection;
                 }
             );
+
+        $this->removalCheckService
+            ->shouldReceive('mayBeRemoved')
+            ->twice()
+            ->andReturn(true);
+
+        $this->removeFromLastLoginCommandHandler
+            ->shouldReceive('handle')
+            ->twice();
 
         $this->service->batchDeprovision();
     }

@@ -16,22 +16,11 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Repository;
+namespace OpenConext\UserLifecycle\Application\CommandHandler;
 
-use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Application\Command\CommandInterface;
 
-interface LastLoginRepositoryInterface
+interface CommandHandlerInterface
 {
-    /**
-     * @param int $inactivityPeriod the period in months
-     * @return LastLoginCollectionInterface
-     */
-    public function findDeprovisionCandidates($inactivityPeriod);
-
-    /**
-     * Delete an entry from the last login table identified by collabPersonId
-     *
-     * @param $collabPersonId
-     */
-    public function delete($collabPersonId);
+    public function handle(CommandInterface $command);
 }

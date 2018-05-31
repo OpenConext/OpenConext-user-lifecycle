@@ -18,13 +18,16 @@
 
 namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Command;
 
+use DateTime;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -55,6 +58,11 @@ class DeprovisionCommandTest extends DatabaseTestCase
      */
     private $application;
 
+    /**
+     * @var LastLoginRepository
+     */
+    private $repository;
+
     public function setUp()
     {
         parent::setUp();
@@ -81,7 +89,11 @@ class DeprovisionCommandTest extends DatabaseTestCase
         // Create the application and add the information command
         $this->application = new Application(self::$kernel);
 
-        $deprovisionService = self::$kernel->getContainer()->get(DeprovisionService::class);
+        // Set the time on the LastLoginRepository
+        $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
+        $this->repository->setNow(new DateTime('2018-01-01'));
+
+        $deprovisionService = $this->container->get(DeprovisionService::class);
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
@@ -114,6 +126,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
         $this->assertContains($collabPersonId, $output);
         $this->assertContains('OK', $output);
+
+        $this->assertCount(3, $this->repository->findAll());
     }
 
     public function test_execute_cancels_when_no_is_confirmed()
@@ -138,6 +152,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
         $this->assertContains($collabPersonId, $output);
         $this->assertNotContains('OK', $output);
+
+        $this->assertCount(4, $this->repository->findAll());
     }
 
     public function test_execute_dry_run()
@@ -161,6 +177,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $output = $commandTester->getDisplay();
         $this->assertContains($collabPersonId, $output);
         $this->assertContains('OK', $output);
+
+        $this->assertCount(4, $this->repository->findAll());
     }
 
     public function test_execute_forced()
@@ -183,6 +201,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $output = $commandTester->getDisplay();
         $this->assertContains($collabPersonId, $output);
         $this->assertContains('OK', $output);
+
+        $this->assertCount(3, $this->repository->findAll());
     }
 
     private function getOkStatus($serviceName, $collabPersonId)

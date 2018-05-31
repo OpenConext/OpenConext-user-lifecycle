@@ -16,22 +16,24 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Repository;
+namespace OpenConext\UserLifecycle\Application\Command;
 
-use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-interface LastLoginRepositoryInterface
+class RemoveFromLastLoginCommand implements CommandInterface
 {
-    /**
-     * @param int $inactivityPeriod the period in months
-     * @return LastLoginCollectionInterface
-     */
-    public function findDeprovisionCandidates($inactivityPeriod);
+    private $collabPersonId;
+
+    public function __construct(CollabPersonId $personId)
+    {
+        $this->collabPersonId = $personId;
+    }
 
     /**
-     * Delete an entry from the last login table identified by collabPersonId
-     *
-     * @param $collabPersonId
+     * @return CollabPersonId
      */
-    public function delete($collabPersonId);
+    public function getCollabPersonId()
+    {
+        return $this->collabPersonId;
+    }
 }

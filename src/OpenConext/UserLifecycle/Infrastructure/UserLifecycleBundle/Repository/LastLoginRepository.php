@@ -22,6 +22,7 @@ use DateTime;
 use Doctrine\ORM\EntityRepository;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollection;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
+use Webmozart\Assert\Assert;
 
 class LastLoginRepository extends EntityRepository implements LastLoginRepositoryInterface
 {
@@ -43,6 +44,23 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
             ->getResult();
 
         return LastLoginCollection::from($results);
+    }
+
+    /**
+     * Delete an entry from the last login table identified by collabPersonId
+     *
+     * @param string $collabPersonId
+     */
+    public function delete($collabPersonId)
+    {
+        Assert::stringNotEmpty($collabPersonId);
+
+        $this->createQueryBuilder('ll')
+            ->delete()
+            ->where('ll.collabPersonId = :collabPersonId')
+            ->setParameter('collabPersonId', $collabPersonId)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

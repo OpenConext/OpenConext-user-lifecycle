@@ -18,10 +18,13 @@
 
 namespace OpenConext\UserLifecycle\Application\Service;
 
+use OpenConext\UserLifecycle\Application\Command\RemoveFromLastLoginCommand;
+use OpenConext\UserLifecycle\Application\CommandHandler\RemoveFromLastLoginCommandHandler;
 use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\RemovalCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
@@ -45,6 +48,16 @@ class DeprovisionService implements DeprovisionServiceInterface
     private $lastLoginService;
 
     /**
+     * @var RemovalCheckServiceInterface
+     */
+    private $removalCheckService;
+
+    /**
+     * @var RemoveFromLastLoginCommandHandler
+     */
+    private $removeFromLastLoginCommandHandler;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -53,11 +66,15 @@ class DeprovisionService implements DeprovisionServiceInterface
         DeprovisionClientCollectionInterface $deprovisionClientCollection,
         SanityCheckServiceInterface $sanityCheckService,
         LastLoginServiceInterface $lastLoginService,
+        RemovalCheckServiceInterface $removalCheckService,
+        RemoveFromLastLoginCommandHandler $removeFromLastLoginCommandHandler,
         LoggerInterface $logger
     ) {
         $this->deprovisionClientCollection = $deprovisionClientCollection;
         $this->sanityCheckService = $sanityCheckService;
         $this->lastLoginService = $lastLoginService;
+        $this->removalCheckService = $removalCheckService;
+        $this->removeFromLastLoginCommandHandler = $removeFromLastLoginCommandHandler;
         $this->logger = $logger;
     }
 
@@ -74,14 +91,21 @@ class DeprovisionService implements DeprovisionServiceInterface
 
         $this->logger->debug('Delegate deprovisioning to the registered services.');
 
-        $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun)->jsonSerialize();
+        $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun);
 
         $this->logger->info(
             sprintf('Received deprovision information for user "%s" with the following data.', $personId),
-            ['information_response' => $information]
+            ['information_response' => $information->jsonSerialize()]
         );
 
-        return $information;
+        if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
+            $this->logger->info('Succesfully deprovisioned the user from the services he used.');
+            $command = new RemoveFromLastLoginCommand($collabPersonId);
+            $this->logger->info('Remove the user from the last login table.');
+            $this->removeFromLastLoginCommandHandler->handle($command);
+        }
+
+        return $information->jsonSerialize();
     }
 
     /**
@@ -109,8 +133,15 @@ class DeprovisionService implements DeprovisionServiceInterface
                     'Received deprovision information for user "%s" with the following data.',
                     $lastLogin->getCollabPersonId()
                 ),
-                ['information_response' => $information]
+                ['information_response' => $information->jsonSerialize()]
             );
+
+            if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
+                $this->logger->info('Succesfully deprovisioned the user from the services he used.');
+                $command = new RemoveFromLastLoginCommand($collabPersonId);
+                $this->logger->info('Remove the user from the last login table.');
+                $this->removeFromLastLoginCommandHandler->handle($command);
+            }
         }
 
         return $batchInformationCollection->jsonSerialize();

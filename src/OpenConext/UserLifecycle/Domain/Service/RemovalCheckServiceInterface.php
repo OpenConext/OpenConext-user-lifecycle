@@ -16,22 +16,17 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Repository;
+namespace OpenConext\UserLifecycle\Domain\Service;
 
-use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 
-interface LastLoginRepositoryInterface
+interface RemovalCheckServiceInterface
 {
     /**
-     * @param int $inactivityPeriod the period in months
-     * @return LastLoginCollectionInterface
-     */
-    public function findDeprovisionCandidates($inactivityPeriod);
-
-    /**
-     * Delete an entry from the last login table identified by collabPersonId
+     * Analyze a collection and report if deprovisioning was a success
      *
-     * @param $collabPersonId
+     * @param InformationResponseCollectionInterface $collection
+     * @return bool
      */
-    public function delete($collabPersonId);
+    public function mayBeRemoved(InformationResponseCollectionInterface $collection);
 }

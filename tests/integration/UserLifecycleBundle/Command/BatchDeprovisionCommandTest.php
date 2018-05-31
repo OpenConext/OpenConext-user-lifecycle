@@ -127,14 +127,86 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertContains('OK', $output);
 
         // After deprovisioning the user should have been removed from the last login table
-        //$this->assertCount(3, $this->repository->findAll());
+        $this->assertCount(3, $this->repository->findAll());
     }
 
+    public function test_execute_multiple_users()
+    {
+        // Set the repository time in the future, ensuring deprovisioning of all users in the last login table
+        $this->repository->setNow(new DateTime('2028-01-01'));
+
+        // Ascertain we start of with 4 entries in the last login repository
+        $this->assertCount(4, $this->repository->findAll());
+
+        $this->handlerMyService->append(
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
+        );
+
+        $this->handlerMySecondService->append(
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
+        );
+
+        $command = $this->application->find('user-lifecycle:deprovision');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->setInputs(['yes']);
+        $commandTester->execute([]);
+
+        // After deprovisioning the user should have been removed from the last login table
+        $this->assertCount(0, $this->repository->findAll());
+    }
+    public function test_execute_multiple_users_one_failure()
+    {
+        // Set the repository time in the future, ensuring deprovisioning of all users in the last login table
+        $this->repository->setNow(new DateTime('2028-01-01'));
+
+        // Ascertain we start of with 4 entries in the last login repository
+        $this->assertCount(4, $this->repository->findAll());
+
+        $this->handlerMyService->append(
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
+        );
+
+        $this->handlerMySecondService->append(
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
+            new Response(200, [], $this->getFailedStatus('my_second_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
+        );
+
+        $command = $this->application->find('user-lifecycle:deprovision');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->setInputs(['yes']);
+        $commandTester->execute([]);
+
+        // After deprovisioning the user should have been removed from the last login table
+        $this->assertCount(1, $this->repository->findAll());
+    }
 
     private function getOkStatus($serviceName, $collabPersonId)
     {
         return sprintf(
             '{"status": "OK", "name": "%s", "data": [ { "name": "foobar", "value": "%s" } ] }',
+            $serviceName,
+            $collabPersonId
+        );
+    }
+
+    private function getFailedStatus($serviceName, $collabPersonId)
+    {
+        return sprintf(
+            '{"status": "FAILED", "message": "Something went awfully wrong", "name": "%s", ' .
+            '"data": [ { "name": "foobar", "value": "%s" } ] }',
             $serviceName,
             $collabPersonId
         );

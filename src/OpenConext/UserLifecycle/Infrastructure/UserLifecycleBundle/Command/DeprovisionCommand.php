@@ -85,7 +85,7 @@ class DeprovisionCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $userIdInput = $input->getArgument('user');
-        $dryRun = $input->hasOption('dryRun');
+        $dryRun = $input->getOption('dry-run');
         $forced = $input->getOption('force');
 
         if (is_null($userIdInput)) {

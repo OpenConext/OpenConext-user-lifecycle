@@ -20,7 +20,6 @@ namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Reposit
 
 use DateTime;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 
@@ -56,12 +55,21 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->assertEquals(0, $candidates->count());
     }
 
-
-    public function test_it_returns_null_if_user_does_not_exist()
+    public function test_delete()
     {
-        $userId = new CollabPersonId('urn:collab:org:surf.nl:jimmy_jones');
-        $result = $this->repository->findDeprovisionCandidates($userId);
+        $userId ='urn:collab:org:surf.nl:jason_mraz';
+        $result = $this->repository->delete($userId);
 
-        $this->assertNull($result);
+        $this->assertNull($result, 'The delete message should return void.');
+        $this->assertCount(3, $this->repository->findAll());
+    }
+
+    public function test_delete_non_exisiting()
+    {
+        $userId ='urn:collab:org:surf.nl:joe_dirt';
+        $result = $this->repository->delete($userId);
+
+        $this->assertNull($result, 'The delete message should return void.');
+        $this->assertCount(4, $this->repository->findAll());
     }
 }
