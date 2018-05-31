@@ -99,7 +99,7 @@ class DeprovisionCommand extends Command
     {
         if (!$forced) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion(sprintf('Continue with deprovisioning? (y/n)', $userIdInput), false);
+            $question = new ConfirmationQuestion(sprintf('<question>Continue with deprovisioning? (y/n)</question> ', $userIdInput), false);
 
             if (!$helper->ask($input, $output, $question)) {
                 return;
@@ -124,7 +124,7 @@ class DeprovisionCommand extends Command
     {
         if (!$forced) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion(sprintf('Continue with deprovisioning of "%s"? (y/n)', $userIdInput), false);
+            $question = new ConfirmationQuestion(sprintf('<question>Continue with deprovisioning of "%s"? (y/n)</question> ', $userIdInput), false);
 
             if (!$helper->ask($input, $output, $question)) {
                 return;
