@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 
 use InvalidArgumentException;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\CommandHandler\RemoveFromLastLoginCommandHandler;
 use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
@@ -35,6 +36,8 @@ use Psr\Log\LoggerInterface;
 
 class DeprovisionServiceTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var DeprovisionService
      */
@@ -81,12 +84,6 @@ class DeprovisionServiceTest extends TestCase
             $this->removeFromLastLoginCommandHandler,
             $logger
         );
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
     }
 
     public function test_deprovision()

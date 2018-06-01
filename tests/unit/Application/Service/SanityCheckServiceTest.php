@@ -19,6 +19,7 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Service\SanityCheckService;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
@@ -27,6 +28,8 @@ use Psr\Log\LoggerInterface;
 
 class SanityCheckServiceTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var SanityCheckService
      */
@@ -44,12 +47,6 @@ class SanityCheckServiceTest extends TestCase
             2,
             $this->logger
         );
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
     }
 
     public function test_check()

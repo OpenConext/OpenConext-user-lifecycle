@@ -31,7 +31,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class LastLoginRepositoryTest extends DatabaseTestCase
 {
-
     /**
      * @var ContainerInterface
      */

@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 
 use InvalidArgumentException;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
@@ -29,6 +30,8 @@ use Psr\Log\LoggerInterface;
 
 class InformationServiceTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var InformationService
      */
@@ -44,12 +47,6 @@ class InformationServiceTest extends TestCase
         $this->apiCollection = m::mock(DeprovisionClientCollectionInterface::class);
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
         $this->service = new InformationService($this->apiCollection, $logger);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
     }
 
     public function test_read_information_for()

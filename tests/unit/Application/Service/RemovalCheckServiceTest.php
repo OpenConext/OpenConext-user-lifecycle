@@ -18,22 +18,19 @@
 
 namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 
-use InvalidArgumentException;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
-use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
-use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandler;
-use OpenConext\UserLifecycle\Application\Service\LastLoginService;
 use OpenConext\UserLifecycle\Application\Service\RemovalCheckService;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Service\RemovalCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class RemovalCheckServiceTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var RemovalCheckService
      */
@@ -48,12 +45,6 @@ class RemovalCheckServiceTest extends TestCase
     {
         $this->logger = m::mock(LoggerInterface::class);
         $this->service = new RemovalCheckService($this->logger);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
     }
 
     public function test_may_be_removed()

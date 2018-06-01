@@ -18,8 +18,8 @@
 
 namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 
-use InvalidArgumentException;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
 use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandler;
@@ -30,6 +30,8 @@ use Psr\Log\LoggerInterface;
 
 class LastLoginServiceTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var LastLoginService
      */
@@ -50,12 +52,6 @@ class LastLoginServiceTest extends TestCase
         $this->queryHandler = m::mock(InactiveUsersQueryHandler::class);
         $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
         $this->service = new LastLoginService(2, $this->queryHandler, $this->logger);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
     }
 
     public function test_read_information_for()

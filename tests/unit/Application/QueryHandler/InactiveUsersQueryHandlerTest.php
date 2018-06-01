@@ -19,6 +19,7 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Application\QueryHandler;
 
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
 use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandler;
@@ -29,6 +30,8 @@ use PHPUnit\Framework\TestCase;
 
 class InactiveUsersQueryHandlerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var InactiveUsersQueryHandler
      */
@@ -43,12 +46,6 @@ class InactiveUsersQueryHandlerTest extends TestCase
     {
         $this->repository = m::mock(LastLoginRepositoryInterface::class);
         $this->queryHandler = new InactiveUsersQueryHandler($this->repository);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
     }
 
     public function test_handle()

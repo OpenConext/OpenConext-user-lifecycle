@@ -19,6 +19,7 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Application\CommandHandler;
 
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Command\RemoveFromLastLoginCommand;
 use OpenConext\UserLifecycle\Application\CommandHandler\RemoveFromLastLoginCommandHandler;
@@ -32,6 +33,8 @@ use PHPUnit\Framework\TestCase;
 
 class RemoveFromLastLoginCommandHandlerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var RemoveFromLastLoginCommandHandler
      */
@@ -46,12 +49,6 @@ class RemoveFromLastLoginCommandHandlerTest extends TestCase
     {
         $this->repository = m::mock(LastLoginRepositoryInterface::class);
         $this->commandHandler = new RemoveFromLastLoginCommandHandler($this->repository);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
     }
 
     public function test_handle()

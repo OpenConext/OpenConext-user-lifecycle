@@ -34,7 +34,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class BatchDeprovisionCommandTest extends DatabaseTestCase
 {
-
     /**
      * @var ContainerInterface
      */

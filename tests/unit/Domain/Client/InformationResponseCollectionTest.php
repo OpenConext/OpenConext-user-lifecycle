@@ -19,6 +19,7 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Domain\Client;
 
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
@@ -29,11 +30,7 @@ use PHPUnit\Framework\TestCase;
 
 class InformationResponseCollectionTest extends TestCase
 {
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
-    }
+    use MockeryPHPUnitIntegration;
 
     public function test_can_be_created()
     {
