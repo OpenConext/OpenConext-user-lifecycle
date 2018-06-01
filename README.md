@@ -33,16 +33,12 @@ TODO: describe DELETE feature and its --dry-run option.
 ## Gather information about a user
 To read user information you can use the `user-lifecycle:information` console command.
 
-The `user-lifecycle:information` command takes one option:
-
-| Name   | Shortcut   | Description  |
-|---|---|---|
-| `username`   | `u`  | The collabUserId of the user you want to retrieve information from.  |
+The `user-lifecycle:information` command takes one argument which is the collabPersonId.
 
 Example:
 
 ```bash
-$ bin/console user-lifecycle:information --user=userid
+$ bin/console user-lifecycle:information urn:collab:example.org:user_id
 ```
 
 ## For developers

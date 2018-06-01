@@ -103,7 +103,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $command = $this->application->find('user-lifecycle:information');
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['--user' => $collabPersonId]);
+        $commandTester->execute(['user' => $collabPersonId]);
 
         $output = $commandTester->getDisplay();
         $this->assertContains($collabPersonId, $output);
@@ -125,13 +125,25 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $command = $this->application->find('user-lifecycle:information');
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['--user' => $collabPersonId]);
+        $commandTester->execute(['user' => $collabPersonId]);
 
         $output = $commandTester->getDisplay();
         $this->assertContains($collabPersonId, $output);
         $this->assertContains('OK', $output);
         $this->assertContains('FAILED', $output);
         $this->assertContains($errorMessage, $output);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Console\Exception\RuntimeException
+     * @expectedExceptionMessage Not enough arguments (missing: "user").
+     */
+    public function test_execute_no_arguments()
+    {
+        $command = $this->application->find('user-lifecycle:information');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
     }
 
     private function getOkStatus($serviceName, $collabPersonId)
