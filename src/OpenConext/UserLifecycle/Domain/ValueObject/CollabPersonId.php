@@ -46,4 +46,9 @@ class CollabPersonId
     {
         return $this->collabPersonId;
     }
+
+    public function __toString()
+    {
+        return $this->collabPersonId;
+    }
 }

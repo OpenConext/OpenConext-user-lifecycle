@@ -39,6 +39,6 @@ class RemoveFromLastLoginCommandHandler implements CommandHandlerInterface
      */
     public function handle(CommandInterface $command)
     {
-        $this->lastLoginRepository->delete($command->getCollabPersonId()->getCollabPersonId());
+        $this->lastLoginRepository->delete((string) $command->getCollabPersonId());
     }
 }

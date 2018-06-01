@@ -55,7 +55,7 @@ class RemoveFromLastLoginCommandHandlerTest extends TestCase
     {
         $collabPersonId = m::mock(CollabPersonId::class);
         $collabPersonId
-            ->shouldReceive('getCollabPersonId')
+            ->shouldReceive('__toString')
             ->andReturn('urn:collab:org:surf.nl:james_carter');
         $query = new RemoveFromLastLoginCommand($collabPersonId);
 
