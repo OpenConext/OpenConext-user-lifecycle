@@ -21,7 +21,6 @@ namespace OpenConext\UserLifecycle\Application\Service;
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;

@@ -19,7 +19,6 @@
 namespace OpenConext\UserLifecycle\Domain\Client;
 
 use JsonSerializable;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
 
 interface InformationResponseCollectionInterface extends JsonSerializable
 {

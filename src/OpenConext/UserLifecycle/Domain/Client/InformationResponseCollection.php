@@ -18,8 +18,6 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
-
 class InformationResponseCollection implements InformationResponseCollectionInterface
 {
     /**
