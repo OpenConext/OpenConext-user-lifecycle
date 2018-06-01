@@ -55,8 +55,8 @@ class BatchInformationResponseCollection implements BatchInformationResponseColl
         foreach ($this->data as $collabPersonId => $collection) {
             $errorMessages = $collection->getErrorMessages();
             if (!empty($errorMessages)) {
-                foreach ($errorMessages as $message) {
-                    $messages[] = sprintf('"%s" for user "%s"', $message, $collabPersonId);
+                foreach ($errorMessages as $serviceName => $message) {
+                    $messages[] = sprintf('%s: "%s" for user "%s"', $serviceName, $message, $collabPersonId);
                 }
             }
         }

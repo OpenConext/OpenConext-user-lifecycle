@@ -103,18 +103,18 @@ class SummaryServiceTest extends TestCase
         $collection
             ->shouldReceive('getErrorMessages')
             ->andReturn([
-                '"Error message" for user "collabPersonId"',
-                '"EngineBlock not available" for user "urn:collab:jane_doe"',
-                '"DropjesService has gone away" for user "urn:collab:jack_black"',
+                'Service name: "Error message" for user "collabPersonId"',
+                'EngineBlock: "Service not available" for user "urn:collab:jane_doe"',
+                'DropjesService: "Server has gone away" for user "urn:collab:jack_black"',
             ]);
 
         $summary = $this->service->summarize($collection);
 
         $this->assertContains('256 users have been deprovisioned.', $summary);
         $this->assertContains('3 deprovision calls to services failed. See error messages below:', $summary);
-        $this->assertContains(' * "Error message" for user "collabPersonId"', $summary);
-        $this->assertContains(' * "EngineBlock not available" for user "urn:collab:jane_doe"', $summary);
-        $this->assertContains(' * "DropjesService has gone away" for user "urn:collab:jack_black"', $summary);
+        $this->assertContains(' * Service name: "Error message" for user "collabPersonId"', $summary);
+        $this->assertContains(' * EngineBlock: "Service not available" for user "urn:collab:jane_doe"', $summary);
+        $this->assertContains(' * DropjesService: "Server has gone away" for user "urn:collab:jack_black"', $summary);
     }
 
     public function test_summarize_information_collection_information_context()
