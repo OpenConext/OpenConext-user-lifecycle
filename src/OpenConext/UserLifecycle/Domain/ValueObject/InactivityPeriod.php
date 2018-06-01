@@ -18,6 +18,8 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject;
 
+use OpenConext\UserLifecycle\Domain\Exception\InvalidInactivityPeriodException;
+
 class InactivityPeriod
 {
     /**
@@ -28,14 +30,14 @@ class InactivityPeriod
     public function __construct($inactivityPeriod)
     {
         if (!is_int($inactivityPeriod) || $inactivityPeriod <= 0) {
-            throw new InvalidInactivityPeriodException('The collabUserId must be a non empty string');
+            throw new InvalidInactivityPeriodException('The inactivity period must be an integer value');
         }
 
         $this->period = $inactivityPeriod;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getInactivityPeriod()
     {

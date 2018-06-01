@@ -60,7 +60,7 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
             ->where('ll.collabPersonId = :collabPersonId')
             ->setParameter('collabPersonId', $collabPersonId)
             ->getQuery()
-            ->getResult();
+            ->execute();
     }
 
     /**

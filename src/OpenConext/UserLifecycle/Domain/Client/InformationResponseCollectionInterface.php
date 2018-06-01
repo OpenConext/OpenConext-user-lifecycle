@@ -39,7 +39,7 @@ interface InformationResponseCollectionInterface extends JsonSerializable
     public function getErrorMessages();
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize();
 }

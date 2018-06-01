@@ -47,7 +47,7 @@ interface InformationResponseInterface extends JsonSerializable
     public function getErrorMessage();
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize();
 }
