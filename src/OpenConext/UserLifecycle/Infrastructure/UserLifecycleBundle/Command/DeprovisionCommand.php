@@ -137,7 +137,7 @@ class DeprovisionCommand extends Command
 
             if (!$isQuiet) {
                 $output->writeln(PHP_EOL);
-                $output->write($this->summaryService->summarize($information), true);
+                $output->write($this->summaryService->summarizeBatchResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 
@@ -179,7 +179,7 @@ class DeprovisionCommand extends Command
 
             if (!$isQuiet) {
                 $output->writeln(PHP_EOL);
-                $output->write($this->summaryService->summarize($information), true);
+                $output->write($this->summaryService->summarizeDeprovisionResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 

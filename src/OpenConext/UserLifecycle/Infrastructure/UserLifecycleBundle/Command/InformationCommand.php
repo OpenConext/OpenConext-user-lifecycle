@@ -54,7 +54,6 @@ class InformationCommand extends Command
         parent::__construct(null);
         $this->service = $informationDeprovisionService;
         $this->summaryService = $summaryService;
-        $this->summaryService->setContext(SummaryService::CONTEXT_INFORMATION);
         $this->logger = $logger;
     }
 
@@ -97,7 +96,7 @@ class InformationCommand extends Command
 
             if (!$isQuiet) {
                 $output->writeln(PHP_EOL);
-                $output->write($this->summaryService->summarize($information), true);
+                $output->write($this->summaryService->summarizeInformationResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 

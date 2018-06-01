@@ -18,21 +18,32 @@
 
 namespace OpenConext\UserLifecycle\Domain\Service;
 
+use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
+
 interface SummaryServiceInterface
 {
     /**
-     * Summarize the information response from a deprovision or
-     * information call.
+     * Summarize the information response from an information call.
      *
-     * @param
+     * @param InformationResponseCollectionInterface $collection
      * @return string
      */
-    public function summarize($collection);
+    public function summarizeInformationResponse(InformationResponseCollectionInterface $collection);
 
     /**
-     * Set the context to deprovision or information outputting
+     * Summarize the information response from a deprovision call.
      *
-     * @param $context
+     * @param InformationResponseCollectionInterface $collection
+     * @return string
      */
-    public function setContext($context);
+    public function summarizeDeprovisionResponse(InformationResponseCollectionInterface $collection);
+
+    /**
+     * Summarize the information response from a batch deprovision call.
+     *
+     * @param BatchInformationResponseCollectionInterface $collection
+     * @return string
+     */
+    public function summarizeBatchResponse(BatchInformationResponseCollectionInterface $collection);
 }

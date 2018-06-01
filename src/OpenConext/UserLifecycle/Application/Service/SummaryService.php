@@ -21,7 +21,6 @@ namespace OpenConext\UserLifecycle\Application\Service;
 use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
-use Webmozart\Assert\Assert;
 
 class SummaryService implements SummaryServiceInterface
 {
@@ -34,80 +33,54 @@ class SummaryService implements SummaryServiceInterface
     const BATCH_DEPROVISION_FORMAT = '%d users have been deprovisioned.';
     const BATCH_DEPROVISION_ERROR_FORMAT = '%d deprovision calls to services failed. See error messages below:';
 
-    const CONTEXT_INFORMATION = 'information';
-    const CONTEXT_DEPROVISION = 'deprovision';
-
-    private $context = 'deprovision';
-
-    /**
-     * Summarize the information response from a deprovision or
-     * information call.
-     *
-     * @param
-     * @return string
-     */
-    public function summarize($collection)
+    public function summarizeInformationResponse(InformationResponseCollectionInterface $collection)
     {
-        Assert::isInstanceOfAny(
-            $collection,
-            [InformationResponseCollectionInterface::class, BatchInformationResponseCollectionInterface::class]
-        );
-
-        if ($collection instanceof InformationResponseCollectionInterface) {
-            return $this->summarizeInformationResponse($collection);
-        }
-
-        if ($collection instanceof BatchInformationResponseCollectionInterface) {
-            return $this->summarizeBatchInformationResponse($collection);
-        }
-    }
-
-    private function summarizeInformationResponse(InformationResponseCollectionInterface $collection)
-    {
-        $message = sprintf(self::USER_DEPROVISION_FORMAT, count($collection)) . PHP_EOL;
-        if ($this->context === self::CONTEXT_INFORMATION) {
-            $message = sprintf(self::USER_INFORMATION_FORMAT, count($collection)) . PHP_EOL;
-        }
+        $message = sprintf(self::USER_INFORMATION_FORMAT, count($collection)).PHP_EOL;
 
         $errorMessages = $collection->getErrorMessages();
         $errorMessageList = '';
         if (!empty($errorMessages)) {
-            $errorMessageList .= sprintf(self::USER_DEPROVISION_ERROR_FORMAT) . PHP_EOL . PHP_EOL;
+            $errorMessageList .= sprintf(self::USER_DEPROVISION_ERROR_FORMAT).PHP_EOL.PHP_EOL;
 
             foreach ($errorMessages as $errorMessage) {
-                $errorMessageList .= ' * ' . $errorMessage . PHP_EOL;
+                $errorMessageList .= ' * '.$errorMessage.PHP_EOL;
             }
         }
 
-        return $message . $errorMessageList;
+        return $message.$errorMessageList;
     }
 
-    private function summarizeBatchInformationResponse(BatchInformationResponseCollectionInterface $collection)
+    public function summarizeDeprovisionResponse(InformationResponseCollectionInterface $collection)
     {
-        $message = sprintf(self::BATCH_DEPROVISION_FORMAT, count($collection)) . PHP_EOL;
+        $message = sprintf(self::USER_DEPROVISION_FORMAT, count($collection)).PHP_EOL;
+
+        $errorMessages = $collection->getErrorMessages();
+        $errorMessageList = '';
+        if (!empty($errorMessages)) {
+            $errorMessageList .= sprintf(self::USER_DEPROVISION_ERROR_FORMAT).PHP_EOL.PHP_EOL;
+
+            foreach ($errorMessages as $errorMessage) {
+                $errorMessageList .= ' * '.$errorMessage.PHP_EOL;
+            }
+        }
+
+        return $message.$errorMessageList;
+    }
+
+    public function summarizeBatchResponse(BatchInformationResponseCollectionInterface $collection)
+    {
+        $message = sprintf(self::BATCH_DEPROVISION_FORMAT, count($collection)).PHP_EOL;
 
         $errorMessageList = '';
 
         $errorMessages = $collection->getErrorMessages();
         if (!empty($errorMessages)) {
-            $errorMessageList .= sprintf(self::BATCH_DEPROVISION_ERROR_FORMAT, count($errorMessages)) . PHP_EOL . PHP_EOL;
+            $errorMessageList .= sprintf(self::BATCH_DEPROVISION_ERROR_FORMAT, count($errorMessages)).PHP_EOL.PHP_EOL;
             foreach ($errorMessages as $errorMessage) {
-                $errorMessageList .= ' * ' . $errorMessage . PHP_EOL;
+                $errorMessageList .= ' * '.$errorMessage.PHP_EOL;
             }
         }
 
-        return $message . $errorMessageList;
-    }
-
-    /**
-     * Set the context to deprovision or information outputting
-     *
-     * @param string $context
-     */
-    public function setContext($context)
-    {
-        Assert::stringNotEmpty($context);
-        Assert::oneOf($context, [self::CONTEXT_INFORMATION, self::CONTEXT_DEPROVISION]);
-        $this->context = $context;
+        return $message.$errorMessageList;
     }
 }

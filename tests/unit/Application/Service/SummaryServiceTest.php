@@ -52,7 +52,7 @@ class SummaryServiceTest extends TestCase
             ->shouldReceive('getErrorMessages')
             ->andReturn([]);
 
-        $summary = $this->service->summarize($collection);
+        $summary = $this->service->summarizeDeprovisionResponse($collection);
 
         $this->assertContains('The user was removed from 5 services.', $summary);
         $this->assertNotContains('See error messages below:', $summary);
@@ -69,7 +69,7 @@ class SummaryServiceTest extends TestCase
             ->shouldReceive('getErrorMessages')
             ->andReturn(['Fake error message']);
 
-        $summary = $this->service->summarize($collection);
+        $summary = $this->service->summarizeDeprovisionResponse($collection);
 
         $this->assertContains('The user was removed from 5 services.', $summary);
         $this->assertContains('See error messages below:', $summary);
@@ -87,7 +87,7 @@ class SummaryServiceTest extends TestCase
             ->shouldReceive('getErrorMessages')
             ->andReturn([]);
 
-        $summary = $this->service->summarize($collection);
+        $summary = $this->service->summarizeBatchResponse($collection);
 
         $this->assertContains('256 users have been deprovisioned.', $summary);
         $this->assertNotContains('See error messages below:', $summary);
@@ -108,7 +108,7 @@ class SummaryServiceTest extends TestCase
                 'DropjesService: "Server has gone away" for user "urn:collab:jack_black"',
             ]);
 
-        $summary = $this->service->summarize($collection);
+        $summary = $this->service->summarizeBatchResponse($collection);
 
         $this->assertContains('256 users have been deprovisioned.', $summary);
         $this->assertContains('3 deprovision calls to services failed. See error messages below:', $summary);
@@ -119,7 +119,6 @@ class SummaryServiceTest extends TestCase
 
     public function test_summarize_information_collection_information_context()
     {
-        $this->service->setContext(SummaryService::CONTEXT_INFORMATION);
 
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
@@ -130,17 +129,9 @@ class SummaryServiceTest extends TestCase
             ->shouldReceive('getErrorMessages')
             ->andReturn([]);
 
-        $summary = $this->service->summarize($collection);
+        $summary = $this->service->summarizeInformationResponse($collection);
 
         $this->assertContains('Retrieved user information from 5 services.', $summary);
         $this->assertNotContains('See error messages below:', $summary);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function test_invalid_input()
-    {
-        $this->service->summarize(['foo', 'bar']);
     }
 }
