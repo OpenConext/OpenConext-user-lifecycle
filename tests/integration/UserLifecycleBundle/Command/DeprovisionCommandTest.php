@@ -203,6 +203,42 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(3, $this->repository->findAll());
     }
 
+    public function test_execute_silently()
+    {
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+
+        $this->handlerMyService->append(
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+        );
+
+        $this->handlerMySecondService->append(
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+        );
+
+        $command = $this->application->find('user-lifecycle:deprovision');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['user' => $collabPersonId, '--json' => true, '--no-interaction' => true]);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertJson($output);
+    }
+
+    /**
+     * @expectedException \OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException
+     * @expectedExceptionMessage The --json option must be used in combination with --no-interaction (-n).
+     */
+    public function test_execute_silently_required_no_interaction_option()
+    {
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+
+        $command = $this->application->find('user-lifecycle:information');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['--user' => $collabPersonId, '--json' => true]);
+    }
+
     private function getOkStatus($serviceName, $collabPersonId)
     {
         return sprintf(

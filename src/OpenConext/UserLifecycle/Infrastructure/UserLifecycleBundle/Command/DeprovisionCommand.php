@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -82,6 +83,12 @@ class DeprovisionCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Should the command be run in dry run mode?'
+            )
+            ->addOption(
+                'json',
+                null,
+                InputOption::VALUE_NONE,
+                'Output only JSON to StdOut. Requires --no-interaction to work.'
             );
     }
 
@@ -96,12 +103,18 @@ class DeprovisionCommand extends Command
         $userIdInput = $input->getArgument('user');
         $dryRun = $input->getOption('dry-run');
         $forced = $input->getOption('force');
-        $isQuiet = $input->getOption('quiet');
+
+        $outputOnlyJson = $input->getOption('json');
+        $noInteraction = $input->getOption('no-interaction');
+
+        if ($outputOnlyJson && $noInteraction === false) {
+            throw new RuntimeException('The --json option must be used in combination with --no-interaction (-n).');
+        }
 
         if (is_null($userIdInput)) {
-            $this->executeBatch($input, $output, $userIdInput, $dryRun, $forced, $isQuiet);
+            $this->executeBatch($input, $output, $userIdInput, $dryRun, $forced, $outputOnlyJson);
         } else {
-            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $forced, $isQuiet);
+            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $forced, $outputOnlyJson);
         }
     }
 
@@ -111,7 +124,7 @@ class DeprovisionCommand extends Command
         $userIdInput,
         $dryRun,
         $forced,
-        $isQuiet
+        $outputOnlyJson
     ) {
         if (!$forced) {
             $helper = $this->getHelper('question');
@@ -135,7 +148,7 @@ class DeprovisionCommand extends Command
         try {
             $information = $this->service->batchDeprovision($dryRun);
 
-            if (!$isQuiet) {
+            if (!$outputOnlyJson) {
                 $output->writeln(PHP_EOL);
                 $output->write($this->summaryService->summarizeBatchResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
@@ -153,7 +166,7 @@ class DeprovisionCommand extends Command
         $userIdInput,
         $dryRun,
         $forced,
-        $isQuiet
+        $outputOnlyJson
     ) {
         if (!$forced) {
             $helper = $this->getHelper('question');
@@ -177,7 +190,7 @@ class DeprovisionCommand extends Command
         try {
             $information = $this->service->deprovision($userIdInput, $dryRun);
 
-            if (!$isQuiet) {
+            if (!$outputOnlyJson) {
                 $output->writeln(PHP_EOL);
                 $output->write($this->summaryService->summarizeDeprovisionResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
