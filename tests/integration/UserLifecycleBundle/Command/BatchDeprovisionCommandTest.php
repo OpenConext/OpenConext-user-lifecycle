@@ -32,7 +32,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class DeprovisionCommandTest extends DatabaseTestCase
+class BatchDeprovisionCommandTest extends DatabaseTestCase
 {
     /**
      * @var ContainerInterface
@@ -85,11 +85,11 @@ class DeprovisionCommandTest extends DatabaseTestCase
         // Create the application and add the information command
         $this->application = new Application(self::$kernel);
 
+        $deprovisionService = $this->container->get(DeprovisionService::class);
+
         // Set the time on the LastLoginRepository
         $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
         $this->repository->setNow(new DateTime('2018-01-01'));
-
-        $deprovisionService = $this->container->get(DeprovisionService::class);
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
@@ -102,8 +102,10 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
     public function test_execute()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        // Ascertain we start of with 4 entries in the last login repository
+        $this->assertCount(4, $this->repository->findAll());
 
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
@@ -116,95 +118,94 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);
-        $commandTester->execute(['user' => $collabPersonId]);
+        $commandTester->execute([]);
 
         $output = $commandTester->getDisplay();
 
         $this->assertContains($collabPersonId, $output);
         $this->assertContains('OK', $output);
 
+        // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(3, $this->repository->findAll());
     }
 
-    public function test_execute_cancels_when_no_is_confirmed()
+    public function test_execute_multiple_users()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        // Set the repository time in the future, ensuring deprovisioning of all users in the last login table
+        $this->repository->setNow(new DateTime('2028-01-01'));
 
-        $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
-        );
-
-        $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
-        );
-
-        $command = $this->application->find('user-lifecycle:deprovision');
-        $commandTester = new CommandTester($command);
-
-        $commandTester->setInputs(['no']);
-        $commandTester->execute(['user' => $collabPersonId]);
-
-        $output = $commandTester->getDisplay();
-
-        $this->assertContains($collabPersonId, $output);
-        $this->assertNotContains('OK', $output);
-
+        // Ascertain we start of with 4 entries in the last login repository
         $this->assertCount(4, $this->repository->findAll());
-    }
-
-    public function test_execute_dry_run()
-    {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
         );
 
         $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
         );
 
         $command = $this->application->find('user-lifecycle:deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);
-        $commandTester->execute(['user' => $collabPersonId, '--dry-run' => true]);
+        $commandTester->execute([]);
 
-        $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
-
-        $this->assertCount(4, $this->repository->findAll());
+        // After deprovisioning the user should have been removed from the last login table
+        $this->assertCount(0, $this->repository->findAll());
     }
-
-    public function test_execute_forced()
+    public function test_execute_multiple_users_one_failure()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        // Set the repository time in the future, ensuring deprovisioning of all users in the last login table
+        $this->repository->setNow(new DateTime('2028-01-01'));
+
+        // Ascertain we start of with 4 entries in the last login repository
+        $this->assertCount(4, $this->repository->findAll());
 
         $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
         );
 
         $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
+            new Response(200, [], $this->getFailedStatus('my_second_name', 'user3')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
         );
 
         $command = $this->application->find('user-lifecycle:deprovision');
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['user' => $collabPersonId, '--force' => true]);
+        $commandTester->setInputs(['yes']);
+        $commandTester->execute([]);
 
-        $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
-
-        $this->assertCount(3, $this->repository->findAll());
+        // After deprovisioning the user should have been removed from the last login table
+        $this->assertCount(1, $this->repository->findAll());
     }
 
     private function getOkStatus($serviceName, $collabPersonId)
     {
         return sprintf(
             '{"status": "OK", "name": "%s", "data": [ { "name": "foobar", "value": "%s" } ] }',
+            $serviceName,
+            $collabPersonId
+        );
+    }
+
+    private function getFailedStatus($serviceName, $collabPersonId)
+    {
+        return sprintf(
+            '{"status": "FAILED", "message": "Something went awfully wrong", "name": "%s", ' .
+            '"data": [ { "name": "foobar", "value": "%s" } ] }',
             $serviceName,
             $collabPersonId
         );

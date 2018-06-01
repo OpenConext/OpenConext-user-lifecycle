@@ -19,6 +19,7 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Domain\ValueObject;
 
 use InvalidArgumentException;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use OpenConext\UserLifecycle\Application\Client\InformationResponseFactory;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
@@ -26,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 
 class InformationResponseFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private $informationResponseFactory;
 
     public function setUp()

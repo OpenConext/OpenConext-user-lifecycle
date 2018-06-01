@@ -16,22 +16,24 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Service;
+namespace OpenConext\UserLifecycle\Application\Command;
 
-interface DeprovisionServiceInterface
+use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+
+class RemoveFromLastLoginCommand implements CommandInterface
 {
-    /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return string
-     */
-    public function deprovision($personId, $dryRun = false);
+    private $collabPersonId;
+
+    public function __construct(CollabPersonId $personId)
+    {
+        $this->collabPersonId = $personId;
+    }
 
     /**
-     * Finds the users marked for deprovisioning, and deprovisions them.
-     *
-     * @param bool $dryRun
-     * @return string
+     * @return CollabPersonId
      */
-    public function batchDeprovision($dryRun = false);
+    public function getCollabPersonId()
+    {
+        return $this->collabPersonId;
+    }
 }

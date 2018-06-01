@@ -18,12 +18,15 @@
 
 namespace OpenConext\UserLifecycle\Tests\Unit\Domain\ValueObject;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use OpenConext\UserLifecycle\Domain\Exception\InvalidCollabPersonIdException;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use PHPUnit\Framework\TestCase;
 
 class CollabPersonIdTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function test_can_be_created()
     {
         $user = new CollabPersonId('urn:mace:example.com:jan');

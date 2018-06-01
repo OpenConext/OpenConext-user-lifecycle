@@ -16,22 +16,22 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Service;
+namespace OpenConext\UserLifecycle\Application\Query;
 
-interface DeprovisionServiceInterface
+class InactiveUsersQuery
 {
     /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return string
+     * @var int
      */
-    public function deprovision($personId, $dryRun = false);
+    private $inactivityPeriod;
 
-    /**
-     * Finds the users marked for deprovisioning, and deprovisions them.
-     *
-     * @param bool $dryRun
-     * @return string
-     */
-    public function batchDeprovision($dryRun = false);
+    public function __construct($inactivityPeriod)
+    {
+        $this->inactivityPeriod = $inactivityPeriod;
+    }
+
+    public function getInactivityPeriod()
+    {
+        return $this->inactivityPeriod;
+    }
 }

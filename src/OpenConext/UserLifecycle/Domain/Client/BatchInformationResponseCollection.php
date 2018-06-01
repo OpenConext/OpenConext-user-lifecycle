@@ -18,28 +18,22 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use JsonSerializable;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
+use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-interface InformationResponseCollectionInterface extends JsonSerializable
+class BatchInformationResponseCollection implements BatchInformationResponseCollectionInterface
 {
     /**
-     * @param InformationResponseInterface $informationResponse
+     * @var InformationResponseCollectionInterface[]
      */
-    public function addInformationResponse(InformationResponseInterface $informationResponse);
+    private $data = [];
 
-    /**
-     * @return InformationResponseInterface[]
-     */
-    public function getInformationResponses();
+    public function add(CollabPersonId $personId, InformationResponseCollectionInterface $collection)
+    {
+        $this->data[$personId->getCollabPersonId()] = $collection;
+    }
 
-    /**
-     * @return ErrorMessage[]
-     */
-    public function getErrorMessages();
-
-    /**
-     * @return array
-     */
-    public function jsonSerialize();
+    public function jsonSerialize()
+    {
+        return json_encode($this->data, JSON_PRETTY_PRINT);
+    }
 }

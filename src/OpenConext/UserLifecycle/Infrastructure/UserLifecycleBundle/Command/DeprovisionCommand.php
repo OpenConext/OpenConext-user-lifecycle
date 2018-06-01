@@ -56,11 +56,12 @@ class DeprovisionCommand extends Command
             ->setHelp(
                 'This command allows you to deprovision a given user identified by a collabPersonId. '.
                 'The command will delegate the deprovisioning to all registered applications and report back '.
-                'on the actually removed data.'
+                'on the actually removed data. Optionally leave the user argument blank to deprovision all users that '.
+                'meet the automatic deprovision criteria as configured with the `deprovision_after` parameter.'
             )
             ->addArgument(
                 'user',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'The collabPersonId of the user to deprovision.'
             )
             ->addOption(
@@ -75,12 +76,52 @@ class DeprovisionCommand extends Command
             );
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $userIdInput = $input->getArgument('user');
-        $dryRun = $input->hasOption('dryRun');
+        $dryRun = $input->getOption('dry-run');
         $forced = $input->getOption('force');
 
+        if (is_null($userIdInput)) {
+            $this->executeBatch($input, $output, $userIdInput, $dryRun, $forced);
+        } else {
+            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $forced);
+        }
+    }
+
+    private function executeBatch(InputInterface $input, OutputInterface $output, $userIdInput, $dryRun, $forced)
+    {
+        if (!$forced) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion(sprintf('Continue with deprovisioning? (y/n)', $userIdInput), false);
+
+            if (!$helper->ask($input, $output, $question)) {
+                return;
+            }
+        }
+        $this->logger->info(
+            sprintf(
+                'Received a deprovision request with dryRun turned %s',
+                $userIdInput,
+                ($dryRun ? 'on' : 'off')
+            )
+        );
+
+        try {
+            $output->write($this->service->batchDeprovision($dryRun));
+        } catch (InvalidArgumentException $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
+
+    private function executeSingleUser(InputInterface $input, OutputInterface $output, $userIdInput, $dryRun, $forced)
+    {
         if (!$forced) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(sprintf('Continue with deprovisioning of "%s"? (y/n)', $userIdInput), false);

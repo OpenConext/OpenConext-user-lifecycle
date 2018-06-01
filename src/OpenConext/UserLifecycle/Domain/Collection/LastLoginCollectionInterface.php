@@ -16,38 +16,30 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Client;
+namespace OpenConext\UserLifecycle\Domain\Collection;
 
-use JsonSerializable;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
+use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 
-interface InformationResponseInterface extends JsonSerializable
+interface LastLoginCollectionInterface
 {
     /**
-     * @return ResponseStatus
+     * @param array $results
+     * @return LastLoginCollectionInterface
      */
-    public function getStatus();
+    public static function from(array $results);
 
     /**
-     * @return Name
+     * @param LastLogin $lastLogin
      */
-    public function getName();
+    public function add(LastLogin $lastLogin);
 
     /**
-     * @return Data
+     * @return LastLogin[]
      */
     public function getData();
 
     /**
-     * @return ErrorMessage
+     * @return int
      */
-    public function getErrorMessage();
-
-    /**
-     * @return array
-     */
-    public function jsonSerialize();
+    public function count();
 }

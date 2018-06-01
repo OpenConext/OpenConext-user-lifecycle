@@ -18,20 +18,15 @@
 
 namespace OpenConext\UserLifecycle\Domain\Service;
 
-interface DeprovisionServiceInterface
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
+
+interface RemovalCheckServiceInterface
 {
     /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return string
-     */
-    public function deprovision($personId, $dryRun = false);
-
-    /**
-     * Finds the users marked for deprovisioning, and deprovisions them.
+     * Analyze a collection and report if deprovisioning was a success
      *
-     * @param bool $dryRun
-     * @return string
+     * @param InformationResponseCollectionInterface $collection
+     * @return bool
      */
-    public function batchDeprovision($dryRun = false);
+    public function mayBeRemoved(InformationResponseCollectionInterface $collection);
 }

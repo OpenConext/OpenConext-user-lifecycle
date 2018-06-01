@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Tests\Integration;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Tests\Integration\DataFixtures\ORM\DatabaseTestFixtures;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -34,6 +35,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 abstract class DatabaseTestCase extends KernelTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var KernelInterface
      */

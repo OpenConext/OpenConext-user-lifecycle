@@ -16,22 +16,9 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Service;
+namespace OpenConext\UserLifecycle\Application\Command;
 
-interface DeprovisionServiceInterface
+interface CommandInterface
 {
-    /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return string
-     */
-    public function deprovision($personId, $dryRun = false);
 
-    /**
-     * Finds the users marked for deprovisioning, and deprovisions them.
-     *
-     * @param bool $dryRun
-     * @return string
-     */
-    public function batchDeprovision($dryRun = false);
 }

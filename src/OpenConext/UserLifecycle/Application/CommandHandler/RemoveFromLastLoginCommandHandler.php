@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Application\QueryHandler;
+namespace OpenConext\UserLifecycle\Application\CommandHandler;
 
-use OpenConext\UserLifecycle\Application\Query\LastLoginByUserIdQuery;
+use OpenConext\UserLifecycle\Application\Command\CommandInterface;
+use OpenConext\UserLifecycle\Application\Command\RemoveFromLastLoginCommand;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 
-class LastLoginByUserIdQueryHandler implements LastLoginByUserIdQueryHandlerInterface
+class RemoveFromLastLoginCommandHandler implements CommandHandlerInterface
 {
     /**
      * @var LastLoginRepositoryInterface
@@ -33,8 +34,11 @@ class LastLoginByUserIdQueryHandler implements LastLoginByUserIdQueryHandlerInte
         $this->lastLoginRepository = $lastLoginRepository;
     }
 
-    public function handle(LastLoginByUserIdQuery $query)
+    /**
+     * @param CommandInterface|RemoveFromLastLoginCommand $command
+     */
+    public function handle(CommandInterface $command)
     {
-        return $this->lastLoginRepository->findLastLoginFor($query->getPersonId());
+        $this->lastLoginRepository->delete((string) $command->getCollabPersonId());
     }
 }

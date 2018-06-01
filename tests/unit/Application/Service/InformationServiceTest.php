@@ -20,17 +20,18 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 
 use InvalidArgumentException;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
-use OpenConext\UserLifecycle\Application\QueryHandler\LastLoginByUserIdQueryHandlerInterface;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
-use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class InformationServiceTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var InformationService
      */

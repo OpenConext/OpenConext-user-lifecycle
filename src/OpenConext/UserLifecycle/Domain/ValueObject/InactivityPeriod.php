@@ -16,30 +16,31 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Client;
+namespace OpenConext\UserLifecycle\Domain\ValueObject;
 
-use JsonSerializable;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
+use OpenConext\UserLifecycle\Domain\Exception\InvalidInactivityPeriodException;
 
-interface InformationResponseCollectionInterface extends JsonSerializable
+class InactivityPeriod
 {
     /**
-     * @param InformationResponseInterface $informationResponse
+     * @var int
      */
-    public function addInformationResponse(InformationResponseInterface $informationResponse);
+    private $period;
+
+    public function __construct($inactivityPeriod)
+    {
+        if (!is_int($inactivityPeriod) || $inactivityPeriod <= 0) {
+            throw new InvalidInactivityPeriodException('The inactivity period must be an integer value');
+        }
+
+        $this->period = $inactivityPeriod;
+    }
 
     /**
-     * @return InformationResponseInterface[]
+     * @return int
      */
-    public function getInformationResponses();
-
-    /**
-     * @return ErrorMessage[]
-     */
-    public function getErrorMessages();
-
-    /**
-     * @return array
-     */
-    public function jsonSerialize();
+    public function getInactivityPeriod()
+    {
+        return $this->period;
+    }
 }

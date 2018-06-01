@@ -16,24 +16,25 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Application\Query;
+namespace OpenConext\UserLifecycle\Domain\Client;
 
+use JsonSerializable;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-class LastLoginByUserIdQuery
+interface BatchInformationResponseCollectionInterface extends JsonSerializable
 {
     /**
-     * @var CollabPersonId
+     * Collects InformationResponseCollection objects indexed on the
+     * person id of the user that represents the deprovision response
+     *
+     * @param CollabPersonId $personId
+     * @param InformationResponseCollectionInterface $collection
+     * @return
      */
-    private $personId;
+    public function add(CollabPersonId $personId, InformationResponseCollectionInterface $collection);
 
-    public function __construct(CollabPersonId $userId)
-    {
-        $this->personId = $userId;
-    }
-
-    public function getPersonId()
-    {
-        return $this->personId;
-    }
+    /**
+     * @return array
+     */
+    public function jsonSerialize();
 }

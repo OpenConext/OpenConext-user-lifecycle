@@ -16,6 +16,10 @@ services:
         class: OpenConext\UserLifecycle\Application\Service\DeprovisionService
         arguments:
             - '@open_conext.user_lifecycle.test.deprovision_client_collection'
+            - '@OpenConext\UserLifecycle\Application\Service\SanityCheckService'
+            - '@OpenConext\UserLifecycle\Application\Service\LastLoginService'
+            - '@OpenConext\UserLifecycle\Application\Service\RemovalCheckService'
+            - '@OpenConext\UserLifecycle\Application\CommandHandler\RemoveFromLastLoginCommandHandler'
             - '@logger'
 
     open_conext.user_lifecycle.deprovision_client.test.my_service_name:
