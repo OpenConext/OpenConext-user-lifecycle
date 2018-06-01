@@ -18,8 +18,6 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
-
 class InformationResponseCollection implements InformationResponseCollectionInterface
 {
     /**
@@ -41,7 +39,7 @@ class InformationResponseCollection implements InformationResponseCollectionInte
     }
 
     /**
-     * @return ErrorMessage[]
+     * @return string[]
      */
     public function getErrorMessages()
     {
@@ -56,6 +54,14 @@ class InformationResponseCollection implements InformationResponseCollectionInte
 
     public function jsonSerialize()
     {
-        return json_encode($this->data, JSON_PRETTY_PRINT);
+        return $this->data;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->data);
     }
 }

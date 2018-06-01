@@ -62,7 +62,7 @@ class SanityCheckService implements SanityCheckServiceInterface
      */
     public function check(LastLoginCollectionInterface $lastLoginCollection)
     {
-        $count = $lastLoginCollection->count();
+        $count = count($lastLoginCollection);
 
         if ($count === 0) {
             throw new EmptyLastLoginCollectionException('No candidates found for deprovisioning');

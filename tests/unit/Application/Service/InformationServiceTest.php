@@ -65,7 +65,7 @@ class InformationServiceTest extends TestCase
 
         // Call the readInformationFor method
         $response = $this->service->readInformationFor($personId);
-        $this->assertJson($response);
+        $this->assertInstanceOf(InformationResponseCollection::class, $response);
     }
 
     public function test_read_information_empty_person_id()

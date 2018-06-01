@@ -22,6 +22,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
@@ -78,11 +79,12 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->application = new Application(self::$kernel);
 
         $lastLoginService = self::$kernel->getContainer()->get(InformationService::class);
+        $summaryService = new SummaryService();
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
 
-        $this->application->add(new InformationCommand($lastLoginService, $logger));
+        $this->application->add(new InformationCommand($lastLoginService, $summaryService, $logger));
 
         // Load the database fixtures
         $this->loadFixtures();

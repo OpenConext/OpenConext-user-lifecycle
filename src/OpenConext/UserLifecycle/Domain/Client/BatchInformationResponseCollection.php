@@ -32,8 +32,34 @@ class BatchInformationResponseCollection implements BatchInformationResponseColl
         $this->data[$personId->getCollabPersonId()] = $collection;
     }
 
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->data);
+    }
+
     public function jsonSerialize()
     {
-        return json_encode($this->data, JSON_PRETTY_PRINT);
+        return $this->data;
+    }
+
+    /**
+     * Get an array of error messages in string format
+     * @return string[]
+     */
+    public function getErrorMessages()
+    {
+        $messages = [];
+        foreach ($this->data as $collabPersonId => $collection) {
+            $errorMessages = $collection->getErrorMessages();
+            if (!empty($errorMessages)) {
+                foreach ($errorMessages as $serviceName => $message) {
+                    $messages[] = sprintf('%s: "%s" for user "%s"', $serviceName, $message, $collabPersonId);
+                }
+            }
+        }
+        return $messages;
     }
 }

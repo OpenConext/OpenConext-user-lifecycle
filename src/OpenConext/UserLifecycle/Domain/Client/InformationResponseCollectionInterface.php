@@ -19,9 +19,9 @@
 namespace OpenConext\UserLifecycle\Domain\Client;
 
 use JsonSerializable;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
+use Countable;
 
-interface InformationResponseCollectionInterface extends JsonSerializable
+interface InformationResponseCollectionInterface extends JsonSerializable, Countable
 {
     /**
      * @param InformationResponseInterface $informationResponse
@@ -34,7 +34,7 @@ interface InformationResponseCollectionInterface extends JsonSerializable
     public function getInformationResponses();
 
     /**
-     * @return ErrorMessage[]
+     * @return string[]
      */
     public function getErrorMessages();
 
@@ -42,4 +42,9 @@ interface InformationResponseCollectionInterface extends JsonSerializable
      * @return array
      */
     public function jsonSerialize();
+
+    /**
+     * @return int
+     */
+    public function count();
 }

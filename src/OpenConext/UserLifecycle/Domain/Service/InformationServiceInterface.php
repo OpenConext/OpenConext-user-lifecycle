@@ -18,11 +18,13 @@
 
 namespace OpenConext\UserLifecycle\Domain\Service;
 
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
+
 interface InformationServiceInterface
 {
     /**
      * @param string $personId
-     * @return string
+     * @return InformationResponseInterface
      */
     public function readInformationFor($personId);
 }

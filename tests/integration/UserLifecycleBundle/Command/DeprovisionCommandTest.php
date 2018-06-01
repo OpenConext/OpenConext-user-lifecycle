@@ -23,6 +23,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
+use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
@@ -90,11 +91,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->repository->setNow(new DateTime('2018-01-01'));
 
         $deprovisionService = $this->container->get(DeprovisionService::class);
+        $summaryService = new SummaryService();
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
 
-        $this->application->add(new DeprovisionCommand($deprovisionService, $logger));
+        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $logger));
 
         // Load the database fixtures
         $this->loadFixtures();
