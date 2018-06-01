@@ -19,8 +19,9 @@
 namespace OpenConext\UserLifecycle\Domain\Client;
 
 use JsonSerializable;
+use Countable;
 
-interface InformationResponseCollectionInterface extends JsonSerializable
+interface InformationResponseCollectionInterface extends JsonSerializable, Countable
 {
     /**
      * @param InformationResponseInterface $informationResponse

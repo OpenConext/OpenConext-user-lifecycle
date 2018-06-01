@@ -18,10 +18,11 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
+use Countable;
 use JsonSerializable;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-interface BatchInformationResponseCollectionInterface extends JsonSerializable
+interface BatchInformationResponseCollectionInterface extends JsonSerializable, Countable
 {
     /**
      * Collects InformationResponseCollection objects indexed on the

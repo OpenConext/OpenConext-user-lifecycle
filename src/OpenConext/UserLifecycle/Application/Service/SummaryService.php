@@ -64,9 +64,9 @@ class SummaryService implements SummaryServiceInterface
 
     private function summarizeInformationResponse(InformationResponseCollectionInterface $collection)
     {
-        $message = sprintf(self::USER_DEPROVISION_FORMAT, $collection->count()) . PHP_EOL;
+        $message = sprintf(self::USER_DEPROVISION_FORMAT, count($collection)) . PHP_EOL;
         if ($this->context === self::CONTEXT_INFORMATION) {
-            $message = sprintf(self::USER_INFORMATION_FORMAT, $collection->count()) . PHP_EOL;
+            $message = sprintf(self::USER_INFORMATION_FORMAT, count($collection)) . PHP_EOL;
         }
 
         $errorMessages = $collection->getErrorMessages();
@@ -84,7 +84,7 @@ class SummaryService implements SummaryServiceInterface
 
     private function summarizeBatchInformationResponse(BatchInformationResponseCollectionInterface $collection)
     {
-        $message = sprintf(self::BATCH_DEPROVISION_FORMAT, $collection->count()) . PHP_EOL;
+        $message = sprintf(self::BATCH_DEPROVISION_FORMAT, count($collection)) . PHP_EOL;
 
         $errorMessageList = '';
 

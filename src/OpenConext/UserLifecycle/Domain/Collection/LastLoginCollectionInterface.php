@@ -18,9 +18,10 @@
 
 namespace OpenConext\UserLifecycle\Domain\Collection;
 
+use Countable;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 
-interface LastLoginCollectionInterface
+interface LastLoginCollectionInterface extends Countable
 {
     /**
      * @param array $results
