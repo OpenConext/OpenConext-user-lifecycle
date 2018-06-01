@@ -23,8 +23,8 @@ use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InformationCommand extends Command
@@ -56,11 +56,10 @@ class InformationCommand extends Command
                 'This command allows you to read information of a given user identified by a collabPersonId. ' .
                 'The command will ask all registered applications what information is available for the user.'
             )
-            ->addOption(
+            ->addArgument(
                 'user',
-                'u',
-                InputOption::VALUE_REQUIRED,
-                'The user identifier of the user to get information from.'
+                InputArgument::REQUIRED,
+                'The collabPersonId of the user to deprovision.'
             );
     }
 
@@ -68,7 +67,6 @@ class InformationCommand extends Command
      * Execute the information command
      *
      * The command will:
-     *  - Validate the requested user is a user of the platform, by querying the last_login data source
      *  - Retrieve information from the registered services by calling their information endpoint for the specified user
      *  - Return JSON string with the results
      *
@@ -80,7 +78,7 @@ class InformationCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $userIdInput = $input->getOption('user');
+        $userIdInput = $input->getArgument('user');
         $this->logger->info(sprintf('Received an information request for user: "%s"', $userIdInput));
         try {
             $output->write($this->service->readInformationFor($userIdInput));
