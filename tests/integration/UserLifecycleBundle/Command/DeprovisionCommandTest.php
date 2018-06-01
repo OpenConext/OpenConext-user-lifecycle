@@ -179,7 +179,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
     }
 
-    public function test_execute_forced()
+    public function test_execute_no_interaction()
     {
         $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
 
@@ -194,7 +194,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $command = $this->application->find('user-lifecycle:deprovision');
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['user' => $collabPersonId, '--force' => true]);
+        $commandTester->execute(['user' => $collabPersonId, '--no-interaction' => true]);
 
         $output = $commandTester->getDisplay();
         $this->assertContains($collabPersonId, $output);
@@ -233,10 +233,10 @@ class DeprovisionCommandTest extends DatabaseTestCase
     {
         $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
 
-        $command = $this->application->find('user-lifecycle:information');
+        $command = $this->application->find('user-lifecycle:deprovision');
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['--user' => $collabPersonId, '--json' => true]);
+        $commandTester->execute(['user' => $collabPersonId, '--json' => true]);
     }
 
     private function getOkStatus($serviceName, $collabPersonId)

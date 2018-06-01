@@ -75,10 +75,6 @@ class DeprovisionCommand extends Command
                 'The collabPersonId of the user to deprovision.'
             )
             ->addOption(
-                'force',
-                'f'
-            )
-            ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
@@ -102,7 +98,6 @@ class DeprovisionCommand extends Command
     {
         $userIdInput = $input->getArgument('user');
         $dryRun = $input->getOption('dry-run');
-        $forced = $input->getOption('force');
 
         $outputOnlyJson = $input->getOption('json');
         $noInteraction = $input->getOption('no-interaction');
@@ -112,9 +107,9 @@ class DeprovisionCommand extends Command
         }
 
         if (is_null($userIdInput)) {
-            $this->executeBatch($input, $output, $userIdInput, $dryRun, $forced, $outputOnlyJson);
+            $this->executeBatch($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson);
         } else {
-            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $forced, $outputOnlyJson);
+            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson);
         }
     }
 
@@ -123,10 +118,10 @@ class DeprovisionCommand extends Command
         OutputInterface $output,
         $userIdInput,
         $dryRun,
-        $forced,
+        $noInteraction,
         $outputOnlyJson
     ) {
-        if (!$forced) {
+        if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
                 sprintf('<question>Continue with deprovisioning? (y/n)</question> ', $userIdInput),
@@ -165,10 +160,10 @@ class DeprovisionCommand extends Command
         OutputInterface $output,
         $userIdInput,
         $dryRun,
-        $forced,
+        $noInteraction,
         $outputOnlyJson
     ) {
-        if (!$forced) {
+        if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
                 sprintf('<question>Continue with deprovisioning of "%s"? (y/n)</question> ', $userIdInput),
