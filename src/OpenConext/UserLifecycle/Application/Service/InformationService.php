@@ -65,7 +65,7 @@ class InformationService implements InformationServiceInterface
 
         $this->logger->info(
             sprintf('Received information for user "%s" with the following data.', $personId),
-            ['information_response' => json_encode($information->jsonSerialize())]
+            ['information_response' => json_encode($information)]
         );
 
         return $information;

@@ -141,7 +141,7 @@ class DeprovisionCommand extends Command
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 
-            $output->write(json_encode($information->jsonSerialize()), true);
+            $output->write(json_encode($information), true);
         } catch (InvalidArgumentException $e) {
             $this->logger->error($e->getMessage());
         }
@@ -183,7 +183,7 @@ class DeprovisionCommand extends Command
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 
-            $output->write(json_encode($information->jsonSerialize()), true);
+            $output->write(json_encode($information), true);
         } catch (InvalidArgumentException $e) {
             $this->logger->error($e->getMessage());
         }
