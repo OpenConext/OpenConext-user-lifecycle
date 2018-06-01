@@ -148,6 +148,26 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $commandTester->execute([]);
     }
 
+    public function test_execute_silently()
+    {
+        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+
+        $this->handlerMyService->append(
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+        );
+
+        $errorMessage = 'Internal server error';
+        $this->handlerMySecondService->append(
+            new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
+        );
+        $command = $this->application->find('user-lifecycle:information');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['user' => $collabPersonId, '--json' => true]);
+        $output = $commandTester->getDisplay();
+        $this->assertJson($output, 'The output must be JSON');
+    }
+
     private function getOkStatus($serviceName, $collabPersonId)
     {
         return sprintf(

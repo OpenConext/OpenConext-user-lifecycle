@@ -20,13 +20,14 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
-use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InformationCommand extends Command
@@ -70,6 +71,12 @@ class InformationCommand extends Command
                 'user',
                 InputArgument::REQUIRED,
                 'The collabPersonId of the user to deprovision.'
+            )
+            ->addOption(
+                'json',
+                null,
+                InputOption::VALUE_NONE,
+                'Output only JSON to StdOut. Requires --no-interaction to work.'
             );
     }
 
@@ -89,12 +96,14 @@ class InformationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $userIdInput = $input->getArgument('user');
-        $isQuiet = $input->getOption('quiet');
+        $outputOnlyJson = $input->getOption('json');
+
         $this->logger->info(sprintf('Received an information request for user: "%s"', $userIdInput));
+
         try {
             $information = $this->service->readInformationFor($userIdInput);
 
-            if (!$isQuiet) {
+            if (!$outputOnlyJson) {
                 $output->writeln(PHP_EOL);
                 $output->write($this->summaryService->summarizeInformationResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
