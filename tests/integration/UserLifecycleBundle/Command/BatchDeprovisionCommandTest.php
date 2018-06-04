@@ -117,7 +117,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);
@@ -154,7 +154,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);
@@ -185,7 +185,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);

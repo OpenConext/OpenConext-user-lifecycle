@@ -61,7 +61,7 @@ class DeprovisionCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('user-lifecycle:deprovision')
+            ->setName('deprovision')
             ->setDescription('Deprovision a user from the platform. The user is identified by a collabPersonId.')
             ->setHelp(
                 'This command allows you to deprovision a given user identified by a collabPersonId. '.

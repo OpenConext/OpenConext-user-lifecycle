@@ -61,7 +61,7 @@ class InformationCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('user-lifecycle:information')
+            ->setName('information')
             ->setDescription('Read privacy information for a given user identified by a collabPersonId.')
             ->setHelp(
                 'This command allows you to read information of a given user identified by a collabPersonId. '.
