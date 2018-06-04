@@ -18,6 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
+use GuzzleHttp\Promise\PromiseInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 interface DeprovisionClientInterface
@@ -27,6 +28,7 @@ interface DeprovisionClientInterface
      *
      * @param CollabPersonId $user
      * @param bool $dryRun
+     * @return PromiseInterface
      */
     public function deprovision(CollabPersonId $user, $dryRun = false);
 
@@ -36,7 +38,7 @@ interface DeprovisionClientInterface
      * Returns a Json encoded string containing the user information provided by the different deprovision API's.
      *
      * @param CollabPersonId|null $user
-     * @return InformationResponseInterface
+     * @return PromiseInterface
      */
     public function information(CollabPersonId $user);
 

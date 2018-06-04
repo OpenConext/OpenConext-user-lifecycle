@@ -19,7 +19,8 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client;
 
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException as CoreInvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface;
@@ -32,6 +33,9 @@ use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\Resour
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use Webmozart\Assert\Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class DeprovisionClient implements DeprovisionClientInterface
 {
     const DEPROVISION_ENDPOINT = '/deprovision/%s';
@@ -68,7 +72,8 @@ class DeprovisionClient implements DeprovisionClientInterface
     /**
      * @param CollabPersonId $user
      * @param bool $dryRun
-     * @return mixed
+     *
+     * @return PromiseInterface
      */
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
@@ -78,11 +83,7 @@ class DeprovisionClient implements DeprovisionClientInterface
     /**
      * @param CollabPersonId $user
      *
-     * @return InformationResponseInterface
-     *
-     * @throws GuzzleException
-     * @throws InvalidArgumentException
-     * @throws RuntimeException
+     * @return PromiseInterface
      */
     public function information(CollabPersonId $user)
     {
@@ -92,6 +93,54 @@ class DeprovisionClient implements DeprovisionClientInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Async read a deprovision API.
+     *
+     * A promise is returned which resolves to an InformationResponseInterface instance.
+     *
+     * @param string $path A URL path, optionally containing printf parameters. The parameters
+     *               will be URL encoded and formatted into the path string.
+     *               Example: "information/%s"
+     * @param array $parameters
+     *
+     * @return PromiseInterface
+     */
+    private function read($path, array $parameters = [])
+    {
+        $resource = $this->buildResourcePath($path, $parameters);
+
+        $promise = $this->httpClient->requestAsync('GET', $resource, ['exceptions' => false]);
+
+        return $promise->then(
+            function (Response $response) use (&$promise, $resource) {
+                return $this->handleResponse($response, $resource);
+            }
+        );
+    }
+
+    /**
+     * Async delete on a deprovision API.
+     *
+     * A promise is returned which resolves to an InformationResponseInterface instance.
+     *
+     * @param string $path
+     * @param array $parameters
+     *
+     * @return PromiseInterface
+     */
+    private function delete($path, array $parameters = [])
+    {
+        $resource = $this->buildResourcePath($path, $parameters);
+
+        $promise = $this->httpClient->requestAsync('DELETE', $resource, ['exceptions' => false]);
+
+        return $promise->then(
+            function (Response $response) use ($resource) {
+                return $this->handleResponse($response, $resource);
+            }
+        );
     }
 
     /**
@@ -121,55 +170,12 @@ class DeprovisionClient implements DeprovisionClientInterface
     }
 
     /**
-     * @param string $path A URL path, optionally containing printf parameters. The parameters
-     *               will be URL encoded and formatted into the path string.
-     *               Example: "information/%s"
-     * @param array $parameters
-     * @return InformationResponseInterface $data
-     * @throws InvalidResponseException
-     * @throws MalformedResponseException
-     * @throws ResourceNotFoundException
-     * @throws GuzzleException
+     * @param Response $response
+     * @param string $resource
+     * @return InformationResponseInterface
      */
-    private function read($path, array $parameters = [])
+    private function handleResponse(Response $response, $resource)
     {
-        $resource = $this->buildResourcePath($path, $parameters);
-
-        $response = $this->httpClient->request('GET', $resource, ['exceptions' => false]);
-
-        $statusCode = $response->getStatusCode();
-
-        if ($statusCode === 404) {
-            throw new ResourceNotFoundException(sprintf('Resource "%s" not found', $resource));
-        }
-
-        if ($statusCode !== 200) {
-            throw new InvalidResponseException(
-                sprintf(
-                    'Request to resource "%s" returned an invalid response with status code %s',
-                    $resource,
-                    $statusCode
-                )
-            );
-        }
-
-        try {
-            $data = $this->parseJson((string)$response->getBody());
-        } catch (InvalidArgumentException $e) {
-            throw new MalformedResponseException(
-                sprintf('Cannot read resource "%s": malformed JSON returned. %s', $resource, $e->getMessage())
-            );
-        }
-
-        return $data;
-    }
-
-    private function delete($path, array $parameters = [])
-    {
-        $resource = $this->buildResourcePath($path, $parameters);
-
-        $response = $this->httpClient->request('DELETE', $resource, ['exceptions' => false]);
-
         $statusCode = $response->getStatusCode();
 
         if ($statusCode === 404) {
