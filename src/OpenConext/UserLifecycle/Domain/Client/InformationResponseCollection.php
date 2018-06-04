@@ -27,7 +27,7 @@ class InformationResponseCollection implements InformationResponseCollectionInte
 
     public function addInformationResponse(InformationResponseInterface $informationResponse)
     {
-        $this->data[(string) $informationResponse->getName()] = $informationResponse;
+        $this->data[] = $informationResponse;
     }
 
     /**
