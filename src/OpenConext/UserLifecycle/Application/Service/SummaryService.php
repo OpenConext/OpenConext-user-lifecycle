@@ -25,17 +25,19 @@ use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 class SummaryService implements SummaryServiceInterface
 {
 
-    const USER_DEPROVISION_FORMAT = 'The user was removed from %d services.';
+    const USER_DEPROVISION_FORMAT = 'The user was removed from %d %s.';
     const USER_DEPROVISION_ERROR_FORMAT = 'See error messages below:';
 
-    const USER_INFORMATION_FORMAT = 'Retrieved user information from %d services.';
+    const USER_INFORMATION_FORMAT = 'Retrieved user information from %d %s.';
 
     const BATCH_DEPROVISION_FORMAT = '%d users have been deprovisioned.';
     const BATCH_DEPROVISION_ERROR_FORMAT = '%d deprovision calls to services failed. See error messages below:';
 
     public function summarizeInformationResponse(InformationResponseCollectionInterface $collection)
     {
-        $message = sprintf(self::USER_INFORMATION_FORMAT, count($collection)).PHP_EOL;
+        $count = count($collection);
+        $service = $this->pluralizeService($count);
+        $message = sprintf(self::USER_INFORMATION_FORMAT, $count, $service).PHP_EOL;
 
         $errorMessages = $collection->getErrorMessages();
         $errorMessageList = '';
@@ -52,7 +54,9 @@ class SummaryService implements SummaryServiceInterface
 
     public function summarizeDeprovisionResponse(InformationResponseCollectionInterface $collection)
     {
-        $message = sprintf(self::USER_DEPROVISION_FORMAT, count($collection)).PHP_EOL;
+        $count = count($collection);
+        $service = $this->pluralizeService($count);
+        $message = sprintf(self::USER_DEPROVISION_FORMAT, $count, $service).PHP_EOL;
 
         $errorMessages = $collection->getErrorMessages();
         $errorMessageList = '';
@@ -82,5 +86,13 @@ class SummaryService implements SummaryServiceInterface
         }
 
         return $message.$errorMessageList;
+    }
+
+    private function pluralizeService($count)
+    {
+        if ($count === 1) {
+            return 'service';
+        }
+        return 'services';
     }
 }
