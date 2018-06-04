@@ -67,13 +67,13 @@ class SummaryServiceTest extends TestCase
 
         $collection
             ->shouldReceive('getErrorMessages')
-            ->andReturn(['Fake error message']);
+            ->andReturn(['EngineBlock' => 'Fake error message']);
 
         $summary = $this->service->summarizeDeprovisionResponse($collection);
 
         $this->assertContains('The user was removed from 5 services.', $summary);
         $this->assertContains('See error messages below:', $summary);
-        $this->assertContains(' * Fake error message', $summary);
+        $this->assertContains(' * EngineBlock: Fake error message', $summary);
     }
 
     public function test_summarize_batch_information_collection()
