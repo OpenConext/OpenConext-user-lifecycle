@@ -134,9 +134,8 @@ class DeprovisionCommand extends Command
         }
         $this->logger->info(
             sprintf(
-                'Received a deprovision request with dryRun turned %s',
-                $userIdInput,
-                ($dryRun ? 'on' : 'off')
+                'Starting batch-deprovisioning of users%s',
+                ($dryRun ? ' (dry-run)' : '')
             )
         );
 
@@ -177,9 +176,9 @@ class DeprovisionCommand extends Command
 
         $this->logger->info(
             sprintf(
-                'Received a deprovision request for user: "%s", with dryRun turned %s',
+                'Starting deprovisioning of user "%s"%s',
                 $userIdInput,
-                ($dryRun ? 'on' : 'off')
+                ($dryRun ? ' (dry-run)' : '')
             )
         );
         try {
