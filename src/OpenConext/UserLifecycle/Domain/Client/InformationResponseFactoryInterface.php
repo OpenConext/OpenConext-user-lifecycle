@@ -18,6 +18,8 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
+use Exception;
+
 interface InformationResponseFactoryInterface
 {
     /**
@@ -25,4 +27,11 @@ interface InformationResponseFactoryInterface
      * @return InformationResponseInterface
      */
     public function fromApiResponse(array $response);
+
+    /**
+     * @param Exception $e
+     * @param string $applicationName
+     * @return InformationResponseInterface
+     */
+    public function fromException(Exception $e, $applicationName);
 }

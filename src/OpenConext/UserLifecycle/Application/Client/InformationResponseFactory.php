@@ -18,6 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Application\Client;
 
+use Exception;
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface;
@@ -57,6 +58,25 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
         $name = new Name($response['name']);
         $data = new Data($response['data']);
         $errorMessage = $this->buildErrorMessage($response, $status);
+
+        return new InformationResponse($status, $name, $data, $errorMessage);
+    }
+
+    /**
+     * Build an InformationResponse object from an exception.
+     *
+     * @param Exception $exception
+     * @return InformationResponse
+     */
+    public function fromException(Exception $exception, $applicationName)
+    {
+        $status = new ResponseStatus(ResponseStatus::STATUS_FAILED);
+        $name = new Name($applicationName);
+        $data = new Data([]);
+
+        $errorMessage = new ErrorMessage(
+            $exception->getMessage()
+        );
 
         return new InformationResponse($status, $name, $data, $errorMessage);
     }
