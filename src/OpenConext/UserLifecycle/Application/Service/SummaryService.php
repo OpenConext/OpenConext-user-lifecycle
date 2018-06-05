@@ -42,8 +42,8 @@ class SummaryService implements SummaryServiceInterface
         if (!empty($errorMessages)) {
             $errorMessageList .= sprintf(self::USER_DEPROVISION_ERROR_FORMAT).PHP_EOL.PHP_EOL;
 
-            foreach ($errorMessages as $errorMessage) {
-                $errorMessageList .= ' * '.$errorMessage.PHP_EOL;
+            foreach ($errorMessages as $serviceName => $errorMessage) {
+                $errorMessageList .= ' * '.$serviceName .': '.$errorMessage.PHP_EOL;
             }
         }
 
@@ -59,8 +59,8 @@ class SummaryService implements SummaryServiceInterface
         if (!empty($errorMessages)) {
             $errorMessageList .= sprintf(self::USER_DEPROVISION_ERROR_FORMAT).PHP_EOL.PHP_EOL;
 
-            foreach ($errorMessages as $errorMessage) {
-                $errorMessageList .= ' * '.$errorMessage.PHP_EOL;
+            foreach ($errorMessages as $serviceName => $errorMessage) {
+                $errorMessageList .= ' * '.$serviceName .': '.$errorMessage.PHP_EOL;
             }
         }
 
