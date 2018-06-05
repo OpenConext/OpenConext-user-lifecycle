@@ -95,9 +95,10 @@ The `information` command takes one argument which is the collabPersonId.
 
 
 **Options**
-| Name   | Shortcut | Description |
-|---|---|---|
-| `--json` | __none__ | Only outputs JSON.|
+
+| Name | Shortcut | Description |
+| --- | --- | --- |
+| `--json` | __none__ | Only outputs JSON. |
 
 
 **Example usage**
