@@ -104,9 +104,7 @@ class InformationCommand extends Command
             $information = $this->service->readInformationFor($userIdInput);
 
             if (!$outputOnlyJson) {
-                $output->writeln(PHP_EOL);
                 $output->write($this->summaryService->summarizeInformationResponse($information), true);
-                $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 
             $output->write(json_encode($information), true);

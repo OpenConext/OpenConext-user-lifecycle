@@ -143,7 +143,6 @@ class DeprovisionCommand extends Command
             $information = $this->service->batchDeprovision($dryRun);
 
             if (!$outputOnlyJson) {
-                $output->writeln(PHP_EOL);
                 $output->write($this->summaryService->summarizeBatchResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
@@ -185,7 +184,6 @@ class DeprovisionCommand extends Command
             $information = $this->service->deprovision($userIdInput, $dryRun);
 
             if (!$outputOnlyJson) {
-                $output->writeln(PHP_EOL);
                 $output->write($this->summaryService->summarizeDeprovisionResponse($information), true);
                 $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
