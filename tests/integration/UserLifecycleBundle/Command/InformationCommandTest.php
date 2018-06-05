@@ -102,7 +102,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
-        $command = $this->application->find('user-lifecycle:information');
+        $command = $this->application->find('information');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['user' => $collabPersonId]);
@@ -124,7 +124,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->handlerMySecondService->append(
             new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
         );
-        $command = $this->application->find('user-lifecycle:information');
+        $command = $this->application->find('information');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['user' => $collabPersonId]);
@@ -142,7 +142,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
      */
     public function test_execute_no_arguments()
     {
-        $command = $this->application->find('user-lifecycle:information');
+        $command = $this->application->find('information');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([]);
@@ -160,7 +160,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->handlerMySecondService->append(
             new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
         );
-        $command = $this->application->find('user-lifecycle:information');
+        $command = $this->application->find('information');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['user' => $collabPersonId, '--json' => true]);

@@ -114,7 +114,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);
@@ -140,7 +140,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['no']);
@@ -166,7 +166,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['yes']);
@@ -191,7 +191,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['user' => $collabPersonId, '--no-interaction' => true]);
@@ -215,7 +215,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['user' => $collabPersonId, '--json' => true, '--no-interaction' => true]);
@@ -233,7 +233,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
     {
         $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
 
-        $command = $this->application->find('user-lifecycle:deprovision');
+        $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['user' => $collabPersonId, '--json' => true]);
