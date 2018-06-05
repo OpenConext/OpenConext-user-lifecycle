@@ -144,7 +144,6 @@ class DeprovisionCommand extends Command
 
             if (!$outputOnlyJson) {
                 $output->write($this->summaryService->summarizeBatchResponse($information), true);
-                $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 
             $output->write(json_encode($information), true);
@@ -185,7 +184,6 @@ class DeprovisionCommand extends Command
 
             if (!$outputOnlyJson) {
                 $output->write($this->summaryService->summarizeDeprovisionResponse($information), true);
-                $output->writeln('Full output of the deprovisioning command:' . PHP_EOL);
             }
 
             $output->write(json_encode($information), true);
