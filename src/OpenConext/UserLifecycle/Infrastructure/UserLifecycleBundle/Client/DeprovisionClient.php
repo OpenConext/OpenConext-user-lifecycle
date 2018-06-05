@@ -18,8 +18,10 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client;
 
+use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException as CoreInvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
@@ -114,8 +116,16 @@ class DeprovisionClient implements DeprovisionClientInterface
         $promise = $this->httpClient->requestAsync('GET', $resource, ['exceptions' => false]);
 
         return $promise->then(
-            function (Response $response) use (&$promise, $resource) {
-                return $this->handleResponse($response, $resource);
+            function (Response $response) use ($resource) {
+                try {
+                    return $this->handleResponse($response, $resource);
+                } catch (Exception $exception) {
+                    return new RejectedPromise($exception);
+                }
+            }
+        )->otherwise(
+            function (Exception $exception) {
+                return $this->informationResponseFactory->fromException($exception, $this->getName());
             }
         );
     }
@@ -138,7 +148,15 @@ class DeprovisionClient implements DeprovisionClientInterface
 
         return $promise->then(
             function (Response $response) use ($resource) {
-                return $this->handleResponse($response, $resource);
+                try {
+                    return $this->handleResponse($response, $resource);
+                } catch (Exception $exception) {
+                    return new RejectedPromise($exception);
+                }
+            }
+        )->otherwise(
+            function (Exception $exception) {
+                return $this->informationResponseFactory->fromException($exception, $this->getName());
             }
         );
     }
