@@ -48,3 +48,14 @@ services:
 
     open_conext.user_lifecycle.deprovision_client_collection:
         class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
+
+    open_conext.user_lifecycle.deprovision_client.guzzle_stack:
+        public: false
+        class: 'GuzzleHttp\HandlerStack'
+        factory: ['GuzzleHttp\HandlerStack', create]
+        calls:
+            - [setHandler, ['@open_conext.user_lifecycle.deprovision_client.guzzle_handler']]
+
+    open_conext.user_lifecycle.deprovision_client.guzzle_handler:
+        public: false
+        class: 'GuzzleHttp\Handler\CurlMultiHandler'

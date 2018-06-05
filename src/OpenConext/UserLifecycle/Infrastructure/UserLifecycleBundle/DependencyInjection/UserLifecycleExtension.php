@@ -25,6 +25,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Webmozart\Assert\Assert;
 
@@ -114,7 +115,8 @@ class UserLifecycleExtension extends Extension
             ],
             'headers' => [
                 'Accept' => 'application/json'
-            ]
+            ],
+            'handler' => new Reference('open_conext.user_lifecycle.deprovision_client.guzzle_stack'),
         ]);
 
         $container->setDefinition(

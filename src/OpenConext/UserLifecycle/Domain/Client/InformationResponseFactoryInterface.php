@@ -20,5 +20,9 @@ namespace OpenConext\UserLifecycle\Domain\Client;
 
 interface InformationResponseFactoryInterface
 {
+    /**
+     * @param array $response
+     * @return InformationResponseInterface
+     */
     public function fromApiResponse(array $response);
 }
