@@ -19,7 +19,7 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use Exception;
-use InvalidArgumentException;
+use JsonSerializable;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
@@ -86,6 +86,12 @@ class DeprovisionCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Output only JSON to StdOut. Requires --no-interaction to work.'
+            )
+            ->addOption(
+                'pretty',
+                null,
+                InputOption::VALUE_NONE,
+                'Pretty-print JSON output.'
             );
     }
 
@@ -101,6 +107,7 @@ class DeprovisionCommand extends Command
         $dryRun = $input->getOption('dry-run');
 
         $outputOnlyJson = $input->getOption('json');
+        $prettyJson = $input->getOption('pretty');
         $noInteraction = $input->getOption('no-interaction');
 
         if ($outputOnlyJson && $noInteraction === false) {
@@ -108,9 +115,9 @@ class DeprovisionCommand extends Command
         }
 
         if (is_null($userIdInput)) {
-            $this->executeBatch($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson);
+            $this->executeBatch($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson, $prettyJson);
         } else {
-            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson);
+            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson, $prettyJson);
         }
     }
 
@@ -120,7 +127,8 @@ class DeprovisionCommand extends Command
         $userIdInput,
         $dryRun,
         $noInteraction,
-        $outputOnlyJson
+        $outputOnlyJson,
+        $prettyJson
     ) {
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
@@ -147,7 +155,7 @@ class DeprovisionCommand extends Command
                 $output->write($this->summaryService->summarizeBatchResponse($information), true);
             }
 
-            $output->write(json_encode($information), true);
+            $this->printJson($output, $information, $prettyJson);
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
@@ -160,7 +168,8 @@ class DeprovisionCommand extends Command
         $userIdInput,
         $dryRun,
         $noInteraction,
-        $outputOnlyJson
+        $outputOnlyJson,
+        $prettyJson
     ) {
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
@@ -188,10 +197,29 @@ class DeprovisionCommand extends Command
                 $output->write($this->summaryService->summarizeDeprovisionResponse($information), true);
             }
 
-            $output->write(json_encode($information), true);
+            $this->printJson($output, $information, $prettyJson);
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
         }
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param JsonSerializable $information
+     * @param bool $prettyJson
+     */
+    private function printJson(OutputInterface $output, JsonSerializable $information, $prettyJson)
+    {
+        $jsonOptions = 0;
+
+        if ($prettyJson) {
+            $jsonOptions |= JSON_PRETTY_PRINT;
+        }
+
+        $output->write(
+            json_encode($information, $jsonOptions),
+            true
+        );
     }
 }

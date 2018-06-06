@@ -76,6 +76,12 @@ class InformationCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Output only JSON to StdOut. Requires --no-interaction to work.'
+            )
+            ->addOption(
+                'pretty',
+                null,
+                InputOption::VALUE_NONE,
+                'Pretty-print JSON output.'
             );
     }
 
@@ -96,6 +102,7 @@ class InformationCommand extends Command
     {
         $userIdInput = $input->getArgument('user');
         $outputOnlyJson = $input->getOption('json');
+        $prettyJson = $input->getOption('pretty');
 
         $this->logger->info(sprintf('Received an information request for user: "%s"', $userIdInput));
 
@@ -106,7 +113,15 @@ class InformationCommand extends Command
                 $output->write($this->summaryService->summarizeInformationResponse($information), true);
             }
 
-            $output->write(json_encode($information), true);
+            $jsonOptions = 0;
+            if ($prettyJson) {
+                $jsonOptions |= JSON_PRETTY_PRINT;
+            }
+
+            $output->write(
+                json_encode($information, $jsonOptions),
+                true
+            );
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
