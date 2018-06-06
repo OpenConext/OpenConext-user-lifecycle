@@ -5,6 +5,7 @@ monolog:
             ident: userlifecycle
             facility: user
             channels: ['!event', '!doctrine']
+            level: INFO
             formatter: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Monolog\Formatter\JsonFormatter
         console:
             type: console

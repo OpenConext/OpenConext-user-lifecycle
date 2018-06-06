@@ -96,14 +96,13 @@ class DeprovisionService implements DeprovisionServiceInterface
         $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun);
 
         $this->logger->info(
-            sprintf('Received deprovision information for user "%s" with the following data.', $personId),
+            sprintf('Deprovisioned user "%s" with the following data.', $personId),
             ['information_response' => json_encode($information)]
         );
 
         if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
-            $this->logger->info('Succesfully deprovisioned the user from the services he used.');
             $command = new RemoveFromLastLoginCommand($collabPersonId);
-            $this->logger->info('Remove the user from the last login table.');
+            $this->logger->debug('Remove the user from the last login table.');
             $this->removeFromLastLoginCommandHandler->handle($command);
         }
 
@@ -132,16 +131,15 @@ class DeprovisionService implements DeprovisionServiceInterface
 
             $this->logger->info(
                 sprintf(
-                    'Received deprovision information for user "%s" with the following data.',
+                    'Deprovisioned user "%s" with the following data.',
                     $lastLogin->getCollabPersonId()
                 ),
                 ['information_response' => json_encode($information)]
             );
 
             if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
-                $this->logger->info('Succesfully deprovisioned the user from the services he used.');
                 $command = new RemoveFromLastLoginCommand($collabPersonId);
-                $this->logger->info('Remove the user from the last login table.');
+                $this->logger->debug('Remove the user from the last login table.');
                 $this->removeFromLastLoginCommandHandler->handle($command);
             }
         }
