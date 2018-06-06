@@ -23,6 +23,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
+use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
 use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
@@ -97,7 +98,9 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
 
-        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $logger));
+        $progressReporter = new ProgressReporter();
+
+        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger));
 
         // Load the database fixtures
         $this->loadFixtures();

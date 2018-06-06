@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use Exception;
 use JsonSerializable;
+use OpenConext\UserLifecycle\Application\Service\ProgressReporterInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
@@ -48,14 +49,21 @@ class DeprovisionCommand extends Command
      */
     private $summaryService;
 
+    /**
+     * @var ProgressReporterInterface
+     */
+    private $progressReporter;
+
     public function __construct(
         DeprovisionServiceInterface $deprovisionService,
         SummaryServiceInterface $summaryService,
+        ProgressReporterInterface $progressReporter,
         LoggerInterface $logger
     ) {
         parent::__construct(null);
         $this->service = $deprovisionService;
         $this->summaryService = $summaryService;
+        $this->progressReporter = $progressReporter;
         $this->logger = $logger;
     }
 
@@ -148,10 +156,15 @@ class DeprovisionCommand extends Command
             )
         );
 
+        if (!$outputOnlyJson) {
+            $this->progressReporter->setConsoleOutput($output);
+        }
+
         try {
-            $information = $this->service->batchDeprovision($dryRun);
+            $information = $this->service->batchDeprovision($this->progressReporter, $dryRun);
 
             if (!$outputOnlyJson) {
+                $output->writeln('');
                 $output->write($this->summaryService->summarizeBatchResponse($information), true);
             }
 
