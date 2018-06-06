@@ -5,6 +5,11 @@ services:
         exclude: '../../../../Application/Query'
         autoconfigure: true
         autowire: true
+    
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Monolog\Formatter\:
+        resource: '../../Monolog/Formatter'
+        autoconfigure: true
+        autowire: true
 
     OpenConext\UserLifecycle\Application\Service\SanityCheckService:
         arguments:

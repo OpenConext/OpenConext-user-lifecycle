@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: services.yml }
+    - { resource: logging.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -35,19 +36,6 @@ doctrine:
                 dir: "%kernel.root_dir%/../src/OpenConext/UserLifecycle/Domain/Entity"
                 prefix: OpenConext\UserLifecycle\Domain\Entity
                 alias: OpenConextUserLifecycle
-
-monolog:
-    handlers:
-        main:
-            type: stream
-            path: '%kernel.logs_dir%/%kernel.environment%.log'
-            level: debug
-            channels: ['!event']
-        console:
-            type: console
-            verbosity_levels:
-                VERBOSITY_NORMAL: CRITICAL
-            channels: ['!event', '!doctrine']
 
 user_lifecycle:
      clients: '%open_conext_user_lifecycle_clients%'
