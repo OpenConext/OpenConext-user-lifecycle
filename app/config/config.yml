@@ -43,9 +43,10 @@ monolog:
             path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
             channels: ['!event']
-#            formatter: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
         console:
             type: console
+            verbosity_levels:
+                VERBOSITY_NORMAL: CRITICAL
             channels: ['!event', '!doctrine']
 
 user_lifecycle:
