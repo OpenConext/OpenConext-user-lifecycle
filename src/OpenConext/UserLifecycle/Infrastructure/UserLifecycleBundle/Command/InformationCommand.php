@@ -18,11 +18,10 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
-use InvalidArgumentException;
+use Exception;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -108,7 +107,8 @@ class InformationCommand extends Command
             }
 
             $output->write(json_encode($information), true);
-        } catch (InvalidArgumentException $e) {
+        } catch (Exception $e) {
+            $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
         }
     }

@@ -18,6 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
+use Exception;
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
@@ -147,7 +148,8 @@ class DeprovisionCommand extends Command
             }
 
             $output->write(json_encode($information), true);
-        } catch (InvalidArgumentException $e) {
+        } catch (Exception $e) {
+            $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
         }
     }
@@ -187,7 +189,8 @@ class DeprovisionCommand extends Command
             }
 
             $output->write(json_encode($information), true);
-        } catch (InvalidArgumentException $e) {
+        } catch (Exception $e) {
+            $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
         }
     }
