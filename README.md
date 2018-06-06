@@ -43,6 +43,7 @@ The `user` argument should be the one and only argument of the command.
 |---|---|---|
 | `--dry-run` | __none__ | Enables dry run mode, simulates a deprovision action, returning the output a regular run would, but without actually deprovisioning the user. |
 | `--json` | __none__ | Only outputs JSON. Must be used in combination with the --no-interaction option.|
+| `--pretty` | __none__ | Pretty-print JSON output.|
 | `--no-interaction` | `-n` | Prevents the confirmation question. |
 
 **Example usage**
