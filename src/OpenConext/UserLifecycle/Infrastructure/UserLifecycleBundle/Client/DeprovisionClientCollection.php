@@ -40,11 +40,6 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
      */
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
-        // When dry run, only return the user information
-        if ($dryRun) {
-            return $this->information($user);
-        }
-
         $promises = [];
         foreach ($this->clients as $client) {
             $promises[] = $client->deprovision($user, $dryRun);

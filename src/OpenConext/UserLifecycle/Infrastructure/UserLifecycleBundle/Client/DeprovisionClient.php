@@ -41,6 +41,7 @@ use Webmozart\Assert\Assert;
 class DeprovisionClient implements DeprovisionClientInterface
 {
     const DEPROVISION_ENDPOINT = '/deprovision/%s';
+    const DRYRUN_ENDPOINT = '/deprovision/%s/dry-run';
 
     /**
      * @var ClientInterface
@@ -79,6 +80,10 @@ class DeprovisionClient implements DeprovisionClientInterface
      */
     public function deprovision(CollabPersonId $user, $dryRun = false)
     {
+        if ($dryRun) {
+            return $this->delete(self::DRYRUN_ENDPOINT, [$user->getCollabPersonId()]);
+        }
+
         return $this->delete(self::DEPROVISION_ENDPOINT, [$user->getCollabPersonId()]);
     }
 
