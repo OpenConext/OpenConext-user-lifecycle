@@ -32,7 +32,6 @@ class SummaryService implements SummaryServiceInterface
     const USER_INFORMATION_FORMAT = 'Retrieved user information from %d %s.';
     const USER_INFORMATION_JSON_HEADING = 'Full output of the information command:';
 
-    const BATCH_DEPROVISION_FORMAT = '%d users have been deprovisioned.';
     const BATCH_DEPROVISION_ERROR_FORMAT = '%d deprovision calls to services failed. See error messages below:';
 
     public function summarizeInformationResponse(InformationResponseCollectionInterface $collection)
@@ -75,8 +74,6 @@ class SummaryService implements SummaryServiceInterface
 
     public function summarizeBatchResponse(BatchInformationResponseCollectionInterface $collection)
     {
-        $message = sprintf(self::BATCH_DEPROVISION_FORMAT, count($collection)).PHP_EOL;
-
         $errorMessageList = '';
 
         $errorMessages = $collection->getErrorMessages();
@@ -87,7 +84,7 @@ class SummaryService implements SummaryServiceInterface
             }
         }
 
-        return $message.$errorMessageList.PHP_EOL.self::USER_DEPROVISION_JSON_HEADING.PHP_EOL;
+        return $errorMessageList.PHP_EOL.self::USER_DEPROVISION_JSON_HEADING.PHP_EOL;
     }
 
     private function pluralizeService($count)

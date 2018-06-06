@@ -89,7 +89,6 @@ class SummaryServiceTest extends TestCase
 
         $summary = $this->service->summarizeBatchResponse($collection);
 
-        $this->assertContains('256 users have been deprovisioned.', $summary);
         $this->assertNotContains('See error messages below:', $summary);
     }
 
@@ -110,7 +109,6 @@ class SummaryServiceTest extends TestCase
 
         $summary = $this->service->summarizeBatchResponse($collection);
 
-        $this->assertContains('256 users have been deprovisioned.', $summary);
         $this->assertContains('3 deprovision calls to services failed. See error messages below:', $summary);
         $this->assertContains(' * Service name: "Error message" for user "collabPersonId"', $summary);
         $this->assertContains(' * EngineBlock: "Service not available" for user "urn:collab:jane_doe"', $summary);

@@ -33,8 +33,9 @@ interface DeprovisionServiceInterface
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.
      *
+     * @param ProgressReporterInterface $progressReporter
      * @param bool $dryRun
      * @return BatchInformationResponseCollectionInterface
      */
-    public function batchDeprovision($dryRun = false);
+    public function batchDeprovision(ProgressReporterInterface $progressReporter, $dryRun = false);
 }

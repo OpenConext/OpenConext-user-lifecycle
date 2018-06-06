@@ -26,12 +26,16 @@ use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
+use OpenConext\UserLifecycle\Domain\Service\ProgressReporterInterface;
 use OpenConext\UserLifecycle\Domain\Service\RemovalCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class DeprovisionService implements DeprovisionServiceInterface
 {
     /**
@@ -113,10 +117,11 @@ class DeprovisionService implements DeprovisionServiceInterface
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.
      *
+     * @param ProgressReporterInterface $progressReporter
      * @param bool $dryRun
      * @return BatchInformationResponseCollectionInterface
      */
-    public function batchDeprovision($dryRun = false)
+    public function batchDeprovision(ProgressReporterInterface $progressReporter, $dryRun = false)
     {
         $this->logger->debug('Retrieve the users that are marked for deprovisioning.');
         $users = $this->lastLoginService->findUsersForDeprovision();
@@ -125,7 +130,14 @@ class DeprovisionService implements DeprovisionServiceInterface
         $this->sanityCheckService->check($users);
 
         $batchInformationCollection = new BatchInformationResponseCollection();
-        foreach ($users->getData() as $lastLogin) {
+
+        foreach ($users->getData() as $currentIndex => $lastLogin) {
+            $progressReporter->progress(
+                sprintf('Working on %s...', $lastLogin->getCollabPersonId()),
+                count($users),
+                $currentIndex
+            );
+
             $collabPersonId = $this->buildCollabPersonId($lastLogin->getCollabPersonId());
             $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun);
             $batchInformationCollection->add($collabPersonId, $information);
@@ -145,6 +157,8 @@ class DeprovisionService implements DeprovisionServiceInterface
                 $this->removeFromLastLoginCommandHandler->handle($command);
             }
         }
+
+        $progressReporter->progress('Done.', count($users), count($users));
 
         return $batchInformationCollection;
     }
