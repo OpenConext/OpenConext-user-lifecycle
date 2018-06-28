@@ -40,8 +40,8 @@ use Webmozart\Assert\Assert;
  */
 class DeprovisionClient implements DeprovisionClientInterface
 {
-    const DEPROVISION_ENDPOINT = '/deprovision/%s';
-    const DRYRUN_ENDPOINT = '/deprovision/%s/dry-run';
+    const DEPROVISION_ENDPOINT = 'deprovision/%s';
+    const DRYRUN_ENDPOINT = 'deprovision/%s/dry-run';
 
     /**
      * @var ClientInterface
