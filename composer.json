@@ -47,7 +47,8 @@
         "sensio/generator-bundle": "^3.0",
         "sensiolabs/security-checker": "^4.0",
         "squizlabs/php_codesniffer": "^2.8",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^3.0",
+        "symfony/web-server-bundle": "^3.4"
     },
     "scripts": {
         "symfony-scripts": [
