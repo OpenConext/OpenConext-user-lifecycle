@@ -1,0 +1,5 @@
+
+deprovision:
+    path:     api/deprovision
+    methods:  GET
+    defaults: { _controller: UserLifecycleBundle:Api:deprovision }
