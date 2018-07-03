@@ -5,7 +5,7 @@ services:
         exclude: '../../../../Application/Query'
         autoconfigure: true
         autowire: true
-    
+
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Monolog\Formatter\:
         resource: '../../Monolog/Formatter'
         autoconfigure: true
@@ -27,6 +27,10 @@ services:
         autoconfigure: true
         autowire: false
 
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
         arguments:
             - '@OpenConext\UserLifecycle\Application\Service\InformationService'
@@ -43,6 +47,13 @@ services:
             - '@logger'
         tags:
             - 'console.command'
+
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle
+
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\ApiController:
+        arguments:
+            - '@OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle'
 
     OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface:
         class: Doctrine\ORM\EntityRepository

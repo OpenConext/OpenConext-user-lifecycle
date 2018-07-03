@@ -43,4 +43,5 @@ doctrine:
                 alias: OpenConextUserLifecycle
 
 user_lifecycle:
-     clients: '%open_conext_user_lifecycle_clients%'
+    clients: '%open_conext_user_lifecycle_clients%'
+    deprovision_api: '%deprovision_api_settings%'
