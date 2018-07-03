@@ -54,6 +54,8 @@ services:
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\ApiController:
         arguments:
             - '@OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle'
+            - '@OpenConext\UserLifecycle\Application\QueryHandler\FindUserInformationQueryHandler'
+            - '@logger'
 
     OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface:
         class: Doctrine\ORM\EntityRepository

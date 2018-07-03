@@ -1,5 +1,7 @@
 
 deprovision:
-    path:     api/deprovision
-    methods:  GET
+    path: api/deprovision/{collabPersonId}
+    requirements:
+        collabPersonId: .+
+    methods: GET
     defaults: { _controller: UserLifecycleBundle:Api:deprovision }
