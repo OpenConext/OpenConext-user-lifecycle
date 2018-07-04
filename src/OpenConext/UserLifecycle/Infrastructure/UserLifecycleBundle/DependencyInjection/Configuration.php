@@ -82,8 +82,6 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->scalarNode('username')
-                            ->defaultNull()
-                            ->validate()
                                 ->ifTrue(function ($username) {
                                     return !is_string($username) || empty($username);
                                 })
@@ -91,7 +89,6 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->scalarNode('password')
-                            ->defaultNull()
                             ->validate()
                                 ->ifTrue(function ($password) {
                                     return !is_string($password) || empty($password);
