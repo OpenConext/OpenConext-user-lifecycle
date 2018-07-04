@@ -107,5 +107,26 @@ The `information` command takes one argument which is the collabPersonId.
 $ userlifecyle information urn:collab:example.org:user_id
 ```
 
+## API
+An API can be toggled, exposing the deprovision command (in read mode). Use the following feature toggle to enable/disable the API.
+
+In app/config/parameters.yml
+```bash
+# By default the API is disabled
+deprovision_api_settings_enabled: true
+```
+
+Only user information can be read from the endpoint. The API by default is configured with basic authentication, using a configurable username and password.
+
+In app/config/parameters.yml
+ ```bash
+# To enable the API
+deprovision_api_settings_enabled: true
+deprovision_api_settings_username: userlifecycle
+deprovision_api_settings_password: secret
+ ```
+
+Please note that the username and password should always be provided even when the API is disabled. 
+
 ## For developers
 See the `/docs` folder for more details information about the application.
