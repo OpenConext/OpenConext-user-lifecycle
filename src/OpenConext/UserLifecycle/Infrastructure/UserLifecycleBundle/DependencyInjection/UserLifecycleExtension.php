@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Dependency
 
 use GuzzleHttp\Client;
 use OpenConext\UserLifecycle\Application\Client\InformationResponseFactory;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -44,6 +45,20 @@ class UserLifecycleExtension extends Extension
             $clientConfig = $config[0]['clients'];
             $this->loadDeprovisionClients($clientConfig, $container);
         }
+
+        $apiEnabled = false;
+        $toggleDefinition = new Definition(DeprovisionApiFeatureToggle::class);
+
+        if (isset($config[0]['deprovision_api'])) {
+            $apiConfig = $config[0]['deprovision_api'];
+            $apiEnabled = $apiConfig['enabled'];
+        }
+
+        $toggleDefinition->setArgument(0, $apiEnabled);
+        $container->setDefinition(
+            'OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle',
+            $toggleDefinition
+        );
     }
 
     /**

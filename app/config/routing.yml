@@ -1,0 +1,2 @@
+dashboard:
+    resource: '@UserLifecycleBundle/Resources/config/routing.yml'

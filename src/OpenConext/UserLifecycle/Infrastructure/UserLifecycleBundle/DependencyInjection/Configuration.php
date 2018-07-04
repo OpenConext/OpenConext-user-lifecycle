@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
 
         $treeBuilder
-            ->root('open_conext_user_lifecycle')
+            ->root('user_lifecycle')
                 ->children()
                     ->arrayNode('clients')
                         ->info('Configures the deprovision clients.')
@@ -64,6 +64,36 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->booleanNode('verify_ssl')
                                 ->defaultValue(true)
+                            ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('deprovision_api')
+                        ->info('Configures the deprovision API.')
+                        ->canBeDisabled()
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                        ->booleanNode('enabled')
+                            ->defaultFalse()
+                            ->validate()
+                                ->ifTrue(function ($enabled) {
+                                    return is_bool($enabled);
+                                })
+                                ->thenInvalid("Enabled must be a boolean, got '%s'")
+                            ->end()
+                        ->end()
+                        ->scalarNode('username')
+                                ->ifTrue(function ($username) {
+                                    return !is_string($username) || empty($username);
+                                })
+                                ->thenInvalid("Username must be non-empty string, got '%s'")
+                            ->end()
+                        ->end()
+                        ->scalarNode('password')
+                            ->validate()
+                                ->ifTrue(function ($password) {
+                                    return !is_string($password) || empty($password);
+                                })
+                                ->thenInvalid("Password must be non-empty string, got '%s'")
                             ->end()
                         ->end()
                     ->end()

@@ -29,3 +29,8 @@ parameters:
 
     # The inactivity period after which a user is deprovisioned. The period is in months.
     inactivity_period: 37
+
+    # is the deprovision api enabled?
+    deprovision_api_settings_enabled: false
+    deprovision_api_settings_username: userlifecycle
+    deprovision_api_settings_password: secret
