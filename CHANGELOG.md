@@ -1,3 +1,6 @@
+## Develop
+ - Upgraded Symfony to version 3.4.14
+
 ## 0.0.2
  - The information retrieval feature from the deprovision command is now exposed through a web API. See readme for more details. 
 
