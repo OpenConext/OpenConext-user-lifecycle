@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "45c211f0e0b7da5870343e9fd5f3b513",
@@ -1144,16 +1144,16 @@
         },
         {
             "name": "openconext/monitor-bundle",
-            "version": "1.0.2",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Monitor-bundle.git",
-                "reference": "b5cc6d3bf245e0a454b5a09a53d9919e5ec9cc23"
+                "reference": "5f304d885cf6575b420dea592ed285c793d1b1d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/b5cc6d3bf245e0a454b5a09a53d9919e5ec9cc23",
-                "reference": "b5cc6d3bf245e0a454b5a09a53d9919e5ec9cc23",
+                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/5f304d885cf6575b420dea592ed285c793d1b1d9",
+                "reference": "5f304d885cf6575b420dea592ed285c793d1b1d9",
                 "shasum": ""
             },
             "require": {
@@ -1193,7 +1193,7 @@
                 "stepup",
                 "surfnet"
             ],
-            "time": "2017-12-18T15:17:50+00:00"
+            "time": "2018-09-11T12:33:58+00:00"
         },
         {
             "name": "paragonie/random_compat",
