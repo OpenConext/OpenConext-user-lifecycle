@@ -1,4 +1,4 @@
-## Develop
+## 0.0.3
  - Upgraded Symfony to version 3.4.14
 
 ## 0.0.2
