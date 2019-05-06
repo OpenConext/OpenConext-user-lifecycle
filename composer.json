@@ -45,7 +45,6 @@
         "sebastian/phpcpd": "^3.0",
         "sensio/distribution-bundle": "^5.0",
         "sensio/generator-bundle": "^3.0",
-        "sensiolabs/security-checker": "^4.0",
         "squizlabs/php_codesniffer": "^2.8",
         "symfony/phpunit-bridge": "^3.0",
         "symfony/web-server-bundle": "^3.4"
@@ -65,6 +64,10 @@
         ]
     },
     "config": {
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "5.6"
+        },
         "sort-packages": true
     },
     "extra": {
