@@ -40,4 +40,4 @@ Running composer install will also prepare the autoloader, build bootstrap files
 ## Testing the API in a dev environment
 Ansible provisioning does not configure a web server to run the API on. You can use the Symfony built in web server. 
 From your host run: `bin/console server:start`. Or do the same from the guest, but ensure you configure your host files
-accordingly. 
+accordingly and use the command `bin/console server:start 0.0.0.0:8000` on the guest.
