@@ -1,6 +1,6 @@
 ## 0.0.4
- - Upgraded Symfony to version 3.4.27 #31
- - Configured the health endpoints to become publicly available #30
+ - Upgraded Symfony to version 3.4.27
+ - Configured the health endpoints to become publicly available
 
 ## 0.0.3
  - Upgraded Symfony to version 3.4.14
