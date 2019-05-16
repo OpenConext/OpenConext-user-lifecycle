@@ -1,3 +1,6 @@
+## 0.0.5
+ - Add sensio distribution bundle to normal dependency instead dev dependency
+
 ## 0.0.4
  - Upgraded Symfony to version 3.4.27
  - Configured the health endpoints to become publicly available
