@@ -83,10 +83,8 @@
         </exec>
     </target>
 
-    <target name="security-tests">
-        <exec executable="./bin/console" failonerror="true">
-            <arg line="security:check" />
-        </exec>
+    <target name="security-tests" description="Check for vulnerable dependencies with SensioLabs Security Checker">
+        <exec dir="${basedir}" executable="bin/securityChecker.sh" failonerror="true"></exec>
     </target>
 
 </project>
