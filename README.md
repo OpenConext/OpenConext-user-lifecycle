@@ -128,5 +128,11 @@ deprovision_api_settings_password: secret
 
 Please note that the username and password should always be provided even when the API is disabled. 
 
+The API can be called in the following manner for a given user's collabPersonId:
+
+`GET /api/deprovision/urn:collab:person:example.org:jdoe`
+
+and will return the deprovision information in JSON format.
+
 ## For developers
 See the `/docs` folder for more details information about the application.
