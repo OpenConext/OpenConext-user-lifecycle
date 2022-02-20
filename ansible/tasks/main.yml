@@ -13,6 +13,7 @@
   - vim
   - composer
   - git
+  - ant
 
 - name: enable remi-php72
   shell: yum-config-manager --enable remi-php72
