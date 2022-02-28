@@ -1,0 +1,4 @@
+doctrine:
+  dbal:
+    driver: pdo_sqlite
+    path: "/tmp/user-lifecycle-test.sqlite"

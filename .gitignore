@@ -1,6 +1,6 @@
 /.vagrant/
 /ansible/*.retry
-/app/config/parameters.yml
+/config/legacy/parameters.yml
 /var/*
 !/var/cache
 /var/cache/*

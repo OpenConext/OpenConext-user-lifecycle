@@ -8,8 +8,7 @@
             "OpenConext\\": "src/OpenConext"
         },
         "classmap": [
-            "app/AppKernel.php",
-            "app/AppCache.php"
+            "src/Kernel.php"
         ]
     },
     "autoload-dev": {
@@ -79,7 +78,7 @@
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+            "file": "config/legacy/parameters.yml"
         },
         "branch-alias": null
     }
