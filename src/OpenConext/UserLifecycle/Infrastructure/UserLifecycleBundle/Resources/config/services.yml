@@ -63,6 +63,9 @@ services:
         arguments:
             - OpenConext\UserLifecycle\Domain\Entity\LastLogin
 
+    OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
+
     OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface: '@OpenConext\UserLifecycle\Application\Client\InformationResponseFactory'
 
     open_conext.user_lifecycle.deprovision_client_collection:
