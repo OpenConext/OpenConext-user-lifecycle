@@ -18,6 +18,10 @@ $ docker-compose --version
 docker-compose version 1.28.4, build cabd5cfb
 ```
 
+## Setting the .env
+Either use the provided .env.dist file (from the webroot: `cp .env.dist .env`) or create one of your own. What 
+environment variables can be used in the application can be found in the `.env.dist` file.
+
 ## Installing dependencies
 When the container is up, you should be able to install the composer dependencies. You can 'enter' the
  guest with the `docker-compose exec php-fpm sh` command. 
