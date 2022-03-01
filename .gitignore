@@ -16,3 +16,9 @@
 /web/bundles/
 /app/bootstrap.php.cache
 /.idea
+.env
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
