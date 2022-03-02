@@ -62,7 +62,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->container = self::$kernel->getContainer();
@@ -130,8 +130,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
 
         $this->assertCount(3, $this->repository->findAll());
     }
@@ -156,8 +156,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains($collabPersonId, $output);
-        $this->assertNotContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringNotContainsString('OK', $output);
 
         $this->assertCount(4, $this->repository->findAll());
     }
@@ -181,8 +181,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $commandTester->execute(['user' => $collabPersonId, '--dry-run' => true]);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
 
         $this->assertCount(4, $this->repository->findAll());
     }
@@ -205,8 +205,8 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $commandTester->execute(['user' => $collabPersonId, '--no-interaction' => true]);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
 
         $this->assertCount(3, $this->repository->findAll());
     }

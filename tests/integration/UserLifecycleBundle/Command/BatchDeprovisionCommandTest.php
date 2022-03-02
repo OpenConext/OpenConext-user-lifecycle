@@ -61,7 +61,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->container = self::$kernel->getContainer();
@@ -132,8 +132,8 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
 
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(3, $this->repository->findAll());
@@ -202,7 +202,10 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(1, $this->repository->findAll());
-        $this->assertContains('"Something went awfully wrong" for user "urn:collab:org:surf.nl:jason_mraz"', $output);
+        $this->assertStringContainsString(
+            '"Something went awfully wrong" for user "urn:collab:org:surf.nl:jason_mraz"',
+            $output
+        );
     }
 
     private function getOkStatus($serviceName, $collabPersonId)

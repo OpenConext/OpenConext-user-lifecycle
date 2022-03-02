@@ -42,7 +42,7 @@ class InformationServiceTest extends TestCase
      */
     private $apiCollection;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->apiCollection = m::mock(DeprovisionClientCollectionInterface::class);
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();

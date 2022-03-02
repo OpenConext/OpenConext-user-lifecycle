@@ -47,7 +47,7 @@ class LastLoginServiceTest extends TestCase
      */
     private $logger;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->queryHandler = m::mock(InactiveUsersQueryHandler::class);
         $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();

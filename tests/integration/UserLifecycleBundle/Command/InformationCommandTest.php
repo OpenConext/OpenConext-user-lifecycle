@@ -52,7 +52,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
      */
     private $application;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->container = self::$kernel->getContainer();
@@ -108,8 +108,8 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $commandTester->execute(['user' => $collabPersonId]);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
     }
 
     public function test_execute_second_service_returned_failed_response()
@@ -130,10 +130,10 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $commandTester->execute(['user' => $collabPersonId]);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
-        $this->assertContains('FAILED', $output);
-        $this->assertContains($errorMessage, $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
+        $this->assertStringContainsString('FAILED', $output);
+        $this->assertStringContainsString($errorMessage, $output);
     }
 
     /**

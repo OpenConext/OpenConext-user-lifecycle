@@ -45,7 +45,7 @@ class RemoveFromLastLoginCommandHandlerTest extends TestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->repository = m::mock(LastLoginRepositoryInterface::class);
         $this->commandHandler = new RemoveFromLastLoginCommandHandler($this->repository);

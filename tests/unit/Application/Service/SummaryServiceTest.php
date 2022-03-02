@@ -36,7 +36,7 @@ class SummaryServiceTest extends TestCase
      */
     private $service;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->service = new SummaryService();
     }
@@ -54,8 +54,8 @@ class SummaryServiceTest extends TestCase
 
         $summary = $this->service->summarizeDeprovisionResponse($collection);
 
-        $this->assertContains('The user was removed from 5 services.', $summary);
-        $this->assertNotContains('See error messages below:', $summary);
+        $this->assertStringContainsString('The user was removed from 5 services.', $summary);
+        $this->assertStringNotContainsString('See error messages below:', $summary);
     }
 
     public function test_summarize_information_collection_with_errors()
@@ -71,9 +71,9 @@ class SummaryServiceTest extends TestCase
 
         $summary = $this->service->summarizeDeprovisionResponse($collection);
 
-        $this->assertContains('The user was removed from 5 services.', $summary);
-        $this->assertContains('See error messages below:', $summary);
-        $this->assertContains(' * EngineBlock: Fake error message', $summary);
+        $this->assertStringContainsString('The user was removed from 5 services.', $summary);
+        $this->assertStringContainsString('See error messages below:', $summary);
+        $this->assertStringContainsString(' * EngineBlock: Fake error message', $summary);
     }
 
     public function test_summarize_batch_information_collection()
@@ -89,7 +89,7 @@ class SummaryServiceTest extends TestCase
 
         $summary = $this->service->summarizeBatchResponse($collection);
 
-        $this->assertNotContains('See error messages below:', $summary);
+        $this->assertStringNotContainsString('See error messages below:', $summary);
     }
 
     public function test_summarize_batch_information_collection_with_errors()
@@ -109,10 +109,19 @@ class SummaryServiceTest extends TestCase
 
         $summary = $this->service->summarizeBatchResponse($collection);
 
-        $this->assertContains('3 deprovision calls to services failed. See error messages below:', $summary);
-        $this->assertContains(' * Service name: "Error message" for user "collabPersonId"', $summary);
-        $this->assertContains(' * EngineBlock: "Service not available" for user "urn:collab:jane_doe"', $summary);
-        $this->assertContains(' * DropjesService: "Server has gone away" for user "urn:collab:jack_black"', $summary);
+        $this->assertStringContainsString(
+            '3 deprovision calls to services failed. See error messages below:',
+            $summary
+        );
+        $this->assertStringContainsString(' * Service name: "Error message" for user "collabPersonId"', $summary);
+        $this->assertStringContainsString(
+            ' * EngineBlock: "Service not available" for user "urn:collab:jane_doe"',
+            $summary
+        );
+        $this->assertStringContainsString(
+            ' * DropjesService: "Server has gone away" for user "urn:collab:jack_black"',
+            $summary
+        );
     }
 
     public function test_summarize_information_collection_information_context()
@@ -129,7 +138,7 @@ class SummaryServiceTest extends TestCase
 
         $summary = $this->service->summarizeInformationResponse($collection);
 
-        $this->assertContains('Retrieved user information from 5 services.', $summary);
-        $this->assertNotContains('See error messages below:', $summary);
+        $this->assertStringContainsString('Retrieved user information from 5 services.', $summary);
+        $this->assertStringNotContainsString('See error messages below:', $summary);
     }
 }
