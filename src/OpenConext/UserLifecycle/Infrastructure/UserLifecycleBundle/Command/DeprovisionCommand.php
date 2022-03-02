@@ -125,7 +125,15 @@ class DeprovisionCommand extends Command
         if (is_null($userIdInput)) {
             $this->executeBatch($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson, $prettyJson);
         } else {
-            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson, $prettyJson);
+            $this->executeSingleUser(
+                $input,
+                $output,
+                $userIdInput,
+                $dryRun,
+                $noInteraction,
+                $outputOnlyJson,
+                $prettyJson
+            );
         }
     }
 

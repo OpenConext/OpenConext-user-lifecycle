@@ -19,7 +19,7 @@
 namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\Compiler\DeprovisionClientCollectionPass;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\Compiler\DeprovisionClientCollectionPass; // phpcs:ignore
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;

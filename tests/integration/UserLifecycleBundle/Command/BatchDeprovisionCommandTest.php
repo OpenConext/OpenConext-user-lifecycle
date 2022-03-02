@@ -92,7 +92,9 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $summaryService = new SummaryService();
 
         // Set the time on the LastLoginRepository
-        $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
+        $this->repository = $this->container
+            ->get('doctrine.orm.default_entity_manager')
+            ->getRepository(LastLogin::class);
         $this->repository->setNow(new DateTime('2018-01-01'));
 
         $logger = m::mock(LoggerInterface::class);
@@ -100,7 +102,9 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $progressReporter = new ProgressReporter();
 
-        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger));
+        $this->application->add(
+            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger)
+        );
 
         // Load the database fixtures
         $this->loadFixtures();

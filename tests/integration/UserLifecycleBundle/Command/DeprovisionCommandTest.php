@@ -27,6 +27,7 @@ use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
 use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
@@ -88,7 +89,9 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->application = new Application(self::$kernel);
 
         // Set the time on the LastLoginRepository
-        $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
+        $this->repository = $this->container
+            ->get('doctrine.orm.default_entity_manager')
+            ->getRepository(LastLogin::class);
         $this->repository->setNow(new DateTime('2018-01-01'));
 
         $deprovisionService = $this->container->get(DeprovisionService::class);
@@ -99,7 +102,9 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
         $progressReporter = new ProgressReporter();
 
-        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger));
+        $this->application->add(
+            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger)
+        );
 
         // Load the database fixtures
         $this->loadFixtures();
@@ -228,12 +233,10 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertJson($output);
     }
 
-    /**
-     * @expectedException \OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException
-     * @expectedExceptionMessage The --json option must be used in combination with --no-interaction (-n).
-     */
     public function test_execute_silently_required_no_interaction_option()
     {
+        $this->expectExceptionMessage("The --json option must be used in combination with --no-interaction (-n).");
+        $this->expectException(RuntimeException::class);
         $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
 
         $command = $this->application->find('deprovision');
