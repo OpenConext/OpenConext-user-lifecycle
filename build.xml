@@ -4,14 +4,13 @@
 
     <target name="lint">
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
-            <arg path="app" />
             <arg path="src" />
             <arg path="tests" />
         </exec>
 
         <exec executable="bin/console" failonerror="true">
             <arg line="lint:yaml" />
-            <arg path="app/config" />
+            <arg path="config" />
         </exec>
 
         <exec executable="composer" failonerror="true">
