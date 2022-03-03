@@ -18,6 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\Compiler;
 
+use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -34,11 +35,11 @@ class DeprovisionClientCollectionPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('open_conext.user_lifecycle.deprovision_client_collection')) {
+        if (!$container->has(DeprovisionClientCollectionInterface::class)) {
             return;
         }
 
-        $definition = $container->findDefinition('open_conext.user_lifecycle.deprovision_client_collection');
+        $definition = $container->findDefinition(DeprovisionClientCollectionInterface::class);
 
         // find all service IDs with the open_conext.user_lifecycle.deprovision_client tag
         $taggedServices = $container->findTaggedServiceIds('open_conext.user_lifecycle.deprovision_client');

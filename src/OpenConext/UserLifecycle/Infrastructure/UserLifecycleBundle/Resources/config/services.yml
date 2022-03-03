@@ -2,7 +2,6 @@ services:
 
     OpenConext\UserLifecycle\Application\:
         resource: '../../../../Application/'
-        exclude: '../../../../Application/Query'
         autoconfigure: true
         autowire: true
 
@@ -29,6 +28,8 @@ services:
 
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\:
         resource: '../../Controller'
+        autoconfigure: true
+        autowire: true
         tags: ['controller.service_arguments']
 
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
@@ -48,14 +49,10 @@ services:
         tags:
             - 'console.command'
 
-    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle:
-        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle
-
-    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\ApiController:
+    OpenConext\UserLifecycle\Application\QueryHandler\FindUserInformationQueryHandlerInterface:
+        class: OpenConext\UserLifecycle\Application\QueryHandler\FindUserInformationQueryHandler
         arguments:
-            - '@OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle'
-            - '@OpenConext\UserLifecycle\Application\QueryHandler\FindUserInformationQueryHandler'
-            - '@logger'
+            $service: '@OpenConext\UserLifecycle\Application\Service\InformationService'
 
     OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface:
         class: Doctrine\ORM\EntityRepository
@@ -67,9 +64,6 @@ services:
         class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
 
     OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface: '@OpenConext\UserLifecycle\Application\Client\InformationResponseFactory'
-
-    open_conext.user_lifecycle.deprovision_client_collection:
-        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
 
     open_conext.user_lifecycle.deprovision_client.guzzle_stack:
         public: false

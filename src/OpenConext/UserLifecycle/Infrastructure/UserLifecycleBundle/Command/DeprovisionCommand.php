@@ -105,11 +105,8 @@ class DeprovisionCommand extends Command
 
     /**
      * @SuppressWarnings(PHPMD.ElseExpression)
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $userIdInput = $input->getArgument('user');
         $dryRun = $input->getOption('dry-run');
@@ -123,9 +120,17 @@ class DeprovisionCommand extends Command
         }
 
         if (is_null($userIdInput)) {
-            $this->executeBatch($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson, $prettyJson);
+            return $this->executeBatch(
+                $input,
+                $output,
+                $userIdInput,
+                $dryRun,
+                $noInteraction,
+                $outputOnlyJson,
+                $prettyJson
+            );
         } else {
-            $this->executeSingleUser(
+            return $this->executeSingleUser(
                 $input,
                 $output,
                 $userIdInput,
@@ -145,7 +150,7 @@ class DeprovisionCommand extends Command
         $noInteraction,
         $outputOnlyJson,
         $prettyJson
-    ) {
+    ): int {
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
@@ -154,7 +159,7 @@ class DeprovisionCommand extends Command
             );
 
             if (!$helper->ask($input, $output, $question)) {
-                return;
+                return 1;
             }
         }
         $this->logger->info(
@@ -180,7 +185,9 @@ class DeprovisionCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
+            return 1;
         }
+        return 0;
     }
 
     private function executeSingleUser(
@@ -191,7 +198,7 @@ class DeprovisionCommand extends Command
         $noInteraction,
         $outputOnlyJson,
         $prettyJson
-    ) {
+    ): int {
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
@@ -200,7 +207,7 @@ class DeprovisionCommand extends Command
             );
 
             if (!$helper->ask($input, $output, $question)) {
-                return;
+                return 1;
             }
         }
 
@@ -222,7 +229,9 @@ class DeprovisionCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
+            return 1;
         }
+        return 0;
     }
 
     /**
