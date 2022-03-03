@@ -20,7 +20,7 @@ namespace OpenConext\UserLifecycle\Tests\Integration\DataFixtures\ORM;
 
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 

@@ -20,12 +20,12 @@ namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Depende
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
+use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\UserLifecycleExtension;
-use OpenConext\UserLifecycle\Tests\Integration\DiTestCase;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-class UserLifecycleExtensionTest extends DiTestCase
+class UserLifecycleExtensionTest extends AbstractExtensionTestCase
 {
 
     /**
@@ -34,11 +34,9 @@ class UserLifecycleExtensionTest extends DiTestCase
      *
      * @return ExtensionInterface[]
      */
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
-        return [
-            new UserLifecycleExtension()
-        ];
+        return [new UserLifecycleExtension()];
     }
 
     public function test_after_loading_the_correct_services_have_been_set()

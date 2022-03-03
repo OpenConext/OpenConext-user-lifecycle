@@ -39,26 +39,33 @@ class UserLifecycleExtension extends Extension
         ));
         $loader->load('services.yml');
 
-        if (isset($config[0]['clients'])) {
-            Assert::notEmpty($config[0]['clients'], 'Configure at least one deprovision API in parameters.yml');
+        foreach ($config as $configSet) {
+            // Do not evaluate empty configurations
+            if (empty($configSet)) {
+                continue;
+            }
 
-            $clientConfig = $config[0]['clients'];
-            $this->loadDeprovisionClients($clientConfig, $container);
+            if (isset($configSet['clients'])) {
+                Assert::notEmpty($configSet['clients'], 'Configure at least one deprovision API in parameters.yml');
+
+                $clientConfig = $configSet['clients'];
+                $this->loadDeprovisionClients($clientConfig, $container);
+            }
+
+            $apiEnabled = false;
+            $toggleDefinition = new Definition(DeprovisionApiFeatureToggle::class);
+
+            if (isset($configSet['deprovision_api'])) {
+                $apiConfig = $configSet['deprovision_api'];
+                $apiEnabled = $apiConfig['enabled'];
+            }
+
+            $toggleDefinition->setArgument(0, $apiEnabled);
+            $container->setDefinition(
+                'OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle',
+                $toggleDefinition
+            );
         }
-
-        $apiEnabled = false;
-        $toggleDefinition = new Definition(DeprovisionApiFeatureToggle::class);
-
-        if (isset($config[0]['deprovision_api'])) {
-            $apiConfig = $config[0]['deprovision_api'];
-            $apiEnabled = $apiConfig['enabled'];
-        }
-
-        $toggleDefinition->setArgument(0, $apiEnabled);
-        $container->setDefinition(
-            'OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle',
-            $toggleDefinition
-        );
     }
 
     /**
