@@ -32,5 +32,8 @@ Running composer install will also prepare the autoloader, build bootstrap files
 
 ## Testing the API in a dev environment
 Docker-compose does not configure a web server to run the API on. You can use the Symfony built in web server. 
-From your host run: `bin/console server:start`. Or do the same from the guest, but ensure you configure your host files
-accordingly and use the command `bin/console server:start 0.0.0.0:8000` on the guest.
+From your host run: `symfony server:start`. Or do the same from the guest, but ensure you configure your host files
+accordingly and use the command `symfony server:start --port=8000` on the guest.
+
+If you need assistance in installing the Syfony CLI. Please consult the excellent readme on the 
+[Symfony website.](https://symfony.com/download#step-1-install-symfony-cli)
