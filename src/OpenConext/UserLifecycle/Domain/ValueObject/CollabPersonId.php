@@ -22,6 +22,8 @@ use OpenConext\UserLifecycle\Domain\Exception\InvalidCollabPersonIdException;
 
 class CollabPersonId
 {
+    private static $pattern = '/^urn:collab:person:.+$/';
+
     /**
      * @var string
      */
@@ -33,9 +35,11 @@ class CollabPersonId
             $collabUserId = trim($collabUserId);
         }
         if (empty($collabUserId) || !is_string($collabUserId)) {
-            throw new InvalidCollabPersonIdException('The collabUserId must be a non empty string');
+            throw new InvalidCollabPersonIdException('The collabPersonId must be a non empty string');
         }
-
+        if (preg_match(self::$pattern, $collabUserId) !== 1) {
+            throw new InvalidCollabPersonIdException('The collabPersonId must start with urn:collab:person:');
+        }
         $this->collabPersonId = $collabUserId;
     }
 
