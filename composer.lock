@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d530ccb51754963a5b4cda4b29d48b63",
+    "content-hash": "0616945f3bfcfd34f6244872c1d9d6fe",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1681,11 +1681,17 @@
         },
         {
             "name": "openconext/monitor-bundle",
-            "version": "dev-master",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Monitor-bundle.git",
                 "reference": "3f36539bc70cb621dbf1d7a89aec944f1e7199d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/3f36539bc70cb621dbf1d7a89aec944f1e7199d1",
+                "reference": "3f36539bc70cb621dbf1d7a89aec944f1e7199d1",
+                "shasum": ""
             },
             "require": {
                 "doctrine/orm": "^2.9",
@@ -1712,33 +1718,17 @@
                     "OpenConext\\MonitorBundle\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "App\\Tests\\": "src/Tests/"
-                }
-            },
-            "scripts": {
-                "tests": {
-                    "docheader": "vendor/bin/docheader check src/",
-                    "phpcmd": "vendor/bin/phpmd src xml phpmd.xml --exclude=*/Tests/*",
-                    "phpcs": "vendor/bin/phpcs src --report=full --standard=phpcs.xml --extensions=php --warning-severity=0",
-                    "phpcpd": "vendor/bin/phpcpd src --exclude=src/Tests/*",
-                    "phpunit": "vendor/bin/phpunit --coverage-text"
-                },
-                "post-update-cmd": [
-                    "@tests"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
             "description": "A Symfony 4/5/6 bundle that facilitates health and info endpoints to a Symfony application. The bundle is backwards compatible with Symfony 2 projects.",
             "keywords": [
                 "OpenConext",
-                "SURFnet",
-                "StepUp",
                 "health",
-                "monitoring"
+                "monitoring",
+                "stepup",
+                "surfnet"
             ],
             "time": "2022-03-03T10:34:00+00:00"
         },
@@ -8180,9 +8170,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "openconext/monitor-bundle": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
