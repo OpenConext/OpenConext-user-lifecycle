@@ -25,15 +25,16 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('user_lifecycle');
 
         $treeBuilder
-            ->root('user_lifecycle')
-                ->children()
-                    ->arrayNode('clients')
-                        ->info('Configures the deprovision clients.')
-                        ->isRequired()
-                        ->addDefaultsIfNotSet()
+            ->getRootNode()
+            ->children()
+                ->arrayNode('clients')
+                    ->info('Configures the deprovision clients.')
+                    ->isRequired()
+                    ->useAttributeAsKey('name')
+                    ->arrayPrototype()
                         ->children()
                             ->scalarNode('url')
                                 ->isRequired()
@@ -67,21 +68,22 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
-                    ->arrayNode('deprovision_api')
-                        ->info('Configures the deprovision API.')
-                        ->canBeDisabled()
-                        ->addDefaultsIfNotSet()
-                        ->children()
+                ->end()
+                ->arrayNode('deprovision_api')
+                    ->info('Configures the deprovision API.')
+                    ->canBeDisabled()
+                    ->children()
                         ->booleanNode('enabled')
                             ->defaultFalse()
                             ->validate()
                                 ->ifTrue(function ($enabled) {
-                                    return is_bool($enabled);
+                                    return !is_bool((bool)$enabled);
                                 })
                                 ->thenInvalid("Enabled must be a boolean, got '%s'")
                             ->end()
                         ->end()
                         ->scalarNode('username')
+                            ->validate()
                                 ->ifTrue(function ($username) {
                                     return !is_string($username) || empty($username);
                                 })
@@ -97,8 +99,8 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
-                ->end();
-
+                ->end()
+            ->end();
         return $treeBuilder;
     }
 }

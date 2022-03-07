@@ -42,7 +42,7 @@ abstract class DatabaseTestCase extends KernelTestCase
      */
     protected static $kernel;
 
-    public function setUp()
+    protected function setUp(): void
     {
         self::$kernel = self::bootKernel();
     }

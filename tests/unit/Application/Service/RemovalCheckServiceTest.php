@@ -41,7 +41,7 @@ class RemovalCheckServiceTest extends TestCase
      */
     private $logger;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->logger = m::mock(LoggerInterface::class);
         $this->service = new RemovalCheckService($this->logger);

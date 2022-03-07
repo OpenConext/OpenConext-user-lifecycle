@@ -26,7 +26,6 @@ security:
         main:
             anonymous: ~
             http_basic: ~
-            logout_on_user_change: true
 
     access_control:
         # require ROLE_ADMIN for /api/deprovision*

@@ -42,7 +42,7 @@ class InactiveUsersQueryHandlerTest extends TestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->repository = m::mock(LastLoginRepositoryInterface::class);
         $this->queryHandler = new InactiveUsersQueryHandler($this->repository);

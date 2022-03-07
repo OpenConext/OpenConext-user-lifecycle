@@ -4,14 +4,13 @@
 
     <target name="lint">
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
-            <arg path="app" />
             <arg path="src" />
             <arg path="tests" />
         </exec>
 
         <exec executable="bin/console" failonerror="true">
             <arg line="lint:yaml" />
-            <arg path="app/config" />
+            <arg path="config" />
         </exec>
 
         <exec executable="composer" failonerror="true">
@@ -42,10 +41,10 @@
             <arg line="--standard=phpcs_tests.xml" />
             <arg path="tests" />
         </exec>
-
-        <exec executable="vendor/bin/phpcpd" failonerror="false">
-            <arg path="src" />
-        </exec>
+<!-- Disabled for now. The current package is incompatible with Xdebug3. And a newer CPD is blocked by our PHP version-->
+<!--        <exec executable="vendor/bin/phpcpd" failonerror="false">-->
+<!--            <arg path="src" />-->
+<!--        </exec>-->
     </target>
 
     <target name="phpunit" depends="unit-tests,integration-tests" />

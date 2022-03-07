@@ -39,7 +39,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected static $container;
 
     /**
      * @var MockHandler
@@ -61,38 +61,40 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->container = self::$kernel->getContainer();
+        self::$container = self::$kernel->getContainer();
 
         // Create a client collection that consists of mockable guzzle clients utilizing the Guzzle mock handler.
-        $clientCollection = $this->container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
+        $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
 
         $clientCollection->addClient(
-            $this->container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
         );
         $clientCollection->addClient(
-            $this->container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
         );
 
         // Expose the mock handlers, so the test methods can determine what the 'api' should return
-        $this->handlerMyService = $this->container->get(
+        $this->handlerMyService = self::$container->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name'
         );
-        $this->handlerMySecondService = $this->container->get(
+        $this->handlerMySecondService = self::$container->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name'
         );
 
         // Create the application and add the information command
-        $this->application = new Application(self::$kernel);
+        $this->application = new Application();
 
-        $deprovisionService = $this->container->get(DeprovisionService::class);
+        $deprovisionService = self::$container->get(DeprovisionService::class);
 
         $summaryService = new SummaryService();
 
         // Set the time on the LastLoginRepository
-        $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
+        $this->repository = self::$container
+            ->get('doctrine.orm.default_entity_manager')
+            ->getRepository(LastLogin::class);
         $this->repository->setNow(new DateTime('2018-01-01'));
 
         $logger = m::mock(LoggerInterface::class);
@@ -100,7 +102,9 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $progressReporter = new ProgressReporter();
 
-        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger));
+        $this->application->add(
+            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger)
+        );
 
         // Load the database fixtures
         $this->loadFixtures();
@@ -128,8 +132,8 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
 
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(3, $this->repository->findAll());
@@ -198,7 +202,10 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(1, $this->repository->findAll());
-        $this->assertContains('"Something went awfully wrong" for user "urn:collab:org:surf.nl:jason_mraz"', $output);
+        $this->assertStringContainsString(
+            '"Something went awfully wrong" for user "urn:collab:org:surf.nl:jason_mraz"',
+            $output
+        );
     }
 
     private function getOkStatus($serviceName, $collabPersonId)

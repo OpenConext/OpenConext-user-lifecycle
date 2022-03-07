@@ -10,7 +10,7 @@
 Deprovision users within the OpenConext platform. The User Lifecycle application is where the last login information of OpenConext suite users is stored. From this application you can trigger the deprovisioning of users that are no longer considered active users.
 
 ## Configuring deprovision clients
-A deprovision client is an OpenConext suite app that implements the deprovisioning API. And can therefor be used by OpenConext User Lifecycle to deprovision users from the platform. To configure a client, please update the `app/config/parameters.yml` file. For each client provide an entry in the `open_conext_user_lifecycle_clients` configuration section. An example can be found below.
+A deprovision client is an OpenConext suite app that implements the deprovisioning API. And can therefor be used by OpenConext User Lifecycle to deprovision users from the platform. To configure a client, please update the `config/legacy/parameters.yml` file. For each client provide an entry in the `open_conext_user_lifecycle_clients` configuration section. An example can be found below.
 
 ```yaml
 open_conext_user_lifecycle_clients:
@@ -25,11 +25,11 @@ open_conext_user_lifecycle_clients:
         password: 'secret'
 ``` 
 
-For more information about setting up the clients, see the `parameters.yml.dist` file.
+For more information about setting up the clients, see the `/config/legacy/parameters.yml.dist` file.
 
 ## Deprovisioning users
 Deprovisioning users can be done on a user basis, providing the user collab person id. Or automatically
-after a period of inactiviy. This period can be configured in the `parameters.yml`. Both options use
+after a period of inactiviy. This period can be configured in the `/config/legacy/parameters.yml`. Both options use
 the `userlifecyle deprovision` console command.
 
 ### Single user
@@ -110,7 +110,7 @@ $ userlifecyle information urn:collab:example.org:user_id
 ## API
 An API can be toggled, exposing the deprovision command (in read mode). Use the following feature toggle to enable/disable the API.
 
-In app/config/parameters.yml
+In config/legacy/parameters.yml
 ```bash
 # By default the API is disabled
 deprovision_api_settings_enabled: true
@@ -118,7 +118,7 @@ deprovision_api_settings_enabled: true
 
 Only user information can be read from the endpoint. The API by default is configured with basic authentication, using a configurable username and password.
 
-In app/config/parameters.yml
+In config/legacy/parameters.yml
  ```bash
 # To enable the API
 deprovision_api_settings_enabled: true

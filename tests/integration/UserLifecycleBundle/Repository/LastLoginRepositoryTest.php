@@ -30,7 +30,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures();

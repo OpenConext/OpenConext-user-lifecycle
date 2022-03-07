@@ -1,4 +1,4 @@
-# This file# This DI configuration file containes overrides on the DashboardBundle configuration,
+# This file# This DI configuration file contains overrides on the DashboardBundle configuration,
 # typically to replace doctrine repositories with in-memory repositories.
 parameters:
     database_host: 127.0.0.1

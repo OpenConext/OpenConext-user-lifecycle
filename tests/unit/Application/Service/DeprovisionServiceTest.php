@@ -69,7 +69,7 @@ class DeprovisionServiceTest extends TestCase
      */
     private $removeFromLastLoginCommandHandler;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->apiCollection = m::mock(DeprovisionClientCollection::class);
         $this->sanityChecker = m::mock(SanityCheckServiceInterface::class);
