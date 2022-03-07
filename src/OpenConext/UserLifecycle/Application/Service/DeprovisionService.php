@@ -124,7 +124,6 @@ class DeprovisionService implements DeprovisionServiceInterface
     {
         $this->logger->debug('Retrieve the users that are marked for deprovisioning.');
         $users = $this->lastLoginService->findUsersForDeprovision();
-
         $this->logger->debug('Perform sanity checks on the response from the last login service.');
         $this->sanityCheckService->check($users);
 
