@@ -15,6 +15,6 @@ doctrine:
       openconext_user_lifecycle:
         type: annotation
         is_bundle: false
-        dir: "%kernel.root_dir%/../src/OpenConext/UserLifecycle/Domain/Entity"
+        dir: "%kernel.project_dir%/src/OpenConext/UserLifecycle/Domain/Entity"
         prefix: OpenConext\UserLifecycle\Domain\Entity
         alias: OpenConextUserLifecycle
