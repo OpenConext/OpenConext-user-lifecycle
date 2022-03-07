@@ -64,7 +64,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::$container = self::$kernel->getContainer();
+        self::$container = static::getContainer();
 
         // Create a client collection that consists of mockable guzzle clients utilizing the Guzzle mock handler.
         $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');

@@ -154,6 +154,9 @@
     "symfony/property-access": {
         "version": "v4.4.38"
     },
+    "symfony/runtime": {
+        "version": "v5.4.5"
+    },
     "symfony/security-bundle": {
         "version": "4.4",
         "recipe": {
