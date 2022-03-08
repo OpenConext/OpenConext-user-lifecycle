@@ -1,0 +1,28 @@
+name: test-integration
+on:
+  pull_request:
+  push:
+    branches: [ master, develop, feature/travis-to-ghactions]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Init environment
+        run: |
+          docker-compose up -d
+          docker-compose exec -rm -t php-fpm sh
+      - name: Install dependencies
+        run: composer install
+      - name: Run tests
+        run: composer test
