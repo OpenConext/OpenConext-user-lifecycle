@@ -29,22 +29,22 @@ class DatabaseTestFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $lastLoginJames = new LastLogin(
-            new CollabPersonId('urn:collab:org:surf.nl:james_watson'),
+            new CollabPersonId('urn:collab:person:surf.nl:james_watson'),
             new DateTime('2015-01-01')
         );
 
         $lastLoginJason = new LastLogin(
-            new CollabPersonId('urn:collab:org:surf.nl:jason_mraz'),
+            new CollabPersonId('urn:collab:person:surf.nl:jason_mraz'),
             new DateTime('2017-05-25')
         );
 
         $lastLoginJimi = new LastLogin(
-            new CollabPersonId('urn:collab:org:surf.nl:jimi_hendrix'),
+            new CollabPersonId('urn:collab:person:surf.nl:jimi_hendrix'),
             new DateTime('1970-09-28')
         );
 
         $lastLoginJohn = new LastLogin(
-            new CollabPersonId('urn:collab:org:surf.nl:john_doe'),
+            new CollabPersonId('urn:collab:person:surf.nl:john_doe'),
             new DateTime('2018-01-01')
         );
 

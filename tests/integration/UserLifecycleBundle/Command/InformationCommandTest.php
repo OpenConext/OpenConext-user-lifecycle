@@ -92,7 +92,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
     public function test_execute()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
@@ -114,7 +114,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
     public function test_execute_second_service_returned_failed_response()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
@@ -148,7 +148,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
     public function test_execute_silently()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))

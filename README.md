@@ -49,8 +49,8 @@ The `user` argument should be the one and only argument of the command.
 **Example usage**
 
 ```bash
-$ userlifecyle deprovision urn:collab:org:surf.nl:janis_joplin
-Continue with deprovisioning of "urn:collab:org:surf.nl:janis_joplin"? (y/n)
+$ userlifecyle deprovision urn:collab:person:surf.nl:janis_joplin
+Continue with deprovisioning of "urn:collab:person:surf.nl:janis_joplin"? (y/n)
 # Will start deprovisioning after a positive answer to the confirmation.
 ```
 

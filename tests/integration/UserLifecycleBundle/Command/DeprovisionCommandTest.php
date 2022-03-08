@@ -112,7 +112,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
     public function test_execute()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
@@ -138,7 +138,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
     public function test_execute_cancels_when_no_is_confirmed()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
@@ -164,7 +164,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
     public function test_execute_dry_run()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
@@ -189,7 +189,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
     public function test_execute_no_interaction()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
@@ -213,7 +213,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
     public function test_execute_silently()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
@@ -237,7 +237,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
     {
         $this->expectExceptionMessage("The --json option must be used in combination with --no-interaction (-n).");
         $this->expectException(RuntimeException::class);
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $command = $this->application->find('deprovision');
         $commandTester = new CommandTester($command);
