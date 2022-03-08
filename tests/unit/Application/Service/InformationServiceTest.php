@@ -52,7 +52,7 @@ class InformationServiceTest extends TestCase
     public function test_read_information_for()
     {
         // Setup the test using test doubles
-        $personId = 'jay-leno';
+        $personId = 'urn:collab:person:jay-leno';
 
         $collection = m::mock(InformationResponseCollection::class);
         $collection

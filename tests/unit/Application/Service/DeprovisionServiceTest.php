@@ -90,7 +90,7 @@ class DeprovisionServiceTest extends TestCase
     public function test_deprovision()
     {
         // Setup the test using test doubles
-        $personId = 'jay-leno';
+        $personId = 'urn:collab:person:jay-leno';
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
             ->shouldReceive('jsonSerialize')
@@ -100,7 +100,7 @@ class DeprovisionServiceTest extends TestCase
             ->shouldReceive('deprovision')
             ->andReturnUsing(
                 function ($expectedCollabPersonId, $expectedDryRunState) use ($collection) {
-                    $this->assertEquals('jay-leno', $expectedCollabPersonId->getCollabPersonId());
+                    $this->assertEquals('urn:collab:person:jay-leno', $expectedCollabPersonId->getCollabPersonId());
                     $this->assertFalse($expectedDryRunState);
 
                     return $collection;
@@ -125,7 +125,7 @@ class DeprovisionServiceTest extends TestCase
     public function test_deprovision_dry_run()
     {
         // Setup the test using test doubles
-        $personId = 'jeff-beck';
+        $personId = 'urn:collab:person:jeff-beck';
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
             ->shouldReceive('jsonSerialize')
@@ -134,7 +134,7 @@ class DeprovisionServiceTest extends TestCase
         $this->apiCollection
             ->shouldReceive('deprovision')
             ->andReturnUsing(function ($expectedCollabPersonId, $expectedDryRunState) use ($collection) {
-                $this->assertEquals('jeff-beck', $expectedCollabPersonId->getCollabPersonId());
+                $this->assertEquals('urn:collab:person:jeff-beck', $expectedCollabPersonId->getCollabPersonId());
                 $this->assertTrue($expectedDryRunState);
                 return $collection;
             });
@@ -158,8 +158,8 @@ class DeprovisionServiceTest extends TestCase
     public function test_batch_deprovision()
     {
         $mockCollection = m::mock(LastLoginCollectionInterface::class);
-        $mockUser1 = $this->buildMockLastLoginEntry('jack-black');
-        $mockUser2 = $this->buildMockLastLoginEntry('jan-berry');
+        $mockUser1 = $this->buildMockLastLoginEntry('urn:collab:person:jack-black');
+        $mockUser2 = $this->buildMockLastLoginEntry('urn:collab:person:jan-berry');
 
         $this->lastLoginService
             ->shouldReceive('findUsersForDeprovision')
@@ -187,7 +187,10 @@ class DeprovisionServiceTest extends TestCase
             ->shouldReceive('deprovision')
             ->andReturnUsing(
                 function ($expectedCollabPersonId, $expectedDryRunState) use ($mockCollection, $collection) {
-                    $this->assertContains($expectedCollabPersonId->getCollabPersonId(), ['jack-black', 'jan-berry']);
+                    $this->assertContains(
+                        $expectedCollabPersonId->getCollabPersonId(),
+                        ['urn:collab:person:jack-black', 'urn:collab:person:jan-berry']
+                    );
                     $this->assertFalse($expectedDryRunState);
 
                     return $collection;
@@ -214,8 +217,8 @@ class DeprovisionServiceTest extends TestCase
     public function test_batch_deprovision_dry_run()
     {
         $mockCollection = m::mock(LastLoginCollectionInterface::class);
-        $mockUser1 = $this->buildMockLastLoginEntry('jack-black');
-        $mockUser2 = $this->buildMockLastLoginEntry('jan-berry');
+        $mockUser1 = $this->buildMockLastLoginEntry('urn:collab:person:jack-black');
+        $mockUser2 = $this->buildMockLastLoginEntry('urn:collab:person:jan-berry');
 
         $this->lastLoginService
             ->shouldReceive('findUsersForDeprovision')
@@ -243,7 +246,10 @@ class DeprovisionServiceTest extends TestCase
             ->shouldReceive('deprovision')
             ->andReturnUsing(
                 function ($expectedCollabPersonId, $expectedDryRunState) use ($mockCollection, $collection) {
-                    $this->assertContains($expectedCollabPersonId->getCollabPersonId(), ['jack-black', 'jan-berry']);
+                    $this->assertContains(
+                        $expectedCollabPersonId->getCollabPersonId(),
+                        ['urn:collab:person:jack-black', 'urn:collab:person:jan-berry']
+                    );
                     $this->assertTrue($expectedDryRunState);
 
                     return $collection;

@@ -57,7 +57,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
     public function test_delete()
     {
-        $userId ='urn:collab:org:surf.nl:jason_mraz';
+        $userId ='urn:collab:person:surf.nl:jason_mraz';
         $result = $this->repository->delete($userId);
 
         $this->assertNull($result, 'The delete message should return void.');
@@ -66,7 +66,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
     public function test_delete_non_exisiting()
     {
-        $userId ='urn:collab:org:surf.nl:joe_dirt';
+        $userId ='urn:collab:person:surf.nl:joe_dirt';
         $result = $this->repository->delete($userId);
 
         $this->assertNull($result, 'The delete message should return void.');

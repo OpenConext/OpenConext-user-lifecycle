@@ -115,7 +115,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         // Ascertain we start of with 4 entries in the last login repository
         $this->assertCount(4, $this->repository->findAll());
 
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
         $this->handlerMyService->append(
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
@@ -148,17 +148,17 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
 
         $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user1')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user2')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user3')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user4'))
         );
 
         $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user1')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user2')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user3')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user4'))
         );
 
         $command = $this->application->find('deprovision');
@@ -179,17 +179,17 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
 
         $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user1')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user2')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user3')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user4'))
         );
 
         $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
-            new Response(200, [], $this->getFailedStatus('my_second_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user1')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user2')),
+            new Response(200, [], $this->getFailedStatus('my_second_name', 'urn:collab:person:user3')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user4'))
         );
 
         $command = $this->application->find('deprovision');
@@ -203,7 +203,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(1, $this->repository->findAll());
         $this->assertStringContainsString(
-            '"Something went awfully wrong" for user "urn:collab:org:surf.nl:jason_mraz"',
+            '"Something went awfully wrong" for user "urn:collab:person:surf.nl:jason_mraz"',
             $output
         );
     }
