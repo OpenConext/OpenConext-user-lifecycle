@@ -58,18 +58,6 @@
         </exec>
     </target>
 
-    <target name="unit-tests-no-coverage">
-        <exec executable="vendor/bin/phpunit" failonerror="true">
-            <arg line="--testsuite unit" />
-        </exec>
-    </target>
-
-    <target name="integration-tests-no-coverage" depends="create-test-db">
-        <exec executable="vendor/bin/phpunit" failonerror="true">
-            <arg line="--testsuite integration" />
-        </exec>
-    </target>
-
     <target name="unit-tests">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite unit" />

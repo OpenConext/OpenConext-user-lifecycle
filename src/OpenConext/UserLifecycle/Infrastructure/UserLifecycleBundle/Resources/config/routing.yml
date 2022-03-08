@@ -4,4 +4,4 @@ deprovision:
     requirements:
         collabPersonId: .+
     methods: GET
-    defaults: { _controller: UserLifecycleBundle:Api:deprovision }
+    defaults: { _controller: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\ApiController::deprovisionAction }

@@ -37,16 +37,11 @@ abstract class DatabaseTestCase extends KernelTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var KernelInterface
-     */
-    protected static $kernel;
-
     protected function setUp(): void
     {
-        self::$kernel = self::bootKernel();
+        self::bootKernel();
     }
-    
+
     protected function loadFixtures()
     {
         $em = $this->getEntitytManager();

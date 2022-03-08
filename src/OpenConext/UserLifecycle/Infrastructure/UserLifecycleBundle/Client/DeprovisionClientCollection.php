@@ -80,7 +80,7 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
 
         foreach ($informationResponses as $informationResponse) {
             $collection->addInformationResponse($informationResponse);
-        };
+        }
 
         return $collection;
     }
