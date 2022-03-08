@@ -19,6 +19,6 @@
 .env
 
 ###> phpunit/phpunit ###
-/phpunit.xml
+/ci/qa/phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###

@@ -66,7 +66,23 @@
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "@auto-scripts"
-        ]
+        ],
+        "test": [
+            "@phplint",
+            "@docheader",
+            "@phpmd",
+            "@phpcs",
+            "@create-db",
+            "@phpunit",
+            "@security-tests"
+        ],
+        "phplint": "./ci/qa/phplint",
+        "docheader": "ci/qa/docheader",
+        "phpmd": "./ci/qa/phpmd",
+        "phpcs": "./ci/qa/phpcs",
+        "create-db": "ci/qa/create-db",
+        "phpunit": "./ci/qa/phpunit",
+        "security-tests": "./ci/qa/security-tests"
     },
     "config": {
         "optimize-autoloader": true,
