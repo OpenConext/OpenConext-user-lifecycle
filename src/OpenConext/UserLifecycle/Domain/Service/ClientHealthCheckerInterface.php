@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,14 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Client;
+namespace OpenConext\UserLifecycle\Domain\Service;
 
 use OpenConext\UserLifecycle\Domain\Exception\DeprovisionClientUnavailableException;
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-interface DeprovisionClientCollectionInterface
+interface ClientHealthCheckerInterface
 {
-    public function addClient(DeprovisionClientInterface $client);
-
-    /**
-     * @param CollabPersonId $user
-     * @param bool $dryRun
-     *
-     * @return InformationResponseCollectionInterface
-     */
-    public function deprovision(CollabPersonId $user, $dryRun = false);
-
-    /**
-     * @param CollabPersonId $user
-     * @return InformationResponseCollectionInterface
-     */
-    public function information(CollabPersonId $user);
-
     /**
      * @throws DeprovisionClientUnavailableException
      */
-    public function healthCheck();
+    public function healthCheck(): void;
 }

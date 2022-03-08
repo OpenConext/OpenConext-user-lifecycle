@@ -24,6 +24,7 @@ use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\ProgressReporterInterface;
@@ -36,7 +37,7 @@ use Webmozart\Assert\Assert;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class DeprovisionService implements DeprovisionServiceInterface
+class DeprovisionService implements DeprovisionServiceInterface, ClientHealthCheckerInterface
 {
     /**
      * @var DeprovisionClientCollectionInterface
@@ -96,7 +97,6 @@ class DeprovisionService implements DeprovisionServiceInterface
         $collabPersonId = $this->buildCollabPersonId($personId);
 
         $this->logger->debug('Delegate deprovisioning to the registered services.');
-
         $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun);
 
         $this->logger->info(
@@ -126,7 +126,6 @@ class DeprovisionService implements DeprovisionServiceInterface
         $users = $this->lastLoginService->findUsersForDeprovision();
         $this->logger->debug('Perform sanity checks on the response from the last login service.');
         $this->sanityCheckService->check($users);
-
         $batchInformationCollection = new BatchInformationResponseCollection();
 
         foreach ($users->getData() as $currentIndex => $lastLogin) {
@@ -165,5 +164,10 @@ class DeprovisionService implements DeprovisionServiceInterface
         Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
 
         return new CollabPersonId($personId);
+    }
+
+    public function healthCheck(): void
+    {
+        $this->deprovisionClientCollection->healthCheck();
     }
 }

@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7\Response;
@@ -27,6 +28,7 @@ use InvalidArgumentException as CoreInvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
+use OpenConext\UserLifecycle\Domain\Exception\DeprovisionClientUnavailableException;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidArgumentException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\InvalidResponseException;
@@ -72,13 +74,7 @@ class DeprovisionClient implements DeprovisionClientInterface
         $this->informationResponseFactory = $factory;
     }
 
-    /**
-     * @param CollabPersonId $user
-     * @param bool $dryRun
-     *
-     * @return PromiseInterface
-     */
-    public function deprovision(CollabPersonId $user, $dryRun = false)
+    public function deprovision(CollabPersonId $user, bool $dryRun = false): PromiseInterface
     {
         if ($dryRun) {
             return $this->delete(self::DRYRUN_ENDPOINT, [$user->getCollabPersonId()]);
@@ -87,17 +83,12 @@ class DeprovisionClient implements DeprovisionClientInterface
         return $this->delete(self::DEPROVISION_ENDPOINT, [$user->getCollabPersonId()]);
     }
 
-    /**
-     * @param CollabPersonId $user
-     *
-     * @return PromiseInterface
-     */
-    public function information(CollabPersonId $user)
+    public function information(CollabPersonId $user): PromiseInterface
     {
         return $this->read(self::DEPROVISION_ENDPOINT, [$user->getCollabPersonId()]);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -270,5 +261,17 @@ class DeprovisionClient implements DeprovisionClientInterface
         }
 
         return $response;
+    }
+
+    public function health(): void
+    {
+        try {
+            $response = $this->httpClient->request('GET', '/health', ['timeout' => 5]);
+            if ($response->getStatusCode() !== 200) {
+                throw new DeprovisionClientUnavailableException($this->getName());
+            }
+        } catch (RequestException $e) {
+            throw new DeprovisionClientUnavailableException($this->getName());
+        }
     }
 }

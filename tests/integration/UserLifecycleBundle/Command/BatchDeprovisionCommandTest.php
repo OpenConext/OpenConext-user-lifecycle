@@ -117,10 +117,12 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -148,6 +150,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user1')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user2')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user3')),
@@ -155,6 +158,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user1')),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user2')),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user3')),
@@ -179,6 +183,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user1')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user2')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user3')),
@@ -186,6 +191,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user1')),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user2')),
             new Response(200, [], $this->getFailedStatus('my_second_name', 'urn:collab:person:user3')),

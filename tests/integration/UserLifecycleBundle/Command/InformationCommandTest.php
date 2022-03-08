@@ -95,10 +95,12 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -117,11 +119,13 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $errorMessage = 'Internal server error';
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
         );
         $command = $this->application->find('information');
@@ -151,11 +155,13 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $errorMessage = 'Internal server error';
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
         );
         $command = $this->application->find('information');

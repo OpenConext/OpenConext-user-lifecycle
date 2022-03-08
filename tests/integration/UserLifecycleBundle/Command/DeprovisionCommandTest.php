@@ -115,10 +115,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -141,10 +143,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -167,10 +171,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -192,10 +198,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -216,10 +224,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 

@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 use Exception;
 use JsonSerializable;
 use OpenConext\UserLifecycle\Application\Service\ProgressReporterInterface;
+use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
@@ -40,7 +41,7 @@ class DeprovisionCommand extends Command
     private $logger;
 
     /**
-     * @var DeprovisionServiceInterface
+     * @var DeprovisionServiceInterface&ClientHealthCheckerInterface
      */
     private $service;
 
@@ -174,6 +175,8 @@ class DeprovisionCommand extends Command
         }
 
         try {
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
             $information = $this->service->batchDeprovision($this->progressReporter, $dryRun);
 
             if (!$outputOnlyJson) {
@@ -219,6 +222,8 @@ class DeprovisionCommand extends Command
             )
         );
         try {
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
             $information = $this->service->deprovision($userIdInput, $dryRun);
 
             if (!$outputOnlyJson) {

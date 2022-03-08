@@ -27,6 +27,7 @@ use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
+use OpenConext\UserLifecycle\Domain\Service\DeprovisionClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\ProgressReporterInterface;
 use OpenConext\UserLifecycle\Domain\Service\RemovalCheckServiceInterface;
@@ -71,7 +72,12 @@ class DeprovisionServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->apiCollection = m::mock(DeprovisionClientCollection::class);
+        $this->apiCollection = m::mock(
+            DeprovisionClientCollection::class,
+            DeprovisionClientHealthCheckerInterface::class
+        );
+        $this->apiCollection
+            ->shouldReceive('healthCheck');
         $this->sanityChecker = m::mock(SanityCheckServiceInterface::class);
         $this->lastLoginService = m::mock(LastLoginServiceInterface::class);
         $this->removalCheckService = m::mock(RemovalCheckServiceInterface::class);
