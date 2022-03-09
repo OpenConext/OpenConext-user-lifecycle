@@ -30,10 +30,10 @@ For more information about setting up the clients, see the `/config/legacy/param
 ## Deprovisioning users
 Deprovisioning users can be done on a user basis, providing the user collab person id. Or automatically
 after a period of inactiviy. This period can be configured in the `/config/legacy/parameters.yml`. Both options use
-the `userlifecyle deprovision` console command.
+the `userlifecycle deprovision` console command.
 
 ### Single user
-The `userlifecyle deprovision` takes an user argument and several other options.
+The `userlifecycle deprovision` takes an user argument and several other options.
 
 The `user` argument should be the one and only argument of the command. 
 
@@ -49,18 +49,18 @@ The `user` argument should be the one and only argument of the command.
 **Example usage**
 
 ```bash
-$ userlifecyle deprovision urn:collab:person:surf.nl:janis_joplin
+$ userlifecycle deprovision urn:collab:person:surf.nl:janis_joplin
 Continue with deprovisioning of "urn:collab:person:surf.nl:janis_joplin"? (y/n)
 # Will start deprovisioning after a positive answer to the confirmation.
 ```
 
 ```bash
-$ userlifecyle deprovision urn:collab:org:surf.nl:janis_joplin --dry-run
+$ userlifecycle deprovision urn:collab:org:surf.nl:janis_joplin --dry-run
 # Asks confirmation, will not deprovision actual user data
 ```
 
 ```bash
-$ userlifecyle deprovision urn:collab:org:surf.nl:janis_joplin --no-interaction --json
+$ userlifecycle deprovision urn:collab:org:surf.nl:janis_joplin --no-interaction --json
 # Starts deprovisioning right away, will only output the JSON returned from the services.
 ```
 
@@ -78,13 +78,13 @@ The same options can be used as described in the `Single user` section above.
 **Example usage**
 
 ```bash
-$ userlifecyle deprovision
+$ userlifecycle deprovision
 Continue with deprovisioning? (y/n)
 # Will start deprovisioning after a positive answer to the confirmation.
 ```
 
 ```bash
-$ userlifecyle deprovision --dry-run --no-interaction
+$ userlifecycle deprovision --dry-run --no-interaction
 Continue with deprovisioning? (y/n)
 # Will start a dry run without asking for confirmation.
 ```
@@ -104,7 +104,7 @@ The `information` command takes one argument which is the collabPersonId.
 
 **Example usage**
 ```bash
-$ userlifecyle information urn:collab:example.org:user_id
+$ userlifecycle information urn:collab:example.org:user_id
 ```
 
 ## API
