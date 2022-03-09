@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Application\Service;
 use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
+use const PHP_EOL;
 
 class SummaryService implements SummaryServiceInterface
 {
@@ -33,6 +34,13 @@ class SummaryService implements SummaryServiceInterface
     const USER_INFORMATION_JSON_HEADING = 'Full output of the information command:';
 
     const BATCH_DEPROVISION_ERROR_FORMAT = '%d deprovision calls to services failed. See error messages below:';
+
+    private $progressReporter;
+
+    public function __construct(ProgressReporterInterface $progressReporter)
+    {
+        $this->progressReporter = $progressReporter;
+    }
 
     public function summarizeInformationResponse(InformationResponseCollectionInterface $collection)
     {
@@ -74,6 +82,9 @@ class SummaryService implements SummaryServiceInterface
 
     public function summarizeBatchResponse(BatchInformationResponseCollectionInterface $collection)
     {
+
+        $this->progressReporter->printDeprovisionStatistics() . PHP_EOL;
+
         $errorMessageList = '';
 
         $errorMessages = $collection->getErrorMessages();
@@ -84,7 +95,7 @@ class SummaryService implements SummaryServiceInterface
             }
         }
 
-        return $errorMessageList.PHP_EOL.self::USER_DEPROVISION_JSON_HEADING.PHP_EOL;
+        return PHP_EOL.$errorMessageList.PHP_EOL.self::USER_DEPROVISION_JSON_HEADING.PHP_EOL;
     }
 
     private function pluralizeService($count)

@@ -28,10 +28,5 @@ interface ProgressReporterInterface extends BaseProgressReporterInterface
      */
     public function setConsoleOutput(OutputInterface $output);
 
-    /**
-     * @param string $message
-     * @param int $total
-     * @param int $current
-     */
-    public function progress($message, $total, $current);
+    public function progress(string $message, int $total, int $current): void;
 }

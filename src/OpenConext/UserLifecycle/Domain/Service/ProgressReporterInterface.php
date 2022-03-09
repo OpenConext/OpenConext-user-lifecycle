@@ -20,12 +20,13 @@ namespace OpenConext\UserLifecycle\Domain\Service;
 
 interface ProgressReporterInterface
 {
+    public function progress(string $message, int $total, int $current): void;
+    
+    public function startStopwatch(): void;
+    public function stopStopwatch(): void;
 
+    public function reportDeprovisionedFromService(array $statistics): void;
+    public function reportRemovedFromLastLogin(): void;
 
-    /**
-     * @param string $message
-     * @param int $total
-     * @param int $current
-     */
-    public function progress($message, $total, $current);
+    public function printDeprovisionStatistics();
 }
