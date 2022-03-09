@@ -73,16 +73,16 @@
             "@phpmd",
             "@phpcs",
             "@create-db",
-            "@phpunit",
-            "@security-tests"
+            "@security-tests",
+            "@phpunit"
         ],
         "phplint": "./ci/qa/phplint",
         "docheader": "ci/qa/docheader",
         "phpmd": "./ci/qa/phpmd",
         "phpcs": "./ci/qa/phpcs",
-        "create-db": "ci/qa/create-db",
-        "phpunit": "./ci/qa/phpunit",
-        "security-tests": "./ci/qa/security-tests"
+        "create-db": "ci/qa/create-test-db",
+        "security-tests": "./ci/qa/security-tests",
+        "phpunit": "./ci/qa/phpunit"
     },
     "config": {
         "optimize-autoloader": true,
