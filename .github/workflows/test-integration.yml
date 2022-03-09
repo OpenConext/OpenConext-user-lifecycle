@@ -2,7 +2,7 @@ name: test-integration
 on:
   pull_request:
   push:
-    branches: [ master, develop, feature/travis-to-ghactions]
+    branches: [ master, develop ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,8 +21,7 @@ jobs:
       - name: Init environment
         run: |
           docker-compose up -d
-          docker-compose exec -rm -t php-fpm sh
       - name: Install dependencies
-        run: composer install
+        run: docker-compose exec -T php-fpm sh -c 'composer install'
       - name: Run tests
-        run: composer test
+        run: docker-compose exec -T php-fpm sh -c 'composer test'
