@@ -22,13 +22,16 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
 use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service\Stopwatch;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Stopwatch\Stopwatch as FrameworkStopwatch;
 
 class LastLoginRepositoryTest extends DatabaseTestCase
 {
@@ -79,7 +82,9 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->application = new Application();
 
         $lastLoginService = self::$kernel->getContainer()->get(InformationService::class);
-        $summaryService = new SummaryService();
+
+        $progressReporter = new ProgressReporter(new Stopwatch(new FrameworkStopwatch()));
+        $summaryService = new SummaryService($progressReporter);
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();

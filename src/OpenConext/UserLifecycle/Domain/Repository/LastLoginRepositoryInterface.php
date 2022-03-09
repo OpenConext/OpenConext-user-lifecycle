@@ -30,8 +30,6 @@ interface LastLoginRepositoryInterface
 
     /**
      * Delete an entry from the last login table identified by collabPersonId
-     *
-     * @param $collabPersonId
      */
-    public function delete($collabPersonId);
+    public function delete(string $collabPersonId);
 }

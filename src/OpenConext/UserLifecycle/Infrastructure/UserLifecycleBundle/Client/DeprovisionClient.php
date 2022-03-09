@@ -110,7 +110,6 @@ class DeprovisionClient implements DeprovisionClientInterface
         $resource = $this->buildResourcePath($path, $parameters);
 
         $promise = $this->httpClient->requestAsync('GET', $resource, ['exceptions' => false]);
-
         return $promise->then(
             function (Response $response) use ($resource) {
                 try {

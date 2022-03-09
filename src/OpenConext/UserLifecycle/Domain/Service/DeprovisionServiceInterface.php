@@ -28,7 +28,7 @@ interface DeprovisionServiceInterface
      * @param bool $dryRun
      * @return InformationResponseCollectionInterface
      */
-    public function deprovision($personId, $dryRun = false);
+    public function deprovision(ProgressReporterInterface $progressReporter, $personId, $dryRun = false);
 
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.

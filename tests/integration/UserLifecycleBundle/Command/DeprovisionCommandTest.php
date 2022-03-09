@@ -29,11 +29,13 @@ use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service\Stopwatch;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Stopwatch\Stopwatch as FrameworkStopwatch;
 
 class DeprovisionCommandTest extends DatabaseTestCase
 {
@@ -95,12 +97,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->repository->setNow(new DateTime('2018-01-01'));
 
         $deprovisionService = self::$container->get(DeprovisionService::class);
-        $summaryService = new SummaryService();
+        $progressReporter = new ProgressReporter(new Stopwatch(new FrameworkStopwatch()));
+        $summaryService = new SummaryService($progressReporter);
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
 
-        $progressReporter = new ProgressReporter();
 
         $this->application->add(
             new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger)
@@ -134,6 +136,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
         $this->assertStringContainsString($collabPersonId, $output);
         $this->assertStringContainsString('OK', $output);
+
+        // Single deprovisioning does not show the fancy report
+        $this->assertStringNotContainsString('"runtime"', $output);
+        $this->assertStringNotContainsString('"last-login-removals"', $output);
+        $this->assertStringNotContainsString('"deprovisioned-per-client":{', $output);
+
 
         $this->assertCount(3, $this->repository->findAll());
     }

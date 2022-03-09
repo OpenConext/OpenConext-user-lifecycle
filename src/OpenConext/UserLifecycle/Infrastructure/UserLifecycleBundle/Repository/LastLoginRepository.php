@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository
 use DateTime;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\QueryException;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollection;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\DatabaseConnectionException;
@@ -56,7 +57,7 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
      *
      * @param string $collabPersonId
      */
-    public function delete($collabPersonId)
+    public function delete(string $collabPersonId)
     {
         Assert::stringNotEmpty($collabPersonId);
 

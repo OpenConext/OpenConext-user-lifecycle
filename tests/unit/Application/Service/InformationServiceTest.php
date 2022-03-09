@@ -64,7 +64,7 @@ class InformationServiceTest extends TestCase
         $collection = m::mock(InformationResponseCollection::class);
         $collection
             ->shouldReceive('jsonSerialize')
-            ->andReturn('{"only": "test"}');
+            ->andReturn(["only" => "test"]);
 
         $this->apiCollection
             ->shouldReceive('information')

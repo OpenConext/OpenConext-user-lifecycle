@@ -33,6 +33,7 @@ use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
+use function sleep;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -90,7 +91,7 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
      * @param bool $dryRun
      * @return InformationResponseCollectionInterface
      */
-    public function deprovision($personId, $dryRun = false)
+    public function deprovision(ProgressReporterInterface $progressReporter, $personId, $dryRun = false)
     {
         $this->logger->debug('Received a request to deprovision a user.');
 
@@ -105,7 +106,7 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
         );
 
         if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
-            $command = new RemoveFromLastLoginCommand($collabPersonId);
+            $command = new RemoveFromLastLoginCommand($collabPersonId, $progressReporter);
             $this->logger->debug('Remove the user from the last login table.');
             $this->removeFromLastLoginCommandHandler->handle($command);
         }
@@ -137,6 +138,7 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
 
             $collabPersonId = $this->buildCollabPersonId($lastLogin->getCollabPersonId());
             $information = $this->deprovisionClientCollection->deprovision($collabPersonId, $dryRun);
+            $progressReporter->reportDeprovisionedFromService($information->successesPerClient());
             $batchInformationCollection->add($collabPersonId, $information);
 
             $this->logger->info(
@@ -148,14 +150,15 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
             );
 
             if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
-                $command = new RemoveFromLastLoginCommand($collabPersonId);
+                $command = new RemoveFromLastLoginCommand($collabPersonId, $progressReporter);
                 $this->logger->debug('Remove the user from the last login table.');
                 $this->removeFromLastLoginCommandHandler->handle($command);
+                $progressReporter->reportRemovedFromLastLogin();
             }
         }
 
         $progressReporter->progress('Done.', count($users), count($users));
-
+        $progressReporter->stopStopwatch();
         return $batchInformationCollection;
     }
 
