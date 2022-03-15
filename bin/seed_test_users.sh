@@ -17,10 +17,6 @@ if ! [ -x "$(command -v sqlite3)" ]; then
     echo "SQLite is not installed"
     exit 1
 fi
-if ! [ -x "$(command -v rig)" ]; then
-    echo "Rig is not installed. Rig is used to create a random username."
-    exit 1
-fi
 
 if ! [ -f "${databasePath}" ]; then
     echo "The SQLite database was not found at '${databasePath}'"
@@ -29,7 +25,7 @@ fi
 
 echo "Adding ${1} users to the last_login test table.."
 for ((i = 1 ; i <= $1 ; i++)) do
-    randomUserName=`rig | head -n 1 |  tr ' ' _ | tr A-Z a-z`
+    randomUserName=`cat /dev/urandom | tr -dc '[:alpha:]' | fold -w ${1:-20} | head -n 1`
     timeLastLogin=`date --rfc-3339=date -d "-${2} days"`
 
     query="insert into last_login (userid, lastseen) values ('urn:collab:person:user:example.com:${randomUserName}', '${timeLastLogin}');"
