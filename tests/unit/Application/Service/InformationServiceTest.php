@@ -25,6 +25,8 @@ use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
+use OpenConext\UserLifecycle\Domain\Service\DeprovisionClientHealthCheckerInterface;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -44,7 +46,12 @@ class InformationServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->apiCollection = m::mock(DeprovisionClientCollectionInterface::class);
+        $this->apiCollection = m::mock(
+            DeprovisionClientCollection::class,
+            DeprovisionClientHealthCheckerInterface::class
+        );
+        $this->apiCollection
+            ->shouldReceive('healthCheck');
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
         $this->service = new InformationService($this->apiCollection, $logger);
     }
@@ -57,7 +64,7 @@ class InformationServiceTest extends TestCase
         $collection = m::mock(InformationResponseCollection::class);
         $collection
             ->shouldReceive('jsonSerialize')
-            ->andReturn('{"only": "test"}');
+            ->andReturn(["only" => "test"]);
 
         $this->apiCollection
             ->shouldReceive('information')

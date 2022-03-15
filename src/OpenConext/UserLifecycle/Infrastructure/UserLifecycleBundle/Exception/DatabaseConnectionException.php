@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,18 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Service;
+namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception;
 
-interface ProgressReporterInterface
+use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
+use RuntimeException as CoreRuntimeException;
+
+class DatabaseConnectionException extends CoreRuntimeException
 {
-    public function progress(string $message, int $total, int $current): void;
-    
-    public function startStopwatch(): void;
-    public function stopStopwatch(): void;
-
-    public function reportDeprovisionedFromService(array $statistics): void;
-    public function reportRemovedFromLastLogin(): void;
-
-    public function printDeprovisionStatistics();
+    public function __construct(
+        $message = "No connection possible to the database",
+        $code = 0,
+        Throwable $previous = null
+    ) {
+        parent::__construct($message, $code, $previous);
+    }
 }

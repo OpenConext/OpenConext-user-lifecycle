@@ -19,15 +19,11 @@
 namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 
 use Mockery as m;
-use Mockery\Mock;
-use OpenConext\UserLifecycle\Application\Service\SanityCheckService;
+use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
 use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
 class SummaryServiceTest extends TestCase
 {
@@ -36,9 +32,15 @@ class SummaryServiceTest extends TestCase
      */
     private $service;
 
+    /**
+     * @var m\Mock|ProgressReporter
+     */
+    private $reporter;
+
     protected function setUp(): void
     {
-        $this->service = new SummaryService();
+        $this->reporter = m::mock(ProgressReporter::class);
+        $this->service = new SummaryService($this->reporter);
     }
 
     public function test_summarize_information_collection()
@@ -87,6 +89,9 @@ class SummaryServiceTest extends TestCase
             ->shouldReceive('getErrorMessages')
             ->andReturn([]);
 
+        $this->reporter
+            ->shouldReceive('printDeprovisionStatistics');
+
         $summary = $this->service->summarizeBatchResponse($collection);
 
         $this->assertStringNotContainsString('See error messages below:', $summary);
@@ -106,6 +111,9 @@ class SummaryServiceTest extends TestCase
                 'EngineBlock: "Service not available" for user "urn:collab:jane_doe"',
                 'DropjesService: "Server has gone away" for user "urn:collab:jack_black"',
             ]);
+
+        $this->reporter
+            ->shouldReceive('printDeprovisionStatistics');
 
         $summary = $this->service->summarizeBatchResponse($collection);
 

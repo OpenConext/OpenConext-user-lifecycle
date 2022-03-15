@@ -18,6 +18,8 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
+use function array_key_exists;
+
 class InformationResponseCollection implements InformationResponseCollectionInterface
 {
     /**
@@ -25,7 +27,7 @@ class InformationResponseCollection implements InformationResponseCollectionInte
      */
     private $data = [];
 
-    public function addInformationResponse(InformationResponseInterface $informationResponse)
+    public function addInformationResponse(InformationResponseInterface $informationResponse): void
     {
         $this->data[] = $informationResponse;
     }
@@ -33,7 +35,7 @@ class InformationResponseCollection implements InformationResponseCollectionInte
     /**
      * @return InformationResponseInterface[]
      */
-    public function getInformationResponses()
+    public function getInformationResponses(): array
     {
         return $this->data;
     }
@@ -41,7 +43,7 @@ class InformationResponseCollection implements InformationResponseCollectionInte
     /**
      * @return string[]
      */
-    public function getErrorMessages()
+    public function getErrorMessages(): array
     {
         $messages = [];
         foreach ($this->data as $entry) {
@@ -52,16 +54,28 @@ class InformationResponseCollection implements InformationResponseCollectionInte
         return $messages;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->data;
     }
 
-    /**
-     * @return int
-     */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
+    }
+
+    public function successesPerClient(): array
+    {
+        $report = [];
+        foreach ($this->data as $entry) {
+            if (is_null($entry->getErrorMessage()) || !$entry->getErrorMessage()->hasErrorMessage()) {
+                $clientName = (string) $entry->getName();
+                if (!array_key_exists($clientName, $report)) {
+                    $report[$clientName] = 0;
+                }
+                $report[$clientName]++;
+            }
+        }
+        return $report;
     }
 }

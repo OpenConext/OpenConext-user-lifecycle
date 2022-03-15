@@ -27,6 +27,7 @@ use OpenConext\UserLifecycle\Application\Service\DeprovisionService;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
+use OpenConext\UserLifecycle\Domain\Service\DeprovisionClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\LastLoginServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\ProgressReporterInterface;
 use OpenConext\UserLifecycle\Domain\Service\RemovalCheckServiceInterface;
@@ -68,10 +69,19 @@ class DeprovisionServiceTest extends TestCase
      * @var RemoveFromLastLoginCommandHandler|Mock
      */
     private $removeFromLastLoginCommandHandler;
+    /**
+     * @var ProgressReporterInterface|Mock
+     */
+    private $progressReporter;
 
     protected function setUp(): void
     {
-        $this->apiCollection = m::mock(DeprovisionClientCollection::class);
+        $this->apiCollection = m::mock(
+            DeprovisionClientCollection::class,
+            DeprovisionClientHealthCheckerInterface::class
+        );
+        $this->apiCollection
+            ->shouldReceive('healthCheck');
         $this->sanityChecker = m::mock(SanityCheckServiceInterface::class);
         $this->lastLoginService = m::mock(LastLoginServiceInterface::class);
         $this->removalCheckService = m::mock(RemovalCheckServiceInterface::class);
@@ -85,6 +95,9 @@ class DeprovisionServiceTest extends TestCase
             $this->removeFromLastLoginCommandHandler,
             $logger
         );
+        $this->progressReporter = m::mock(ProgressReporterInterface::class);
+        $this->progressReporter->shouldReceive('setConsoleOutput');
+        $this->progressReporter->shouldReceive('progress');
     }
 
     public function test_deprovision()
@@ -94,7 +107,7 @@ class DeprovisionServiceTest extends TestCase
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
             ->shouldReceive('jsonSerialize')
-            ->andReturn('{"only": "test"}');
+            ->andReturn(["only" => "test"]);
 
         $this->apiCollection
             ->shouldReceive('deprovision')
@@ -117,7 +130,7 @@ class DeprovisionServiceTest extends TestCase
             ->once();
 
         // Call the readInformationFor method
-        $response = $this->service->deprovision($personId);
+        $response = $this->service->deprovision($this->progressReporter, $personId);
 
         $this->assertInstanceOf(InformationResponseCollectionInterface::class, $response);
     }
@@ -129,7 +142,7 @@ class DeprovisionServiceTest extends TestCase
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
             ->shouldReceive('jsonSerialize')
-            ->andReturn('{"only": "test"}');
+            ->andReturn(["only" => "test"]);
 
         $this->apiCollection
             ->shouldReceive('deprovision')
@@ -140,7 +153,7 @@ class DeprovisionServiceTest extends TestCase
             });
 
         // Call the readInformationFor method
-        $response = $this->service->deprovision($personId, true);
+        $response = $this->service->deprovision($this->progressReporter, $personId, true);
 
         $this->assertInstanceOf(InformationResponseCollectionInterface::class, $response);
     }
@@ -152,7 +165,7 @@ class DeprovisionServiceTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Please pass a non empty collabPersonId');
 
-        $this->service->deprovision($personId);
+        $this->service->deprovision($this->progressReporter, $personId);
     }
 
     public function test_batch_deprovision()
@@ -181,7 +194,16 @@ class DeprovisionServiceTest extends TestCase
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
             ->shouldReceive('jsonSerialize')
-            ->andReturn('{"only": "test"}');
+            ->andReturn(["only" => "test"]);
+
+        $collection
+            ->shouldReceive('successesPerClient')
+            ->twice();
+        $this->progressReporter
+            ->shouldReceive('reportDeprovisionedFromService')->times(2)
+            ->shouldReceive('stopStopwatch')->times(1)
+            ->shouldReceive('reportRemovedFromLastLogin')->times(2);
+
 
         $this->apiCollection
             ->shouldReceive('deprovision')
@@ -206,12 +228,7 @@ class DeprovisionServiceTest extends TestCase
             ->shouldReceive('handle')
             ->twice();
 
-        $progressReporter = m::mock(ProgressReporterInterface::class);
-        $progressReporter->shouldReceive('setConsoleOutput');
-        $progressReporter->shouldReceive('progress')
-            ->times(3);
-
-        $this->service->batchDeprovision($progressReporter);
+        $this->service->batchDeprovision($this->progressReporter);
     }
 
     public function test_batch_deprovision_dry_run()
@@ -240,7 +257,12 @@ class DeprovisionServiceTest extends TestCase
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
             ->shouldReceive('jsonSerialize')
-            ->andReturn('{"only": "test"}');
+            ->andReturn(["only" => "test"])
+            ->shouldReceive('successesPerClient')->twice();
+
+        $this->progressReporter
+            ->shouldReceive('reportDeprovisionedFromService')->times(2)
+            ->shouldReceive('stopStopwatch')->times(1);
 
         $this->apiCollection
             ->shouldReceive('deprovision')
@@ -256,13 +278,7 @@ class DeprovisionServiceTest extends TestCase
                 }
             );
 
-
-        $progressReporter = m::mock(ProgressReporterInterface::class);
-        $progressReporter->shouldReceive('setConsoleOutput');
-        $progressReporter->shouldReceive('progress')
-            ->times(3);
-
-        $this->service->batchDeprovision($progressReporter, true);
+        $this->service->batchDeprovision($this->progressReporter, true);
     }
 
     private function buildMockLastLoginEntry($personId)

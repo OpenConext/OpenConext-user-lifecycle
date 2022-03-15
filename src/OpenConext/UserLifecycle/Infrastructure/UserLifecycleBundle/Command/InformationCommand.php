@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use Exception;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use Psr\Log\LoggerInterface;
@@ -37,7 +38,7 @@ class InformationCommand extends Command
     private $logger;
 
     /**
-     * @var InformationService
+     * @var InformationService&ClientHealthCheckerInterface
      */
     private $service;
 
@@ -103,6 +104,8 @@ class InformationCommand extends Command
         $this->logger->info(sprintf('Received an information request for user: "%s"', $userIdInput));
 
         try {
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
             $information = $this->service->readInformationFor($userIdInput);
 
             if (!$outputOnlyJson) {

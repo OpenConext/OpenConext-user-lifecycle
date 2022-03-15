@@ -65,6 +65,11 @@ services:
 
     OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface: '@OpenConext\UserLifecycle\Application\Client\InformationResponseFactory'
 
+    OpenConext\UserLifecycle\Domain\Service\StopwatchInterface:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service\Stopwatch
+        arguments:
+            $stopwatch: '@Symfony\Component\Stopwatch\Stopwatch'
+
     open_conext.user_lifecycle.deprovision_client.guzzle_stack:
         public: false
         class: 'GuzzleHttp\HandlerStack'

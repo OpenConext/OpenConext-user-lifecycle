@@ -24,6 +24,7 @@ use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Exception\DeprovisionClientUnavailableException;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 class DeprovisionClientCollection implements DeprovisionClientCollectionInterface
@@ -80,8 +81,15 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
 
         foreach ($informationResponses as $informationResponse) {
             $collection->addInformationResponse($informationResponse);
-        };
+        }
 
         return $collection;
+    }
+
+    public function healthCheck()
+    {
+        foreach ($this->clients as $client) {
+            $client->health();
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 use Exception;
 use JsonSerializable;
 use OpenConext\UserLifecycle\Application\Service\ProgressReporterInterface;
+use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
@@ -40,7 +41,7 @@ class DeprovisionCommand extends Command
     private $logger;
 
     /**
-     * @var DeprovisionServiceInterface
+     * @var DeprovisionServiceInterface&ClientHealthCheckerInterface
      */
     private $service;
 
@@ -114,13 +115,13 @@ class DeprovisionCommand extends Command
         $outputOnlyJson = $input->getOption('json');
         $prettyJson = $input->getOption('pretty');
         $noInteraction = $input->getOption('no-interaction');
-
+        $this->progressReporter->startStopwatch();
         if ($outputOnlyJson && $noInteraction === false) {
             throw new RuntimeException('The --json option must be used in combination with --no-interaction (-n).');
         }
 
         if (is_null($userIdInput)) {
-            return $this->executeBatch(
+            $exitCode = $this->executeBatch(
                 $input,
                 $output,
                 $userIdInput,
@@ -130,7 +131,7 @@ class DeprovisionCommand extends Command
                 $prettyJson
             );
         } else {
-            return $this->executeSingleUser(
+            $exitCode = $this->executeSingleUser(
                 $input,
                 $output,
                 $userIdInput,
@@ -140,6 +141,7 @@ class DeprovisionCommand extends Command
                 $prettyJson
             );
         }
+        return $exitCode;
     }
 
     private function executeBatch(
@@ -174,6 +176,8 @@ class DeprovisionCommand extends Command
         }
 
         try {
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
             $information = $this->service->batchDeprovision($this->progressReporter, $dryRun);
 
             if (!$outputOnlyJson) {
@@ -219,7 +223,9 @@ class DeprovisionCommand extends Command
             )
         );
         try {
-            $information = $this->service->deprovision($userIdInput, $dryRun);
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
+            $information = $this->service->deprovision($this->progressReporter, $userIdInput, $dryRun);
 
             if (!$outputOnlyJson) {
                 $output->write($this->summaryService->summarizeDeprovisionResponse($information), true);

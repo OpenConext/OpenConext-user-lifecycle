@@ -18,14 +18,34 @@
 
 namespace OpenConext\UserLifecycle\Application\Service;
 
+use OpenConext\UserLifecycle\Domain\Service\StopwatchInterface;
+use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+use OpenConext\UserLifecycle\Domain\ValueObject\DeprovisionStatistics;
 use Symfony\Component\Console\Output\OutputInterface;
+use function json_encode;
 
 class ProgressReporter implements ProgressReporterInterface
 {
     /**
+     * @var StopwatchInterface
+     */
+    private $stopwatch;
+
+    /**
      * @var OutputInterface
      */
     private $output;
+
+    /**
+     * @var DeprovisionStatistics
+     */
+    private $deprovisionStatistics;
+
+    public function __construct(StopwatchInterface $stopwatch)
+    {
+        $this->stopwatch = $stopwatch;
+        $this->deprovisionStatistics = new DeprovisionStatistics();
+    }
 
     public function setConsoleOutput(OutputInterface $output)
     {
@@ -37,7 +57,7 @@ class ProgressReporter implements ProgressReporterInterface
      * @param int $total
      * @param int $current
      */
-    public function progress($message, $total, $current)
+    public function progress(string $message, int $total, int $current): void
     {
         if ($this->output === null) {
             return;
@@ -58,5 +78,32 @@ class ProgressReporter implements ProgressReporterInterface
         $this->output->writeln(
             sprintf('%s %s', $paddedProgress, $message)
         );
+    }
+
+    public function startStopwatch(): void
+    {
+        $this->stopwatch->start();
+    }
+
+    public function stopStopwatch(): void
+    {
+        $this->stopwatch->stop();
+    }
+
+    public function reportDeprovisionedFromService(array $statistics): void
+    {
+        $this->deprovisionStatistics->addDeprovisionedPerClient($statistics);
+    }
+
+    public function reportRemovedFromLastLogin(): void
+    {
+        $this->deprovisionStatistics->addLastLoginRemoval();
+    }
+
+    public function printDeprovisionStatistics()
+    {
+        $this->deprovisionStatistics->setRuntime((int) $this->stopwatch->elapsedTime() / 1000);
+
+        $this->output->writeln(json_encode($this->deprovisionStatistics->jsonSerialize()));
     }
 }

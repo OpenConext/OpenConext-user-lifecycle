@@ -18,6 +18,7 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
+use OpenConext\UserLifecycle\Domain\Exception\DeprovisionClientUnavailableException;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 interface DeprovisionClientCollectionInterface
@@ -37,4 +38,9 @@ interface DeprovisionClientCollectionInterface
      * @return InformationResponseCollectionInterface
      */
     public function information(CollabPersonId $user);
+
+    /**
+     * @throws DeprovisionClientUnavailableException
+     */
+    public function healthCheck();
 }

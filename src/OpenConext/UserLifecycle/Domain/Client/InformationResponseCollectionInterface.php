@@ -26,25 +26,24 @@ interface InformationResponseCollectionInterface extends JsonSerializable, Count
     /**
      * @param InformationResponseInterface $informationResponse
      */
-    public function addInformationResponse(InformationResponseInterface $informationResponse);
+    public function addInformationResponse(InformationResponseInterface $informationResponse): void;
 
     /**
      * @return InformationResponseInterface[]
      */
-    public function getInformationResponses();
+    public function getInformationResponses(): array;
 
     /**
      * @return string[]
      */
-    public function getErrorMessages();
+    public function getErrorMessages(): array;
+
+    public function jsonSerialize(): array;
+
+    public function count(): int;
 
     /**
-     * @return array
+     * @return int[]
      */
-    public function jsonSerialize();
-
-    /**
-     * @return int
-     */
-    public function count();
+    public function successesPerClient(): array;
 }
