@@ -33,6 +33,11 @@ fi
 PROJECT_DIR_NAME=${PROJECT_NAME}-${TAG//\//_} &&
 PROJECT_DIR=${RELEASE_DIR}/${PROJECT_DIR_NAME} &&
 
+# Check requirements
+command -v php >/dev/null 2>&1 || { echo >&2 "Missing PHP 7.2. Aborting"; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo >&2 "Misisng NPM.  Aborting."; exit 1; }
+command -v git >/dev/null 2>&1 || { echo >&2 "Misisng Git.  Aborting."; exit 1; }
+
 echo "Preparing environment" &&
 mkdir -p ${RELEASE_DIR} &&
 rm -rf ${PROJECT_DIR} &&
@@ -56,16 +61,18 @@ echo "Commit: ${COMMITHASH}" >> ${PROJECT_DIR}/RELEASE &&
 echo "Cleaning build of dev files" &&
 rm -rf ${PROJECT_DIR}/.idea &&
 rm -rf ${PROJECT_DIR}/.git &&
+rm -rf ${PROJECT_DIR}/.github &&
+rm -rf ${PROJECT_DIR}/ci &&
+rm -rf ${PROJECT_DIR}/tests &&
+rm -rf ${PROJECT_DIR}/docs &&
 rm -f ${PROJECT_DIR}/.gitignore &&
 rm -f ${PROJECT_DIR}/bin/makeRelease.sh &&
-rm -rf ${PROJECT_DIR}/*.xml &&
-rm -rf ${PROJECT_DIR}/tests &&
-rm -rf ${PROJECT_DIR}/.travis.yml &&
-rm -rf ${PROJECT_DIR}/travis.php.ini &&
-rm -rf ${PROJECT_DIR}/ansible &&
-rm -rf ${PROJECT_DIR}/Vagrantfile &&
-rm -rf ${PROJECT_DIR}/docs &&
-rm -rf ${PROJECT_DIR}/.docheader &&
+rm -f ${PROJECT_DIR}/*.xml &&
+rm -f ${PROJECT_DIR}/.env &&
+rm -f ${PROJECT_DIR}/.env.test &&
+rm -f ${PROJECT_DIR}/bin/seed_test_users.sh &&
+rm -f ${PROJECT_DIR}/docker-compose.yml &&
+rm -f ${PROJECT_DIR}/.docheader &&
 
 echo "Create tarball" &&
 cd ${RELEASE_DIR} &&
