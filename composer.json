@@ -21,6 +21,7 @@
         "php": "^7.2",
         "doctrine/doctrine-bundle": "~2.0",
         "doctrine/doctrine-cache-bundle": "^1.4",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "doctrine/orm": "^2.10",
         "guzzlehttp/guzzle": "^6.3",
         "incenteev/composer-parameter-handler": "^2.0",
@@ -37,7 +38,6 @@
         "symfony/stopwatch": "4.4.*"
     },
     "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "malukenho/docheader": "^0.1.6",
         "matthiasnoback/symfony-dependency-injection-test": "^4.3",
         "mockery/mockery": "^1.1",
