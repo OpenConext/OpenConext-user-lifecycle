@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PREVIOUS_SF_ENV=${SYMFONY_ENV}
 export SYMFONY_ENV="prod"
