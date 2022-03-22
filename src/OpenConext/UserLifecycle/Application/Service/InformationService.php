@@ -21,15 +21,16 @@ namespace OpenConext\UserLifecycle\Application\Service;
 use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
 
-class InformationService implements InformationServiceInterface
+class InformationService implements InformationServiceInterface, ClientHealthCheckerInterface
 {
     /**
-     * @var DeprovisionClientCollectionInterface
+     * @var DeprovisionClientCollectionInterface&ClientHealthCheckerInterface
      */
     private $deprovisionClientCollection;
 
@@ -58,7 +59,6 @@ class InformationService implements InformationServiceInterface
         Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
 
         $collabPersonId = new CollabPersonId($personId);
-
         $this->logger->debug('Retrieve the information from the APIs for the user.');
         $information = $this->deprovisionClientCollection->information($collabPersonId);
 
@@ -68,5 +68,9 @@ class InformationService implements InformationServiceInterface
         );
 
         return $information;
+    }
+    public function healthCheck(): void
+    {
+        $this->deprovisionClientCollection->healthCheck();
     }
 }

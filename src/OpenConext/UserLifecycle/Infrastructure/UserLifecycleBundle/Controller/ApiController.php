@@ -22,12 +22,12 @@ use OpenConext\UserLifecycle\Application\Query\FindUserInformationQuery;
 use OpenConext\UserLifecycle\Application\QueryHandler\FindUserInformationQueryHandlerInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Webmozart\Assert\Assert;
 
-class ApiController extends Controller
+class ApiController extends AbstractController
 {
     /**
      * @var DeprovisionApiFeatureToggle

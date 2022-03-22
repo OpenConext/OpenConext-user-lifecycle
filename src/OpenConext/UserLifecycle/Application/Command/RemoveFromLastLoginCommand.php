@@ -18,22 +18,27 @@
 
 namespace OpenConext\UserLifecycle\Application\Command;
 
+use OpenConext\UserLifecycle\Domain\Service\ProgressReporterInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 class RemoveFromLastLoginCommand implements CommandInterface
 {
     private $collabPersonId;
+    private $progressReporter;
 
-    public function __construct(CollabPersonId $personId)
+    public function __construct(CollabPersonId $personId, ProgressReporterInterface $progressReporter)
     {
         $this->collabPersonId = $personId;
+        $this->progressReporter = $progressReporter;
     }
 
-    /**
-     * @return CollabPersonId
-     */
-    public function getCollabPersonId()
+    public function getCollabPersonId(): CollabPersonId
     {
         return $this->collabPersonId;
+    }
+
+    public function getProgressReporter(): ProgressReporterInterface
+    {
+        return $this->progressReporter;
     }
 }

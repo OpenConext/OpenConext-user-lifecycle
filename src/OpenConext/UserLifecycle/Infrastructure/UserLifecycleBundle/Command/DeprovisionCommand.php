@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 use Exception;
 use JsonSerializable;
 use OpenConext\UserLifecycle\Application\Service\ProgressReporterInterface;
+use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
@@ -40,7 +41,7 @@ class DeprovisionCommand extends Command
     private $logger;
 
     /**
-     * @var DeprovisionServiceInterface
+     * @var DeprovisionServiceInterface&ClientHealthCheckerInterface
      */
     private $service;
 
@@ -105,11 +106,8 @@ class DeprovisionCommand extends Command
 
     /**
      * @SuppressWarnings(PHPMD.ElseExpression)
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $userIdInput = $input->getArgument('user');
         $dryRun = $input->getOption('dry-run');
@@ -117,16 +115,33 @@ class DeprovisionCommand extends Command
         $outputOnlyJson = $input->getOption('json');
         $prettyJson = $input->getOption('pretty');
         $noInteraction = $input->getOption('no-interaction');
-
+        $this->progressReporter->startStopwatch();
         if ($outputOnlyJson && $noInteraction === false) {
             throw new RuntimeException('The --json option must be used in combination with --no-interaction (-n).');
         }
 
         if (is_null($userIdInput)) {
-            $this->executeBatch($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson, $prettyJson);
+            $exitCode = $this->executeBatch(
+                $input,
+                $output,
+                $userIdInput,
+                $dryRun,
+                $noInteraction,
+                $outputOnlyJson,
+                $prettyJson
+            );
         } else {
-            $this->executeSingleUser($input, $output, $userIdInput, $dryRun, $noInteraction, $outputOnlyJson, $prettyJson);
+            $exitCode = $this->executeSingleUser(
+                $input,
+                $output,
+                $userIdInput,
+                $dryRun,
+                $noInteraction,
+                $outputOnlyJson,
+                $prettyJson
+            );
         }
+        return $exitCode;
     }
 
     private function executeBatch(
@@ -137,7 +152,7 @@ class DeprovisionCommand extends Command
         $noInteraction,
         $outputOnlyJson,
         $prettyJson
-    ) {
+    ): int {
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
@@ -146,7 +161,7 @@ class DeprovisionCommand extends Command
             );
 
             if (!$helper->ask($input, $output, $question)) {
-                return;
+                return 1;
             }
         }
         $this->logger->info(
@@ -161,6 +176,8 @@ class DeprovisionCommand extends Command
         }
 
         try {
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
             $information = $this->service->batchDeprovision($this->progressReporter, $dryRun);
 
             if (!$outputOnlyJson) {
@@ -172,7 +189,9 @@ class DeprovisionCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
+            return 1;
         }
+        return 0;
     }
 
     private function executeSingleUser(
@@ -183,7 +202,7 @@ class DeprovisionCommand extends Command
         $noInteraction,
         $outputOnlyJson,
         $prettyJson
-    ) {
+    ): int {
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
@@ -192,7 +211,7 @@ class DeprovisionCommand extends Command
             );
 
             if (!$helper->ask($input, $output, $question)) {
-                return;
+                return 1;
             }
         }
 
@@ -204,7 +223,9 @@ class DeprovisionCommand extends Command
             )
         );
         try {
-            $information = $this->service->deprovision($userIdInput, $dryRun);
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
+            $information = $this->service->deprovision($this->progressReporter, $userIdInput, $dryRun);
 
             if (!$outputOnlyJson) {
                 $output->write($this->summaryService->summarizeDeprovisionResponse($information), true);
@@ -214,7 +235,9 @@ class DeprovisionCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
+            return 1;
         }
+        return 0;
     }
 
     /**

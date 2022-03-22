@@ -23,7 +23,9 @@ use Doctrine\ORM\Mapping as ORM;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 /**
- * @ORM\Entity(repositoryClass="OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository")
+ * @ORM\Entity(
+ *     repositoryClass="OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository"
+ * )
  */
 class LastLogin
 {

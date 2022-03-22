@@ -20,6 +20,7 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use Exception;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use Psr\Log\LoggerInterface;
@@ -37,7 +38,7 @@ class InformationCommand extends Command
     private $logger;
 
     /**
-     * @var InformationService
+     * @var InformationService&ClientHealthCheckerInterface
      */
     private $service;
 
@@ -93,12 +94,8 @@ class InformationCommand extends Command
      *  - Return JSON string with the results
      *
      * In case of an error, the command will output the error in text format
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $userIdInput = $input->getArgument('user');
         $outputOnlyJson = $input->getOption('json');
@@ -107,6 +104,8 @@ class InformationCommand extends Command
         $this->logger->info(sprintf('Received an information request for user: "%s"', $userIdInput));
 
         try {
+            $this->logger->debug('Health check the remote services.');
+            $this->service->healthCheck();
             $information = $this->service->readInformationFor($userIdInput);
 
             if (!$outputOnlyJson) {
@@ -125,6 +124,8 @@ class InformationCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
+            return 1;
         }
+        return 0;
     }
 }

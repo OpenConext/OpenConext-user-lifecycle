@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Tests\Unit\Application\Service;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
+use OpenConext\UserLifecycle\Domain\Service\StopwatchInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -30,7 +31,7 @@ class ProgressReporterTest extends TestCase
 
     public function test_reporter_does_nothing_without_console_output_object()
     {
-        $reporter = new ProgressReporter();
+        $reporter = new ProgressReporter(m::mock(StopwatchInterface::class));
         $this->assertNull(
             $reporter->progress('test', 1, 100)
         );
@@ -51,7 +52,7 @@ class ProgressReporterTest extends TestCase
             ->shouldReceive('writeln')
             ->with('[100% of 4 users]    test');
 
-        $reporter = new ProgressReporter();
+        $reporter = new ProgressReporter(m::mock(StopwatchInterface::class));
         $reporter->setConsoleOutput($output);
 
         $reporter->progress('test', 4, 0);

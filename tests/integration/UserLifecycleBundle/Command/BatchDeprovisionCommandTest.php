@@ -28,18 +28,20 @@ use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service\Stopwatch;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Stopwatch\Stopwatch as FrameworkStopwatch;
 
 class BatchDeprovisionCommandTest extends DatabaseTestCase
 {
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected static $container;
 
     /**
      * @var MockHandler
@@ -61,46 +63,51 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->container = self::$kernel->getContainer();
+        self::$container = self::$kernel->getContainer();
 
         // Create a client collection that consists of mockable guzzle clients utilizing the Guzzle mock handler.
-        $clientCollection = $this->container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
+        $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
 
         $clientCollection->addClient(
-            $this->container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
         );
         $clientCollection->addClient(
-            $this->container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
         );
 
         // Expose the mock handlers, so the test methods can determine what the 'api' should return
-        $this->handlerMyService = $this->container->get(
+        $this->handlerMyService = self::$container->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name'
         );
-        $this->handlerMySecondService = $this->container->get(
+        $this->handlerMySecondService = self::$container->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name'
         );
 
         // Create the application and add the information command
-        $this->application = new Application(self::$kernel);
+        $this->application = new Application();
 
-        $deprovisionService = $this->container->get(DeprovisionService::class);
 
-        $summaryService = new SummaryService();
+        $deprovisionService = self::$container->get(DeprovisionService::class);
+
+        $progressReporter = new ProgressReporter(new Stopwatch(new FrameworkStopwatch()));
+        $summaryService = new SummaryService($progressReporter);
 
         // Set the time on the LastLoginRepository
-        $this->repository = $this->container->get('doctrine.orm.default_entity_manager')->getRepository(LastLogin::class);
+        $this->repository = self::$container
+            ->get('doctrine.orm.default_entity_manager')
+            ->getRepository(LastLogin::class);
         $this->repository->setNow(new DateTime('2018-01-01'));
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
 
-        $progressReporter = new ProgressReporter();
 
-        $this->application->add(new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger));
+        $this->application->add(
+            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger)
+        );
 
         // Load the database fixtures
         $this->loadFixtures();
@@ -111,12 +118,14 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         // Ascertain we start of with 4 entries in the last login repository
         $this->assertCount(4, $this->repository->findAll());
 
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -128,8 +137,8 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
 
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(3, $this->repository->findAll());
@@ -144,17 +153,19 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
 
         $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
+            new Response(200, [], '{"status":"UP"}'),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:james_watson')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:john_doe')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:jimi_hendrix')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:jason_mraz'))
         );
 
         $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
+            new Response(200, [], '{"status":"UP"}'),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:james_watson')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:jimi_hendrix')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:jason_mraz')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:john_doe'))
         );
 
         $command = $this->application->find('deprovision');
@@ -163,9 +174,20 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $commandTester->setInputs(['yes']);
         $commandTester->execute([]);
 
+        $output = $commandTester->getDisplay();
+
+        // The deprovision reporting should show correct data
+        $this->assertStringContainsString('"runtime":0', $output);
+        $this->assertStringContainsString('"last-login-removals":4', $output);
+        $this->assertStringContainsString(
+            '"deprovisioned-per-client":{"my_service_name":4,"my_second_name":4}',
+            $output
+        );
+
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(0, $this->repository->findAll());
     }
+
     public function test_execute_multiple_users_one_failure()
     {
         // Set the repository time in the future, ensuring deprovisioning of all users in the last login table
@@ -175,17 +197,19 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
 
         $this->handlerMyService->append(
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user2')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'user4'))
+            new Response(200, [], '{"status":"UP"}'),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user1')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user2')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user3')),
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user4'))
         );
 
         $this->handlerMySecondService->append(
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user1')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user2')),
-            new Response(200, [], $this->getFailedStatus('my_second_name', 'user3')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'user4'))
+            new Response(200, [], '{"status":"UP"}'),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user1')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user2')),
+            new Response(200, [], $this->getFailedStatus('my_second_name', 'urn:collab:person:user3')),
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user4'))
         );
 
         $command = $this->application->find('deprovision');
@@ -198,7 +222,10 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(1, $this->repository->findAll());
-        $this->assertContains('"Something went awfully wrong" for user "urn:collab:org:surf.nl:jason_mraz"', $output);
+        $this->assertStringContainsString(
+            '"Something went awfully wrong" for user "urn:collab:person:surf.nl:jason_mraz"',
+            $output
+        );
     }
 
     private function getOkStatus($serviceName, $collabPersonId)

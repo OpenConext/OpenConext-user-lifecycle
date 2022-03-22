@@ -1,0 +1,32 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        in_memory:
+            memory:
+                users:
+                    "%deprovision_api_settings_username%":
+                        password: "%deprovision_api_settings_password%"
+                        roles: 'ROLE_ADMIN'
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        monitor:
+            pattern: ^/(info|health)$
+            security: false
+
+        main:
+            anonymous: ~
+            http_basic: ~
+
+    access_control:
+        # require ROLE_ADMIN for /api/deprovision*
+        - { path: ^/api/deprovision, roles: ROLE_ADMIN }

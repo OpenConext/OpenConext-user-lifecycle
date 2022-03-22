@@ -25,27 +25,20 @@ interface DeprovisionClientInterface
 {
     /**
      * Can be used to deprovision a user from the OpenConext platform.
-     *
-     * @param CollabPersonId $user
-     * @param bool $dryRun
-     * @return PromiseInterface
      */
-    public function deprovision(CollabPersonId $user, $dryRun = false);
+    public function deprovision(CollabPersonId $user, bool $dryRun = false): PromiseInterface;
 
     /**
      * Can be used to gather information about a user on the OpenConext platform.
      *
      * Returns a Json encoded string containing the user information provided by the different deprovision API's.
-     *
-     * @param CollabPersonId|null $user
-     * @return PromiseInterface
      */
-    public function information(CollabPersonId $user);
+    public function information(CollabPersonId $user): PromiseInterface;
 
     /**
      * Returns the name of the client, as configured in the parameters.yml
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): string;
+
+    public function health(): void;
 }

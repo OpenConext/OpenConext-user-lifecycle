@@ -23,6 +23,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Service\SanityCheckService;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Domain\Exception\EmptyLastLoginCollectionException;
+use OpenConext\UserLifecycle\Domain\Exception\InvalidLastLoginCollectionException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -40,7 +42,7 @@ class SanityCheckServiceTest extends TestCase
      */
     private $logger;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->logger = m::mock(LoggerInterface::class);
         $this->service = new SanityCheckService(
@@ -64,12 +66,10 @@ class SanityCheckServiceTest extends TestCase
         $this->assertNull($this->service->check($lastLoginCollection));
     }
 
-    /**
-     * @expectedException \OpenConext\UserLifecycle\Domain\Exception\EmptyLastLoginCollectionException
-     * @expectedExceptionMessage No candidates found for deprovisioning
-     */
     public function test_check_empty()
     {
+        $this->expectExceptionMessage("No candidates found for deprovisioning");
+        $this->expectException(EmptyLastLoginCollectionException::class);
         $lastLoginCollection = m::mock(LastLoginCollectionInterface::class);
 
         $lastLoginCollection->shouldReceive('count')
@@ -78,12 +78,12 @@ class SanityCheckServiceTest extends TestCase
         $this->service->check($lastLoginCollection);
     }
 
-    /**
-     * @expectedException \OpenConext\UserLifecycle\Domain\Exception\InvalidLastLoginCollectionException
-     * @expectedExceptionMessage Too much candidates found for deprovisioning. 100 exceeds the limit set at 2 by 98.
-     */
     public function test_check_too_many()
     {
+        $this->expectExceptionMessage(
+            "Too much candidates found for deprovisioning. 100 exceeds the limit set at 2 by 98."
+        );
+        $this->expectException(InvalidLastLoginCollectionException::class);
         $lastLoginCollection = m::mock(LastLoginCollectionInterface::class);
 
         $lastLoginCollection->shouldReceive('count')

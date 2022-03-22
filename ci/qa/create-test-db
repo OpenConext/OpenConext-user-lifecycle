@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+bin/console doctrine:schema:drop --env=test --force
+bin/console doctrine:schema:create --env=test

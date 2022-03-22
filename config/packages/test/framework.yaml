@@ -1,0 +1,6 @@
+imports:
+  - { resource: ../../services_test.yaml }
+  - { resource: ../../legacy/parameters.test.yml }
+
+framework:
+  test: ~

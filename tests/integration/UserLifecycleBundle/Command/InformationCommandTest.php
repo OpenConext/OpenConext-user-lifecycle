@@ -22,20 +22,23 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
+use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
 use OpenConext\UserLifecycle\Application\Service\SummaryService;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service\Stopwatch;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Stopwatch\Stopwatch as FrameworkStopwatch;
 
 class LastLoginRepositoryTest extends DatabaseTestCase
 {
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected static $container;
 
     /**
      * @var MockHandler
@@ -52,34 +55,36 @@ class LastLoginRepositoryTest extends DatabaseTestCase
      */
     private $application;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->container = self::$kernel->getContainer();
+        self::$container = self::$kernel->getContainer();
 
         // Create a client collection that consists of mockable guzzle clients utilizing the Guzzle mock handler.
-        $clientCollection = $this->container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
+        $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
 
         $clientCollection->addClient(
-            $this->container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
         );
         $clientCollection->addClient(
-            $this->container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
         );
 
         // Expose the mock handlers, so the test methods can determine what the 'api' should return
-        $this->handlerMyService = $this->container->get(
+        $this->handlerMyService = self::$container->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name'
         );
-        $this->handlerMySecondService = $this->container->get(
+        $this->handlerMySecondService = self::$container->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name'
         );
 
         // Create the application and add the information command
-        $this->application = new Application(self::$kernel);
+        $this->application = new Application();
 
         $lastLoginService = self::$kernel->getContainer()->get(InformationService::class);
-        $summaryService = new SummaryService();
+
+        $progressReporter = new ProgressReporter(new Stopwatch(new FrameworkStopwatch()));
+        $summaryService = new SummaryService($progressReporter);
 
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
@@ -92,13 +97,15 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
     public function test_execute()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
         );
 
@@ -108,20 +115,22 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $commandTester->execute(['user' => $collabPersonId]);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
     }
 
     public function test_execute_second_service_returned_failed_response()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $errorMessage = 'Internal server error';
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
         );
         $command = $this->application->find('information');
@@ -130,18 +139,16 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $commandTester->execute(['user' => $collabPersonId]);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains($collabPersonId, $output);
-        $this->assertContains('OK', $output);
-        $this->assertContains('FAILED', $output);
-        $this->assertContains($errorMessage, $output);
+        $this->assertStringContainsString($collabPersonId, $output);
+        $this->assertStringContainsString('OK', $output);
+        $this->assertStringContainsString('FAILED', $output);
+        $this->assertStringContainsString($errorMessage, $output);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Not enough arguments (missing: "user").
-     */
     public function test_execute_no_arguments()
     {
+        $this->expectExceptionMessage("Not enough arguments (missing: \"user\").");
+        $this->expectException(\Symfony\Component\Console\Exception\RuntimeException::class);
         $command = $this->application->find('information');
         $commandTester = new CommandTester($command);
 
@@ -150,14 +157,16 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
     public function test_execute_silently()
     {
-        $collabPersonId = 'urn:collab:org:surf.nl:jimi_hendrix';
+        $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
         );
 
         $errorMessage = 'Internal server error';
         $this->handlerMySecondService->append(
+            new Response(200, [], '{"status":"UP"}'),
             new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
         );
         $command = $this->application->find('information');

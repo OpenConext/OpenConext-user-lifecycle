@@ -1,0 +1,4 @@
+doctrine:
+  dbal:
+    driver: pdo_sqlite
+    path: "%kernel.root_dir%/../var/user-lifecycle.sqlite"

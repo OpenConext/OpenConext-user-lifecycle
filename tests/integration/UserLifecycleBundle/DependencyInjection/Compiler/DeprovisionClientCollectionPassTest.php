@@ -19,7 +19,8 @@
 namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\Compiler\DeprovisionClientCollectionPass;
+use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\Compiler\DeprovisionClientCollectionPass; // phpcs:ignore
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -30,7 +31,7 @@ class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
     public function test_clients_are_registered_on_collection()
     {
         $deprovisionCollection = new Definition();
-        $this->setDefinition('open_conext.user_lifecycle.deprovision_client_collection', $deprovisionCollection);
+        $this->setDefinition(DeprovisionClientCollectionInterface::class, $deprovisionCollection);
 
         // Define and tag the clients
         $deprovisionClient = new Definition();
@@ -45,7 +46,7 @@ class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
         $this->compile();
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            'open_conext.user_lifecycle.deprovision_client_collection',
+            DeprovisionClientCollectionInterface::class,
             'addClient',
             [
                 new Reference('open_conext.user_lifecycle.deprovision_client.my_service_name'),
@@ -53,7 +54,7 @@ class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
         );
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            'open_conext.user_lifecycle.deprovision_client_collection',
+            DeprovisionClientCollectionInterface::class,
             'addClient',
             [
                 new Reference('open_conext.user_lifecycle.deprovision_client.my_second_name'),
@@ -67,7 +68,7 @@ class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
      *
      *   $container->addCompilerPass(new MyCompilerPass());
      */
-    protected function registerCompilerPass(ContainerBuilder $container)
+    protected function registerCompilerPass(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new DeprovisionClientCollectionPass());
     }

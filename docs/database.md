@@ -7,8 +7,10 @@ If your development environment does not track the last login data, you can use 
 
 ## Installing SQLite
 
-On the guest or on your host, depending on how you use the application.
+On the guest, SQLite is available in the docker container. If you'd rather work on your host you might need to install
+SQLite.
 
+On a Red Hat-ish distro:
 ```bash
 $ sudo yum install sqlite3
 ```

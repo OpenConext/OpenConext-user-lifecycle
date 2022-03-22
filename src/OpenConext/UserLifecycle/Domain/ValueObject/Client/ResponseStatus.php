@@ -36,7 +36,9 @@ class ResponseStatus
     public function __construct($status)
     {
         if (!is_string($status) || empty(trim($status))) {
-            throw new InvalidResponseStatusException('ResponseStatus must be of the type string, and can not be empty.');
+            throw new InvalidResponseStatusException(
+                'ResponseStatus must be of the type string, and can not be empty.'
+            );
         }
         $validStatuses = [ResponseStatus::STATUS_FAILED, ResponseStatus::STATUS_OK];
 

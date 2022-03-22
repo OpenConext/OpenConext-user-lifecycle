@@ -31,7 +31,7 @@ class InformationResponseFactoryTest extends TestCase
 
     private $informationResponseFactory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->informationResponseFactory = new InformationResponseFactory();
     }
@@ -109,7 +109,14 @@ class InformationResponseFactoryTest extends TestCase
     {
         return [
             // invalid names
-            [$this->buildResponse('', 'OK', [['name' => 'test', 'value' => 'foobar'], ['name' => 'test2', 'value' => 'foobar2']], null)],
+            [
+                $this->buildResponse(
+                    '',
+                    'OK',
+                    [['name' => 'test', 'value' => 'foobar'], ['name' => 'test2', 'value' => 'foobar2']],
+                    null
+                )
+            ],
             [$this->buildResponse(123, 'OK', [['name' => 'test', 'value' => 'foobar']], null)],
             [$this->buildResponse([], 'FAILED', [], 'foobar')],
             [$this->buildResponse(true, 'FAILED', [], 'foobar')],
@@ -125,8 +132,14 @@ class InformationResponseFactoryTest extends TestCase
             [$this->buildResponse('my-service', 'OK', false, null)],
             [$this->buildResponse('my-service', 'OK', '', null)],
             [$this->buildResponse('my-service', 'OK', [['nam' => 'test', 'value' => 'foobar']], null)],
-            [$this->buildResponse('my-service', 'OK', ['name' => 'ffoop', ['name' => 'test', 'value' => 'foobar']], null)],
-
+            [
+                $this->buildResponse(
+                    'my-service',
+                    'OK',
+                    ['name' => 'ffoop', ['name' => 'test', 'value' => 'foobar']],
+                    null
+                )
+            ],
             // invalid message
             [$this->buildResponse('my-service', 'FAILED', [], '')],
             [$this->buildResponse('my-service', 'FAILED', [], false)],

@@ -19,9 +19,12 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository;
 
 use DateTime;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\QueryException;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollection;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\DatabaseConnectionException;
 use Webmozart\Assert\Assert;
 
 class LastLoginRepository extends EntityRepository implements LastLoginRepositoryInterface
@@ -36,13 +39,16 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
         $expirationDate = $this->getNow()->modify(sprintf('-%d months', $inactivityPeriod));
 
         $qb = $this->createQueryBuilder('ll');
-        $results = $qb
-            ->where('ll.lastLoginDate <= :expirationDate')
-            ->orderBy('ll.lastLoginDate', 'ASC')
-            ->setParameter('expirationDate', $expirationDate)
-            ->getQuery()
-            ->getResult();
-
+        try {
+            $results = $qb
+                ->where('ll.lastLoginDate <= :expirationDate')
+                ->orderBy('ll.lastLoginDate', 'ASC')
+                ->setParameter('expirationDate', $expirationDate)
+                ->getQuery()
+                ->getResult();
+        } catch (ConnectionException $e) {
+            throw new DatabaseConnectionException();
+        }
         return LastLoginCollection::from($results);
     }
 
@@ -51,7 +57,7 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
      *
      * @param string $collabPersonId
      */
-    public function delete($collabPersonId)
+    public function delete(string $collabPersonId)
     {
         Assert::stringNotEmpty($collabPersonId);
 

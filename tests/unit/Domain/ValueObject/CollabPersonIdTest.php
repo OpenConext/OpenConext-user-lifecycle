@@ -27,10 +27,10 @@ class CollabPersonIdTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function test_can_be_created()
+    public function test_can_be_created(): void
     {
-        $user = new CollabPersonId('urn:mace:example.com:jan');
-        $this->assertEquals('urn:mace:example.com:jan', $user->getCollabPersonId());
+        $user = new CollabPersonId('urn:collab:person:institution-a:jan');
+        $this->assertEquals('urn:collab:person:institution-a:jan', $user->getCollabPersonId());
     }
 
     /**
@@ -40,7 +40,18 @@ class CollabPersonIdTest extends TestCase
     public function test_must_be_non_empty_string($invalidArgument)
     {
         $this->expectException(InvalidCollabPersonIdException::class);
-        $this->expectExceptionMessage('The collabUserId must be a non empty string');
+        $this->expectExceptionMessage('The collabPersonId must be a non empty string');
+
+        new CollabPersonId($invalidArgument);
+    }
+
+    /**
+     * @dataProvider invalidUrnCollabPersonIds
+     */
+    public function test_only_urn_collab_person_id_prefixed_ids_are_allowed(string $invalidArgument): void
+    {
+        $this->expectException(InvalidCollabPersonIdException::class);
+        $this->expectExceptionMessage('The collabPersonId must start with urn:collab:person:');
 
         new CollabPersonId($invalidArgument);
     }
@@ -54,6 +65,20 @@ class CollabPersonIdTest extends TestCase
             [null],
             [true],
             [['urn:mace:example.com:jan']]
+        ];
+    }
+
+    public function invalidUrnCollabPersonIds()
+    {
+        return [
+            ['collab:person:jan'],
+            ['urn:person:jan'],
+            ['urn:mace:example.com:jan'],
+            ['urn:collab:personid:org:username'],
+            ['urn:colab:person:org:username'],
+            ['urn:collab:person'],
+            ['urn:collab:person:'],
+            ['urn:collab:person-org:jesse'],
         ];
     }
 }
