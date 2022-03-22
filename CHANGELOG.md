@@ -1,3 +1,21 @@
+## 0.1.0
+This release is mainly focussed on making LifeCycle more robust in multiple areas.
+
+**Maintenance:** 
+- Drop PHP 5.6 version compatibility #40
+- Upgrade to Symfony 4.4 (from version 3.4) #42
+- Bring Monolog config in sync with OC projects #53
+
+**New features:**
+- Migrate TravisCI to Github Actions for test-integration #50
+- Improve status reporting #51
+- Improve CollabPersonId input validation #43 #48
+
+**Other chores**
+- Replace the Vagrant dev-env with Docker #41
+- Update documentation #44 #45
+- Create a last_login test data seeder #52
+
 ## 0.0.5
  - Add sensio distribution bundle to normal dependency instead dev dependency
 
