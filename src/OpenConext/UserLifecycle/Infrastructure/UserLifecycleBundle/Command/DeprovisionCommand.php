@@ -153,6 +153,7 @@ class DeprovisionCommand extends Command
         $outputOnlyJson,
         $prettyJson
     ): int {
+        $exitCode = 0;
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
@@ -180,6 +181,10 @@ class DeprovisionCommand extends Command
             $this->service->healthCheck();
             $information = $this->service->batchDeprovision($this->progressReporter, $dryRun);
 
+            // If deprovisioning yielded one or more errors, change the exit code to 1
+            if (count($information->getErrorMessages()) > 0) {
+                $exitCode = 1;
+            }
             if (!$outputOnlyJson) {
                 $output->writeln('');
                 $output->write($this->summaryService->summarizeBatchResponse($information), true);
@@ -191,7 +196,7 @@ class DeprovisionCommand extends Command
             $this->logger->error($e->getMessage());
             return 1;
         }
-        return 0;
+        return $exitCode;
     }
 
     private function executeSingleUser(

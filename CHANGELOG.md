@@ -1,3 +1,15 @@
+## 0.1.1
+Two missing features where added to 0.1.0. They are:
+
+- The exit code changed to 1 when one of the deprovision actions failed. Ensuring the output will be mailed by the 
+  cron mailer to the sysadmin.  #55
+- The deprovision stats are now logged to syslog, before they only ended up in the console output.  #55
+
+And as an added bonus, the documentation was updated to be more specific on the JSON format the UserLifecycle 
+application expects from the clients
+
+- Improve UserLifecycle documentation #54
+
 ## 0.1.0
 This release is mainly focussed on making LifeCycle more robust in multiple areas.
 

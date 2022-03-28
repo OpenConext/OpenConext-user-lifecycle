@@ -19,10 +19,9 @@
 namespace OpenConext\UserLifecycle\Application\Service;
 
 use OpenConext\UserLifecycle\Domain\Service\StopwatchInterface;
-use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use OpenConext\UserLifecycle\Domain\ValueObject\DeprovisionStatistics;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use function json_encode;
 
 class ProgressReporter implements ProgressReporterInterface
 {
@@ -41,10 +40,16 @@ class ProgressReporter implements ProgressReporterInterface
      */
     private $deprovisionStatistics;
 
-    public function __construct(StopwatchInterface $stopwatch)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(StopwatchInterface $stopwatch, LoggerInterface $logger)
     {
         $this->stopwatch = $stopwatch;
         $this->deprovisionStatistics = new DeprovisionStatistics();
+        $this->logger = $logger;
     }
 
     public function setConsoleOutput(OutputInterface $output)
@@ -104,6 +109,8 @@ class ProgressReporter implements ProgressReporterInterface
     {
         $this->deprovisionStatistics->setRuntime((int) $this->stopwatch->elapsedTime() / 1000);
 
-        $this->output->writeln(json_encode($this->deprovisionStatistics->jsonSerialize()));
+        $stats = json_encode($this->deprovisionStatistics->jsonSerialize());
+        $this->logger->info($stats);
+        $this->output->writeln($stats);
     }
 }
