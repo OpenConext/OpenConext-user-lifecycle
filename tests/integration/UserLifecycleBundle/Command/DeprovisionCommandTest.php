@@ -97,7 +97,10 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->repository->setNow(new DateTime('2018-01-01'));
 
         $deprovisionService = self::$container->get(DeprovisionService::class);
-        $progressReporter = new ProgressReporter(new Stopwatch(new FrameworkStopwatch()));
+        $progressReporter = new ProgressReporter(
+            new Stopwatch(new FrameworkStopwatch()),
+            m::mock(LoggerInterface::class)
+        );
         $summaryService = new SummaryService($progressReporter);
 
         $logger = m::mock(LoggerInterface::class);

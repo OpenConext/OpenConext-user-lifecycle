@@ -92,7 +92,10 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $deprovisionService = self::$container->get(DeprovisionService::class);
 
-        $progressReporter = new ProgressReporter(new Stopwatch(new FrameworkStopwatch()));
+        $progressReporter = new ProgressReporter(
+            new Stopwatch(new FrameworkStopwatch()),
+            m::mock(LoggerInterface::class)->shouldIgnoreMissing()
+        );
         $summaryService = new SummaryService($progressReporter);
 
         // Set the time on the LastLoginRepository
@@ -139,7 +142,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $this->assertStringContainsString($collabPersonId, $output);
         $this->assertStringContainsString('OK', $output);
-
+        $this->assertEquals(0, $commandTester->getStatusCode());
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(3, $this->repository->findAll());
     }
@@ -183,7 +186,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             '"deprovisioned-per-client":{"my_service_name":4,"my_second_name":4}',
             $output
         );
-
+        $this->assertEquals(0, $commandTester->getStatusCode());
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(0, $this->repository->findAll());
     }
@@ -219,7 +222,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $commandTester->execute([]);
 
         $output = $commandTester->getDisplay();
-
+        $this->assertEquals(1, $commandTester->getStatusCode());
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(1, $this->repository->findAll());
         $this->assertStringContainsString(

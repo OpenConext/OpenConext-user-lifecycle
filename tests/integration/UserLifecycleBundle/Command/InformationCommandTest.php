@@ -21,6 +21,7 @@ namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Command
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Monolog\Logger;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
 use OpenConext\UserLifecycle\Application\Service\SummaryService;
@@ -83,7 +84,10 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
         $lastLoginService = self::$kernel->getContainer()->get(InformationService::class);
 
-        $progressReporter = new ProgressReporter(new Stopwatch(new FrameworkStopwatch()));
+        $progressReporter = new ProgressReporter(
+            new Stopwatch(new FrameworkStopwatch()),
+            m::mock(LoggerInterface::class)
+        );
         $summaryService = new SummaryService($progressReporter);
 
         $logger = m::mock(LoggerInterface::class);
