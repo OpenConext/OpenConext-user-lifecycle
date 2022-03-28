@@ -134,5 +134,8 @@ The API can be called in the following manner for a given user's collabPersonId:
 
 and will return the deprovision information in JSON format.
 
+There are some rules on how the user data should be structured. User Lifecycle will only accept properly formatted
+user data. The contract can be found in the [docs/deprovision-information.md]().
+
 ## For developers
 See the `/docs` folder for more details information about the application.
