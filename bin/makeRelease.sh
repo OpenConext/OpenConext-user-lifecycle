@@ -2,6 +2,8 @@
 
 PREVIOUS_SF_ENV=${SYMFONY_ENV}
 export SYMFONY_ENV="prod"
+export APP_ENV="prod"
+export APP_DEBUG=false
 
 RELEASE_DIR=${HOME}/Releases
 GITHUB_USER=OpenConext
