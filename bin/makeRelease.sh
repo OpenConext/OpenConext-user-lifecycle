@@ -67,6 +67,8 @@ rm -rf ${PROJECT_DIR}/.github &&
 rm -rf ${PROJECT_DIR}/ci &&
 rm -rf ${PROJECT_DIR}/tests &&
 rm -rf ${PROJECT_DIR}/docs &&
+# Remove the cache folders, we do not include a cache in the release tarbal.
+rm -rf ${PROJECT_DIR}/var/cache/prod/* &&
 rm -f ${PROJECT_DIR}/.gitignore &&
 rm -f ${PROJECT_DIR}/bin/makeRelease.sh &&
 rm -f ${PROJECT_DIR}/*.xml &&
