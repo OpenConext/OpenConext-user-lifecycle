@@ -1,3 +1,11 @@
+## 0.1.2
+And here for some final optimizations to get userlifecycle work as intended on a production environment. The final 
+hurdles where to tweak the release script:
+ - Set environments to prod and remove cache folders,
+ - Remove the prod cache folder from the tarbal.
+
+And finally, dependabot upgraded the guzzlehttp/psr7 package. 
+
 ## 0.1.1
 Two missing features where added to 0.1.0. They are:
 

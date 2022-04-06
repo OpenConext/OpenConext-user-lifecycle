@@ -137,5 +137,24 @@ and will return the deprovision information in JSON format.
 There are some rules on how the user data should be structured. User Lifecycle will only accept properly formatted
 user data. The contract can be found in the [docs/deprovision-information.md]().
 
+## Logging
+
+### Production logging
+Logging is configured slightly different for the UserLifecycle project. On other OpenConext apps logging on production
+is done in syslog using the fingers crossed strategy. Fingers crossed means that no detailed log trails are produced in
+syslog unless a certain log level is reached. Say the application logs an `error`. Fingers crossed will then also log
+any previous log messages along the error. Giving the log-auditor all the context it needs.
+
+A great log solution, but this did not fit for UserLifecyle. Here we log data we always want to see in syslog. And using
+the fingers crossed strategy here was not practical. So the regular `stream` log strategy is used, logging everything
+surpassing the configured log level (`notice`).
+
+### Docker logging
+When using the provided docker container for test or development. Logs are forwarded to the /dev/log (syslog) of the
+host machine. This diverges from the industry standard of outputting to `stderr`, that way you can lever the docker log
+mechanism.
+
+If you want to view the dev logs: check the syslog on your own machine.
+
 ## For developers
 See the `/docs` folder for more details information about the application.
