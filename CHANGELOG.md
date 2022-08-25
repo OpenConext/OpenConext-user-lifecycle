@@ -1,3 +1,7 @@
+## 0.1.3
+- Log using stream handler by default #57
+- Creating an error message with multiple messages causes fatal error #62
+
 ## 0.1.2
 And here for some final optimizations to get userlifecycle work as intended on a production environment. The final 
 hurdles where to tweak the release script:
