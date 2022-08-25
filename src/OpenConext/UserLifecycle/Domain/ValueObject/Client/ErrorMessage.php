@@ -18,6 +18,10 @@
 
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
+use InvalidArgumentException;
+use function is_array;
+use function is_string;
+
 class ErrorMessage
 {
     /**
@@ -30,6 +34,14 @@ class ErrorMessage
      */
     public function __construct($errorMessage = null)
     {
+        // Setting multiple error messages is supported, but only if all array entries are of type string
+        if (is_array($errorMessage)) {
+            foreach ($errorMessage as $message) {
+                if (!is_string($message)) {
+                    throw new InvalidArgumentException('All of the error messages must be of type string');
+                }
+            }
+        }
         $this->errorMessage = $errorMessage;
     }
 
@@ -45,6 +57,10 @@ class ErrorMessage
 
     public function __toString()
     {
-        return $this->getErrorMessage();
+        $message = $this->getErrorMessage();
+        if (is_array($message)) {
+            $message = implode(', ', $message);
+        }
+        return (string) $message;
     }
 }
