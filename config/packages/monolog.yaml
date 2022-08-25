@@ -1,9 +1,8 @@
 monolog:
     handlers:
         main:
-            type: fingers_crossed
-            action_level: ERROR
-            passthru_level: NOTICE
+            type: stream
+            level: INFO # Logs all messages at info level and higher severities
             handler: syslog
             channels: ['!event', '!doctrine']
         syslog:
