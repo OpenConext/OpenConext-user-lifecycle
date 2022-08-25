@@ -24,6 +24,7 @@ use OpenConext\UserLifecycle\Application\Client\InformationResponseFactory;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponse;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class InformationResponseFactoryTest extends TestCase
 {
@@ -96,6 +97,32 @@ class InformationResponseFactoryTest extends TestCase
         $this->assertFalse($response->getErrorMessage()->hasErrorMessage());
     }
 
+    public function test_multible_error_messages_are_allowed()
+    {
+        $data = [['name' => 'fieldname', 'value' => 'fieldvalue']];
+        $response = $this->informationResponseFactory->fromApiResponse(
+            $this->buildResponse(
+                'my-service-name',
+                'FAILED',
+                $data,
+                ['message 1', 'message 2']
+            )
+        );
+        $this->assertEquals(ResponseStatus::STATUS_FAILED, (string) $response->getStatus());
+        $this->assertEquals('message 1, message 2', (string) $response->getErrorMessage());
+
+        $response = $this->informationResponseFactory->fromApiResponse(
+            $this->buildResponse(
+                'my-service-name',
+                'FAILED',
+                $data,
+                ['singular message wrapped in array']
+            )
+        );
+        $this->assertEquals(ResponseStatus::STATUS_FAILED, (string) $response->getStatus());
+        $this->assertEquals('singular message wrapped in array', (string) $response->getErrorMessage());
+    }
+
     /**
      * @dataProvider buildInvalidResponses
      */
@@ -145,7 +172,10 @@ class InformationResponseFactoryTest extends TestCase
             [$this->buildResponse('my-service', 'FAILED', [], false)],
             [$this->buildResponse('my-service', 'FAILED', [], [])],
             [$this->buildResponse('my-service', 'OK', [], 'Something is wrong here!')],
-
+            [$this->buildResponse('my-service', 'FAILED', [], [null, 'this is OK'])],
+            [$this->buildResponse('my-service', 'FAILED', [], [['this is not OK'], 'this would be fine'])],
+            [$this->buildResponse('my-service', 'FAILED', [], [new stdClass(), 'this would be fine'])],
+            [$this->buildResponse('my-service', 'FAILED', [], [1337, 'this would be fine'])],
         ];
     }
 
