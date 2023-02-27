@@ -4,6 +4,8 @@ imports:
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
   secret: '%secret%'
+  esi: false
+  fragments: false
   profiler:
     collect: false
   http_method_override: true
