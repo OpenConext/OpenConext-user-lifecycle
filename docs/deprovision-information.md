@@ -1,11 +1,17 @@
-# User Data JSON structure
+# API for applications supporting deprovision
 
 ## Background
-User Lifecycle iterates different clients and calls a `deprovision` or `user-information` (deprovision dry run) 
-on those clients. In order to come back with a structured set of data for the logs we require the following
-JSON structure for the user data that is returned to User Lifecycle.
 
-### The contract
+User Lifecycle iterates different clients and calls a the deprovision endpoint on those clients.
+
+## Required API endpoints
+
+The following calls are possible, all under a configurable base URL for your application. The passed user identifier is the collabPersonId, e.g. `urn:collab:person:example.org:jdoe`:
+* GET `/deprovision/<collabPersonId>`: app returns all information it has stored for this user in the below JSON format, no actions done on the user.
+* DELETE `/deprovision/<collabPersonId>`: app will deprovision everything it knows about this user, and return the JSON format below indicating success or failure and the last known data of the user right before removing it.
+* DELETE `/deprovision/<collabPersonId>/dry-run`: as previous, but will then only go through the motions, not actually delete the user, and will return the JSON format as below.
+
+## The contract
 The following fields MUST be in the response
 
 |Name | Description                                                                                            | Possible values|
