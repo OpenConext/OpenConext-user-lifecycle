@@ -2,10 +2,10 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
-    database_host: 127.0.0.1
+    database_host: mariadb
     database_port: ~
-    database_name: user-lifecycle
-    database_user: user-lifecycle-rw
+    database_name: userlifecycle
+    database_user: userlifecyclerw
     database_password: secret
     # You should uncomment this if you want to use pdo_sqlite
     #database_path: '%kernel.root_dir%/../var/data/data.sqlite'
@@ -31,6 +31,6 @@ parameters:
     inactivity_period: 37
 
     # is the deprovision api enabled?
-    deprovision_api_settings_enabled: false
+    deprovision_api_settings_enabled: true
     deprovision_api_settings_username: userlifecycle
     deprovision_api_settings_password: secret
