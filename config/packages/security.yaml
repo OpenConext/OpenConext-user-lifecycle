@@ -20,7 +20,7 @@ security:
             security: false
 
         monitor:
-            pattern: ^/(info|health)$
+            pattern: ^/(internal/)?(info|health)$
             security: false
 
         main:
