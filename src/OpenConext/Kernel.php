@@ -31,6 +31,4 @@ class Kernel extends BaseKernel
     {
         return dirname(__DIR__, 2);
     }
-
-
 }

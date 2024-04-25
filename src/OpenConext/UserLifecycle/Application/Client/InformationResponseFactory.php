@@ -89,8 +89,7 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
     private function buildErrorMessage(
         array $response,
         ResponseStatus $status,
-    ): ErrorMessage
-    {
+    ): ErrorMessage {
         // If status failed, we need an error message
         if ($status->getStatus() === ResponseStatus::STATUS_FAILED) {
             Assert::notEmpty($response['message']);
