@@ -42,8 +42,7 @@ class InformationService implements InformationServiceInterface, ClientHealthChe
      */
     public function readInformationFor(
         string $personId,
-    ): InformationResponseCollectionInterface
-    {
+    ): InformationResponseCollectionInterface {
         $this->logger->debug('Received a request for user information');
 
         Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
