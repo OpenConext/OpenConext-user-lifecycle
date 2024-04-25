@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,15 +22,17 @@ namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Depende
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\Compiler\DeprovisionClientCollectionPass; // phpcs:ignore
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\DependencyInjection\Compiler\DeprovisionClientCollectionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
+// phpcs:ignore
+
 class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
 {
 
-    public function test_clients_are_registered_on_collection()
+    public function test_clients_are_registered_on_collection(): void
     {
         $deprovisionCollection = new Definition();
         $this->setDefinition(DeprovisionClientCollectionInterface::class, $deprovisionCollection);
@@ -50,7 +54,7 @@ class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
             'addClient',
             [
                 new Reference('open_conext.user_lifecycle.deprovision_client.my_service_name'),
-            ]
+            ],
         );
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
@@ -58,7 +62,7 @@ class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
             'addClient',
             [
                 new Reference('open_conext.user_lifecycle.deprovision_client.my_second_name'),
-            ]
+            ],
         );
     }
 
@@ -68,8 +72,9 @@ class DeprovisionClientCollectionPassTest extends AbstractCompilerPassTestCase
      *
      *   $container->addCompilerPass(new MyCompilerPass());
      */
-    protected function registerCompilerPass(ContainerBuilder $container): void
-    {
+    protected function registerCompilerPass(
+        ContainerBuilder $container,
+    ): void {
         $container->addCompilerPass(new DeprovisionClientCollectionPass());
     }
 }

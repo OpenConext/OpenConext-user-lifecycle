@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,7 +24,7 @@ use InvalidArgumentException;
 use function is_array;
 use function is_string;
 
-class ErrorMessage
+class ErrorMessage implements \Stringable
 {
     /**
      * @var string|null
@@ -32,8 +34,9 @@ class ErrorMessage
     /**
      * @param string $errorMessage
      */
-    public function __construct($errorMessage = null)
-    {
+    public function __construct(
+        $errorMessage = null,
+    ) {
         // Setting multiple error messages is supported, but only if all array entries are of type string
         if (is_array($errorMessage)) {
             foreach ($errorMessage as $message) {
@@ -45,7 +48,7 @@ class ErrorMessage
         $this->errorMessage = $errorMessage;
     }
 
-    public function hasErrorMessage()
+    public function hasErrorMessage(): bool
     {
         return !is_null($this->errorMessage);
     }
@@ -55,7 +58,7 @@ class ErrorMessage
         return $this->errorMessage;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $message = $this->getErrorMessage();
         if (is_array($message)) {

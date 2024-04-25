@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -21,11 +23,11 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 use Exception;
 use JsonSerializable;
 use OpenConext\UserLifecycle\Application\Service\ProgressReporterInterface;
-use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\DeprovisionServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,82 +35,60 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
+#[AsCommand('deprovision')]
 class DeprovisionCommand extends Command
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var DeprovisionServiceInterface&ClientHealthCheckerInterface
-     */
-    private $service;
-
-    /**
-     * @var SummaryServiceInterface
-     */
-    private $summaryService;
-
-    /**
-     * @var ProgressReporterInterface
-     */
-    private $progressReporter;
-
     public function __construct(
-        DeprovisionServiceInterface $deprovisionService,
-        SummaryServiceInterface $summaryService,
-        ProgressReporterInterface $progressReporter,
-        LoggerInterface $logger
+        private readonly DeprovisionServiceInterface $service,
+        private readonly SummaryServiceInterface $summaryService,
+        private readonly ProgressReporterInterface $progressReporter,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct(null);
-        $this->service = $deprovisionService;
-        $this->summaryService = $summaryService;
-        $this->progressReporter = $progressReporter;
-        $this->logger = $logger;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('deprovision')
             ->setDescription('Deprovision a user from the platform. The user is identified by a collabPersonId.')
             ->setHelp(
                 'This command allows you to deprovision a given user identified by a collabPersonId. '.
                 'The command will delegate the deprovisioning to all registered applications and report back '.
                 'on the actually removed data. Optionally leave the user argument blank to deprovision all users that '.
-                'meet the automatic deprovision criteria as configured with the `deprovision_after` parameter.'
+                'meet the automatic deprovision criteria as configured with the `deprovision_after` parameter.',
             )
             ->addArgument(
                 'user',
                 InputArgument::OPTIONAL,
-                'The collabPersonId of the user to deprovision.'
+                'The collabPersonId of the user to deprovision.',
             )
             ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
-                'Should the command be run in dry run mode?'
+                'Should the command be run in dry run mode?',
             )
             ->addOption(
                 'json',
                 null,
                 InputOption::VALUE_NONE,
-                'Output only JSON to StdOut. Requires --no-interaction to work.'
+                'Output only JSON to StdOut. Requires --no-interaction to work.',
             )
             ->addOption(
                 'pretty',
                 null,
                 InputOption::VALUE_NONE,
-                'Pretty-print JSON output.'
+                'Pretty-print JSON output.',
             );
     }
 
     /**
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output,
+    ): int {
         $userIdInput = $input->getArgument('user');
         $dryRun = $input->getOption('dry-run');
 
@@ -124,11 +104,10 @@ class DeprovisionCommand extends Command
             $exitCode = $this->executeBatch(
                 $input,
                 $output,
-                $userIdInput,
                 $dryRun,
                 $noInteraction,
                 $outputOnlyJson,
-                $prettyJson
+                $prettyJson,
             );
         } else {
             $exitCode = $this->executeSingleUser(
@@ -138,7 +117,7 @@ class DeprovisionCommand extends Command
                 $dryRun,
                 $noInteraction,
                 $outputOnlyJson,
-                $prettyJson
+                $prettyJson,
             );
         }
         return $exitCode;
@@ -147,18 +126,17 @@ class DeprovisionCommand extends Command
     private function executeBatch(
         InputInterface $input,
         OutputInterface $output,
-        $userIdInput,
         $dryRun,
         $noInteraction,
         $outputOnlyJson,
-        $prettyJson
+        $prettyJson,
     ): int {
         $exitCode = 0;
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
-                sprintf('<question>Continue with deprovisioning? (y/n)</question> ', $userIdInput),
-                false
+                '<question>Continue with deprovisioning? (y/n)</question> ',
+                false,
             );
 
             if (!$helper->ask($input, $output, $question)) {
@@ -168,8 +146,8 @@ class DeprovisionCommand extends Command
         $this->logger->info(
             sprintf(
                 'Starting batch-deprovisioning of users%s',
-                ($dryRun ? ' (dry-run)' : '')
-            )
+                ($dryRun ? ' (dry-run)' : ''),
+            ),
         );
 
         if (!$outputOnlyJson) {
@@ -206,13 +184,13 @@ class DeprovisionCommand extends Command
         $dryRun,
         $noInteraction,
         $outputOnlyJson,
-        $prettyJson
+        $prettyJson,
     ): int {
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
                 sprintf('<question>Continue with deprovisioning of "%s"? (y/n)</question> ', $userIdInput),
-                false
+                false,
             );
 
             if (!$helper->ask($input, $output, $question)) {
@@ -224,8 +202,8 @@ class DeprovisionCommand extends Command
             sprintf(
                 'Starting deprovisioning of user "%s"%s',
                 $userIdInput,
-                ($dryRun ? ' (dry-run)' : '')
-            )
+                ($dryRun ? ' (dry-run)' : ''),
+            ),
         );
         try {
             $this->logger->debug('Health check the remote services.');
@@ -246,12 +224,13 @@ class DeprovisionCommand extends Command
     }
 
     /**
-     * @param OutputInterface $output
-     * @param JsonSerializable $information
      * @param bool $prettyJson
      */
-    private function printJson(OutputInterface $output, JsonSerializable $information, $prettyJson)
-    {
+    private function printJson(
+        OutputInterface $output,
+        JsonSerializable $information,
+        $prettyJson,
+    ): void {
         $jsonOptions = 0;
 
         if ($prettyJson) {
@@ -260,7 +239,7 @@ class DeprovisionCommand extends Command
 
         $output->write(
             json_encode($information, $jsonOptions),
-            true
+            true,
         );
     }
 }

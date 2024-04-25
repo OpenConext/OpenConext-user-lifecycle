@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -18,31 +20,20 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service;
 
-use DateTime;
-use Doctrine\DBAL\Exception\ConnectionException;
-use Doctrine\ORM\EntityRepository;
-use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollection;
-use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 use OpenConext\UserLifecycle\Domain\Service\StopwatchInterface;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\DatabaseConnectionException;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\RuntimeException;
 use Symfony\Component\Stopwatch\Stopwatch as SymfonyStopwatch;
-use Webmozart\Assert\Assert;
 
 class Stopwatch implements StopwatchInterface
 {
     private const TIMER = 'timer';
-    /**
-     * @var SymfonyStopwatch
-     */
-    private $stopwatch;
 
-    private $isStarted = false;
-    private $isStopped = false;
+    private bool $isStarted = false;
+    private bool $isStopped = false;
 
-    public function __construct(SymfonyStopwatch $stopwatch)
-    {
-        $this->stopwatch = $stopwatch;
+    public function __construct(
+        private readonly SymfonyStopwatch $stopwatch,
+    ) {
     }
 
     public function start(): void

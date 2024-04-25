@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,28 +25,18 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use OpenConext\UserLifecycle\Application\Command\RemoveFromLastLoginCommand;
 use OpenConext\UserLifecycle\Application\CommandHandler\RemoveFromLastLoginCommandHandler;
-use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
-use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandler;
-use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 use OpenConext\UserLifecycle\Domain\Service\ProgressReporterInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
-use OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod;
 use PHPUnit\Framework\TestCase;
 
 class RemoveFromLastLoginCommandHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var RemoveFromLastLoginCommandHandler
-     */
-    private $commandHandler;
-
-    /**
-     * @var LastLoginRepositoryInterface|Mock
-     */
-    private $repository;
+    private RemoveFromLastLoginCommandHandler $commandHandler;
+    private LastLoginRepositoryInterface|Mock $repository;
+    private ProgressReporterInterface|Mock $progressReporter;
 
     protected function setUp(): void
     {
@@ -53,7 +45,7 @@ class RemoveFromLastLoginCommandHandlerTest extends TestCase
         $this->progressReporter = m::mock(ProgressReporterInterface::class);
     }
 
-    public function test_handle()
+    public function test_handle(): void
     {
         $collabPersonId = m::mock(CollabPersonId::class);
         $collabPersonId

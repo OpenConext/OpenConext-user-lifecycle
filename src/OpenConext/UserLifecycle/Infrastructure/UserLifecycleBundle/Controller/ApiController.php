@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -24,42 +26,27 @@ use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionA
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 use Webmozart\Assert\Assert;
 
 class ApiController extends AbstractController
 {
-    /**
-     * @var DeprovisionApiFeatureToggle
-     */
-    private $apiFeatureToggle;
-
-    /**
-     * @var FindUserInformationQueryHandlerInterface
-     */
-    private $queryHandler;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        DeprovisionApiFeatureToggle $isEnabled,
-        FindUserInformationQueryHandlerInterface $queryHandler,
-        LoggerInterface $logger
+        private readonly DeprovisionApiFeatureToggle $apiFeatureToggle,
+        private readonly FindUserInformationQueryHandlerInterface $queryHandler,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->apiFeatureToggle = $isEnabled;
-        $this->queryHandler = $queryHandler;
-        $this->logger = $logger;
     }
 
-    /**
-     * @param string $collabPersonId
-     * @return JsonResponse|NotFoundHttpException
-     */
-    public function deprovisionAction($collabPersonId)
-    {
+    #[Route(
+        path: '/api/deprovision/{collabPersonId}',
+        name: 'deprovision',
+        requirements: ['collabPersonId' => '.+'],
+        methods: ['GET'],
+    )]
+    public function deprovision(
+        string $collabPersonId,
+    ): JsonResponse {
         $this->logger->debug('Received an API request for user information');
 
         Assert::stringNotEmpty($collabPersonId, 'Received invalid collabPersonId.');

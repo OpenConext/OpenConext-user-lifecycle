@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,8 +25,9 @@ use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 interface InformationServiceInterface
 {
     /**
-     * @param string $personId
      * @return InformationResponseInterface
      */
-    public function readInformationFor($personId);
+    public function readInformationFor(
+        string $personId,
+    );
 }

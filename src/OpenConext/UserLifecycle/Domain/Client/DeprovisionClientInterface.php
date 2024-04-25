@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -26,14 +28,19 @@ interface DeprovisionClientInterface
     /**
      * Can be used to deprovision a user from the OpenConext platform.
      */
-    public function deprovision(CollabPersonId $user, bool $dryRun = false): PromiseInterface;
+    public function deprovision(
+        CollabPersonId $user,
+        bool $dryRun = false,
+    ): PromiseInterface;
 
     /**
      * Can be used to gather information about a user on the OpenConext platform.
      *
      * Returns a Json encoded string containing the user information provided by the different deprovision API's.
      */
-    public function information(CollabPersonId $user): PromiseInterface;
+    public function information(
+        CollabPersonId $user,
+    ): PromiseInterface;
 
     /**
      * Returns the name of the client, as configured in the parameters.yml

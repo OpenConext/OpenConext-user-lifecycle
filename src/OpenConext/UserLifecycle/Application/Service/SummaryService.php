@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -26,24 +28,23 @@ use const PHP_EOL;
 class SummaryService implements SummaryServiceInterface
 {
 
-    const USER_DEPROVISION_FORMAT = 'The user was removed from %d %s.';
-    const USER_DEPROVISION_ERROR_FORMAT = 'See error messages below:';
-    const USER_DEPROVISION_JSON_HEADING = 'Full output of the deprovision command:';
+    public const USER_DEPROVISION_FORMAT = 'The user was removed from %d %s.';
+    public const USER_DEPROVISION_ERROR_FORMAT = 'See error messages below:';
+    public const USER_DEPROVISION_JSON_HEADING = 'Full output of the deprovision command:';
 
-    const USER_INFORMATION_FORMAT = 'Retrieved user information from %d %s.';
-    const USER_INFORMATION_JSON_HEADING = 'Full output of the information command:';
+    public const USER_INFORMATION_FORMAT = 'Retrieved user information from %d %s.';
+    public const USER_INFORMATION_JSON_HEADING = 'Full output of the information command:';
 
-    const BATCH_DEPROVISION_ERROR_FORMAT = '%d deprovision calls to services failed. See error messages below:';
+    public const BATCH_DEPROVISION_ERROR_FORMAT = '%d deprovision calls to services failed. See error messages below:';
 
-    private $progressReporter;
-
-    public function __construct(ProgressReporterInterface $progressReporter)
-    {
-        $this->progressReporter = $progressReporter;
+    public function __construct(
+        private readonly ProgressReporterInterface $progressReporter,
+    ) {
     }
 
-    public function summarizeInformationResponse(InformationResponseCollectionInterface $collection)
-    {
+    public function summarizeInformationResponse(
+        InformationResponseCollectionInterface $collection,
+    ): string {
         $count = count($collection);
         $service = $this->pluralizeService($count);
         $message = sprintf(self::USER_INFORMATION_FORMAT, $count, $service).PHP_EOL;
@@ -61,8 +62,9 @@ class SummaryService implements SummaryServiceInterface
         return $message.$errorMessageList.PHP_EOL.self::USER_INFORMATION_JSON_HEADING.PHP_EOL;
     }
 
-    public function summarizeDeprovisionResponse(InformationResponseCollectionInterface $collection)
-    {
+    public function summarizeDeprovisionResponse(
+        InformationResponseCollectionInterface $collection,
+    ): string {
         $count = count($collection);
         $service = $this->pluralizeService($count);
         $message = sprintf(self::USER_DEPROVISION_FORMAT, $count, $service).PHP_EOL;
@@ -80,8 +82,9 @@ class SummaryService implements SummaryServiceInterface
         return $message.$errorMessageList.PHP_EOL.self::USER_DEPROVISION_JSON_HEADING.PHP_EOL;
     }
 
-    public function summarizeBatchResponse(BatchInformationResponseCollectionInterface $collection)
-    {
+    public function summarizeBatchResponse(
+        BatchInformationResponseCollectionInterface $collection,
+    ): string {
 
         $this->progressReporter->printDeprovisionStatistics() . PHP_EOL;
 
@@ -98,8 +101,9 @@ class SummaryService implements SummaryServiceInterface
         return PHP_EOL.$errorMessageList.PHP_EOL.self::USER_DEPROVISION_JSON_HEADING.PHP_EOL;
     }
 
-    private function pluralizeService($count)
-    {
+    private function pluralizeService(
+        int $count,
+    ): string {
         if ($count === 1) {
             return 'service';
         }

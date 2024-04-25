@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -21,45 +23,32 @@ namespace OpenConext\UserLifecycle\Domain\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
+use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 
-/**
- * @ORM\Entity(
- *     repositoryClass="OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository"
- * )
- */
+#[ORM\Entity(repositoryClass: LastLoginRepository::class)]
 class LastLogin
 {
-    public function __construct(CollabPersonId $collabPersonId, DateTime $lastLoginDate)
-    {
+    public function __construct(
+        CollabPersonId $collabPersonId,
+        #[ORM\Column(name: 'lastseen', type: 'datetime')]
+        private readonly DateTime $lastLoginDate,
+    ) {
         $this->collabPersonId = $collabPersonId->getCollabPersonId();
-        $this->lastLoginDate = $lastLoginDate;
     }
 
     /**
      * @var string
-     * @ORM\Id()
-     * @ORM\Column(length=150, unique=true, name="userid")
      */
+    #[ORM\Id]
+    #[ORM\Column(name: 'userid', length: 150, unique: true)]
     private $collabPersonId;
 
-    /**
-     * @var DateTime
-     * @ORM\Column(type="datetime", name="lastseen")
-     */
-    private $lastLoginDate;
-
-    /**
-     * @return string
-     */
-    public function getCollabPersonId()
+    public function getCollabPersonId(): string
     {
         return $this->collabPersonId;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getLastLoginDate()
+    public function getLastLoginDate(): DateTime
     {
         return $this->lastLoginDate;
     }

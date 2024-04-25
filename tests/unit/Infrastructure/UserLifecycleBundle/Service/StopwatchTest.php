@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -32,14 +34,14 @@ class StopwatchTest extends TestCase
     {
         $this->stopwatch =  new Stopwatch(new \Symfony\Component\Stopwatch\Stopwatch());
     }
-    public function test_it_can_start_and_stop()
+    public function test_it_can_start_and_stop(): void
     {
         $this->stopwatch->start();
         $this->stopwatch->stop();
         $this->assertTrue(is_float($this->stopwatch->elapsedTime()));
     }
 
-    public function test_elapsed_time_returns_expected_value()
+    public function test_elapsed_time_returns_expected_value(): void
     {
         $this->stopwatch->start();
         sleep(1); // Sleep 1000 miliseconds
@@ -48,14 +50,14 @@ class StopwatchTest extends TestCase
         $this->assertEquals(1000, $elapsedTime);
     }
 
-    public function test_can_not_get_elapsed_time_before_started()
+    public function test_can_not_get_elapsed_time_before_started(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Unable to get the elapsed time of a stopwatch that was not started");
         $this->stopwatch->elapsedTime();
     }
 
-    public function test_can_not_get_elapsed_time_before_stopped()
+    public function test_can_not_get_elapsed_time_before_stopped(): void
     {
         $this->stopwatch->start();
         $this->expectException(RuntimeException::class);
@@ -63,7 +65,7 @@ class StopwatchTest extends TestCase
         $this->stopwatch->elapsedTime();
     }
 
-    public function test_can_not_stop_before_started()
+    public function test_can_not_stop_before_started(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Unable to stop a stopwatch that was not started");

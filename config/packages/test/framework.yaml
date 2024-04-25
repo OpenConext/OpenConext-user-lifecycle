@@ -1,6 +1,6 @@
 imports:
   - { resource: ../../services_test.yaml }
-  - { resource: ../../legacy/parameters.test.yml }
+  - { resource: ../../openconext/parameters.test.yaml }
 
 framework:
   test: ~

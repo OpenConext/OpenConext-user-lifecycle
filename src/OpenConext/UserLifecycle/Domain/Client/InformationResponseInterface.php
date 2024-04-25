@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -29,25 +31,25 @@ interface InformationResponseInterface extends JsonSerializable
     /**
      * @return ResponseStatus
      */
-    public function getStatus();
+    public function getStatus(): ResponseStatus;
 
     /**
      * @return Name
      */
-    public function getName();
+    public function getName(): Name;
 
     /**
      * @return Data
      */
-    public function getData();
+    public function getData(): Data;
 
     /**
      * @return ErrorMessage
      */
-    public function getErrorMessage();
+    public function getErrorMessage(): ErrorMessage;
 
     /**
      * @return array
      */
-    public function jsonSerialize();
+    public function jsonSerialize(): mixed;
 }

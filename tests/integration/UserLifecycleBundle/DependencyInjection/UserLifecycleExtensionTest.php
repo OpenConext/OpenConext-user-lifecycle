@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -39,47 +41,47 @@ class UserLifecycleExtensionTest extends AbstractExtensionTestCase
         return [new UserLifecycleExtension()];
     }
 
-    public function test_after_loading_the_correct_services_have_been_set()
+    public function test_after_loading_the_correct_services_have_been_set(): void
     {
         $config = json_decode(
             file_get_contents(__DIR__ . '/Fixtures/user_lifecycle_extension_config_two_services.json'),
-            true
+            true,
         );
 
         $this->load($config);
 
         $this->assertContainerBuilderHasService(
             'open_conext.user_lifecycle.deprovision_client.my_service_name',
-            DeprovisionClient::class
+            DeprovisionClient::class,
         );
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             'open_conext.user_lifecycle.deprovision_client.my_service_name',
-            'open_conext.user_lifecycle.deprovision_client'
+            'open_conext.user_lifecycle.deprovision_client',
         );
         $this->assertContainerBuilderHasService(
             'open_conext.user_lifecycle.deprovision_client.my_second_name',
-            DeprovisionClient::class
+            DeprovisionClient::class,
         );
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             'open_conext.user_lifecycle.deprovision_client.my_second_name',
-            'open_conext.user_lifecycle.deprovision_client'
+            'open_conext.user_lifecycle.deprovision_client',
         );
 
         $this->assertContainerBuilderHasService(
             'open_conext.user_lifecycle.guzzle_client.my_service_name',
-            Client::class
+            Client::class,
         );
         $this->assertContainerBuilderHasService(
             'open_conext.user_lifecycle.guzzle_client.my_second_name',
-            Client::class
+            Client::class,
         );
     }
 
-    public function test_rejects_empty_config()
+    public function test_rejects_empty_config(): void
     {
         $config = json_decode(
             file_get_contents(__DIR__ . '/Fixtures/user_lifecycle_extension_no_config.json'),
-            true
+            true,
         );
 
         $this->expectException(InvalidArgumentException::class);
@@ -88,16 +90,16 @@ class UserLifecycleExtensionTest extends AbstractExtensionTestCase
         $this->load($config);
     }
 
-    public function test_it_rejects_invalid_config()
+    public function test_it_rejects_invalid_config(): void
     {
         $config = json_decode(
             file_get_contents(__DIR__ . '/Fixtures/user_lifecycle_extension_invalid_config.json'),
-            true
+            true,
         );
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Expected the key "password" to exist in deprovision API client configuration "my_service_name"'
+            'Expected the key "password" to exist in deprovision API client configuration "my_service_name"',
         );
 
         $this->load($config);

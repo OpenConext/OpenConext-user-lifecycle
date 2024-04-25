@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -33,57 +35,20 @@ use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
-use function sleep;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DeprovisionService implements DeprovisionServiceInterface, ClientHealthCheckerInterface
 {
-    /**
-     * @var DeprovisionClientCollectionInterface
-     */
-    private $deprovisionClientCollection;
-
-    /**
-     * @var SanityCheckServiceInterface
-     */
-    private $sanityCheckService;
-
-    /**
-     * @var LastLoginServiceInterface
-     */
-    private $lastLoginService;
-
-    /**
-     * @var RemovalCheckServiceInterface
-     */
-    private $removalCheckService;
-
-    /**
-     * @var RemoveFromLastLoginCommandHandler
-     */
-    private $removeFromLastLoginCommandHandler;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        DeprovisionClientCollectionInterface $deprovisionClientCollection,
-        SanityCheckServiceInterface $sanityCheckService,
-        LastLoginServiceInterface $lastLoginService,
-        RemovalCheckServiceInterface $removalCheckService,
-        RemoveFromLastLoginCommandHandler $removeFromLastLoginCommandHandler,
-        LoggerInterface $logger
+        private readonly DeprovisionClientCollectionInterface $deprovisionClientCollection,
+        private readonly SanityCheckServiceInterface $sanityCheckService,
+        private readonly LastLoginServiceInterface $lastLoginService,
+        private readonly RemovalCheckServiceInterface $removalCheckService,
+        private readonly RemoveFromLastLoginCommandHandler $removeFromLastLoginCommandHandler,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->deprovisionClientCollection = $deprovisionClientCollection;
-        $this->sanityCheckService = $sanityCheckService;
-        $this->lastLoginService = $lastLoginService;
-        $this->removalCheckService = $removalCheckService;
-        $this->removeFromLastLoginCommandHandler = $removeFromLastLoginCommandHandler;
-        $this->logger = $logger;
     }
 
     /**
@@ -91,8 +56,11 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
      * @param bool $dryRun
      * @return InformationResponseCollectionInterface
      */
-    public function deprovision(ProgressReporterInterface $progressReporter, $personId, $dryRun = false)
-    {
+    public function deprovision(
+        ProgressReporterInterface $progressReporter,
+        $personId,
+        $dryRun = false,
+    ) {
         $this->logger->debug('Received a request to deprovision a user.');
 
         $collabPersonId = $this->buildCollabPersonId($personId);
@@ -102,7 +70,7 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
 
         $this->logger->info(
             sprintf('Deprovisioned user "%s" with the following data.', $personId),
-            ['information_response' => json_encode($information)]
+            ['information_response' => json_encode($information)],
         );
 
         if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
@@ -117,12 +85,14 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.
      *
-     * @param ProgressReporterInterface $progressReporter
+     * @param \OpenConext\UserLifecycle\OpenConext\UserLifecycle\Application\Service\ProgressReporterInterface $progressReporter
      * @param bool $dryRun
      * @return BatchInformationResponseCollectionInterface
      */
-    public function batchDeprovision(ProgressReporterInterface $progressReporter, $dryRun = false)
-    {
+    public function batchDeprovision(
+        ProgressReporterInterface $progressReporter,
+        $dryRun = false,
+    ): BatchInformationResponseCollection {
         $this->logger->debug('Retrieve the users that are marked for deprovisioning.');
         $users = $this->lastLoginService->findUsersForDeprovision();
         $this->logger->debug('Perform sanity checks on the response from the last login service.');
@@ -133,7 +103,7 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
             $progressReporter->progress(
                 sprintf('Working on %s...', $lastLogin->getCollabPersonId()),
                 count($users),
-                $currentIndex
+                $currentIndex,
             );
 
             $collabPersonId = $this->buildCollabPersonId($lastLogin->getCollabPersonId());
@@ -144,9 +114,9 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
             $this->logger->info(
                 sprintf(
                     'Deprovisioned user "%s" with the following data.',
-                    $lastLogin->getCollabPersonId()
+                    $lastLogin->getCollabPersonId(),
                 ),
-                ['information_response' => json_encode($information)]
+                ['information_response' => json_encode($information)],
             );
 
             if (!$dryRun && $this->removalCheckService->mayBeRemoved($information)) {
@@ -162,8 +132,9 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
         return $batchInformationCollection;
     }
 
-    private function buildCollabPersonId($personId)
-    {
+    private function buildCollabPersonId(
+        $personId,
+    ): CollabPersonId {
         Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
 
         return new CollabPersonId($personId);

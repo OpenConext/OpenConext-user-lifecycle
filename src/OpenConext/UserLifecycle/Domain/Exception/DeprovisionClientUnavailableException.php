@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -23,8 +25,11 @@ use Throwable;
 
 class DeprovisionClientUnavailableException extends RuntimeException
 {
-    public function __construct(string $clientName, $code = 0, Throwable $previous = null)
-    {
+    public function __construct(
+        string $clientName,
+        $code = 0,
+        Throwable $previous = null,
+    ) {
         $message = sprintf("Connection failed to backend '%s'", $clientName);
         parent::__construct($message, $code, $previous);
     }

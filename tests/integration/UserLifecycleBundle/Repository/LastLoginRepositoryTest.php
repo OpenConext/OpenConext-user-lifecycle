@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,6 +22,7 @@ namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Reposit
 
 use DateTime;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
 
@@ -38,24 +41,24 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->repository->setNow(new DateTime('2018-01-01'));
     }
 
-    public function test_it_reads_deprovision_candidates()
+    public function test_it_reads_deprovision_candidates(): void
     {
-        $candidates = $this->repository->findDeprovisionCandidates(2);
+        $candidates = $this->repository->findDeprovisionCandidates(new InactivityPeriod(2));
         $this->assertInstanceOf(LastLoginCollectionInterface::class, $candidates);
         // see the database fixture for more details on the last login set we are querying
         $this->assertEquals(3, $candidates->count());
     }
 
-    public function test_deprovision_candidates_returns_empty_collection()
+    public function test_deprovision_candidates_returns_empty_collection(): void
     {
         $this->repository->setNow(new DateTime('1900-01-01'));
-        $candidates = $this->repository->findDeprovisionCandidates(2);
+        $candidates = $this->repository->findDeprovisionCandidates(new InactivityPeriod(2));
         $this->assertInstanceOf(LastLoginCollectionInterface::class, $candidates);
         // see the database fixture for more details on the last login set we are querying
         $this->assertEquals(0, $candidates->count());
     }
 
-    public function test_delete()
+    public function test_delete(): void
     {
         $userId ='urn:collab:person:surf.nl:jason_mraz';
         $result = $this->repository->delete($userId);
@@ -64,7 +67,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->assertCount(3, $this->repository->findAll());
     }
 
-    public function test_delete_non_exisiting()
+    public function test_delete_non_exisiting(): void
     {
         $userId ='urn:collab:person:surf.nl:joe_dirt';
         $result = $this->repository->delete($userId);

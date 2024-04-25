@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,13 +25,10 @@ use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 class RemoveFromLastLoginCommand implements CommandInterface
 {
-    private $collabPersonId;
-    private $progressReporter;
-
-    public function __construct(CollabPersonId $personId, ProgressReporterInterface $progressReporter)
-    {
-        $this->collabPersonId = $personId;
-        $this->progressReporter = $progressReporter;
+    public function __construct(
+        private readonly CollabPersonId $collabPersonId,
+        private readonly ProgressReporterInterface $progressReporter,
+    ) {
     }
 
     public function getCollabPersonId(): CollabPersonId

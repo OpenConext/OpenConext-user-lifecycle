@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,8 +27,9 @@ interface RemovalCheckServiceInterface
     /**
      * Analyze a collection and report if deprovisioning was a success
      *
-     * @param InformationResponseCollectionInterface $collection
      * @return bool
      */
-    public function mayBeRemoved(InformationResponseCollectionInterface $collection);
+    public function mayBeRemoved(
+        InformationResponseCollectionInterface $collection,
+    );
 }

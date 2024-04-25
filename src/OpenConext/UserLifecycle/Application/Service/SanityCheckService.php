@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,30 +25,17 @@ use OpenConext\UserLifecycle\Domain\Exception\EmptyLastLoginCollectionException;
 use OpenConext\UserLifecycle\Domain\Exception\InvalidLastLoginCollectionException;
 use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use Psr\Log\LoggerInterface;
-use Webmozart\Assert\Assert;
 
 class SanityCheckService implements SanityCheckServiceInterface
 {
     /**
      * The maximum allowed number of LastLogin entries that may be
      * deprovisioned at one time.
-     *
-     * @var int
      */
-    private $userQuota;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        $userQuota,
-        LoggerInterface $logger
+        private readonly int             $userQuota,
+        private readonly LoggerInterface $logger,
     ) {
-        Assert::integer($userQuota);
-        $this->userQuota = $userQuota;
-        $this->logger = $logger;
     }
 
     /**
@@ -56,12 +45,12 @@ class SanityCheckService implements SanityCheckServiceInterface
      * method will throw the InvalidLastLoginCollectionException. This
      * should halt the deprovisioning run.
      *
-     * @param LastLoginCollectionInterface $lastLoginCollection
      * @throws InvalidLastLoginCollectionException
      * @throws EmptyLastLoginCollectionException
      */
-    public function check(LastLoginCollectionInterface $lastLoginCollection)
-    {
+    public function check(
+        LastLoginCollectionInterface $lastLoginCollection,
+    ): void {
         $count = count($lastLoginCollection);
 
         if ($count === 0) {
@@ -74,8 +63,8 @@ class SanityCheckService implements SanityCheckServiceInterface
                     'Too much candidates found for deprovisioning. %d exceeds the limit set at %d by %d.',
                     $count,
                     $this->userQuota,
-                    ($count - $this->userQuota)
-                )
+                    ($count - $this->userQuota),
+                ),
             );
         }
 

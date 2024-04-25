@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,23 +22,12 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api;
 
 class DeprovisionApiFeatureToggle
 {
-    /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @param bool $isEnabled
-     */
-    public function __construct($isEnabled)
-    {
-        $this->isEnabled = $isEnabled;
+    public function __construct(
+        private readonly bool $isEnabled = false,
+    ) {
     }
 
-    /**
-     * @return bool
-     */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->isEnabled;
     }

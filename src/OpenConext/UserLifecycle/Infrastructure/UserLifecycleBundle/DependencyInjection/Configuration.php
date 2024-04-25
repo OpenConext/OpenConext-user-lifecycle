@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,7 +25,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('user_lifecycle');
 
@@ -39,27 +41,21 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('url')
                                 ->isRequired()
                                 ->validate()
-                                    ->ifTrue(function ($url) {
-                                        return !is_string($url) || empty($url);
-                                    })
+                                    ->ifTrue(fn($url): bool => !is_string($url) || empty($url))
                                     ->thenInvalid("Url must be non-empty string, got '%s'")
                                 ->end()
                             ->end()
                             ->scalarNode('username')
                                 ->isRequired()
                                 ->validate()
-                                    ->ifTrue(function ($username) {
-                                        return !is_string($username) || empty($username);
-                                    })
+                                    ->ifTrue(fn($username): bool => !is_string($username) || empty($username))
                                     ->thenInvalid("Username must be non-empty string, got '%s'")
                                 ->end()
                             ->end()
                             ->scalarNode('password')
                                 ->isRequired()
                                 ->validate()
-                                    ->ifTrue(function ($password) {
-                                        return !is_string($password) || empty($password);
-                                    })
+                                    ->ifTrue(fn($password): bool => !is_string($password) || empty($password))
                                     ->thenInvalid("Password must be non-empty string, got '%s'")
                                 ->end()
                             ->end()
@@ -76,25 +72,19 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('enabled')
                             ->defaultFalse()
                             ->validate()
-                                ->ifTrue(function ($enabled) {
-                                    return !is_bool((bool)$enabled);
-                                })
+                                ->ifTrue(fn($enabled): bool => !is_bool((bool)$enabled))
                                 ->thenInvalid("Enabled must be a boolean, got '%s'")
                             ->end()
                         ->end()
                         ->scalarNode('username')
                             ->validate()
-                                ->ifTrue(function ($username) {
-                                    return !is_string($username) || empty($username);
-                                })
+                                ->ifTrue(fn($username): bool => !is_string($username) || empty($username))
                                 ->thenInvalid("Username must be non-empty string, got '%s'")
                             ->end()
                         ->end()
                         ->scalarNode('password')
                             ->validate()
-                                ->ifTrue(function ($password) {
-                                    return !is_string($password) || empty($password);
-                                })
+                                ->ifTrue(fn($password): bool => !is_string($password) || empty($password))
                                 ->thenInvalid("Password must be non-empty string, got '%s'")
                             ->end()
                         ->end()

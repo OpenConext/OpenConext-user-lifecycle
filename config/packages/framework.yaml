@@ -1,6 +1,3 @@
-imports:
-  - { resource: ../legacy/parameters.yml }
-
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
   secret: '%secret%'

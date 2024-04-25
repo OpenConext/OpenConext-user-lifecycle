@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -28,14 +30,20 @@ interface DeprovisionServiceInterface
      * @param bool $dryRun
      * @return InformationResponseCollectionInterface
      */
-    public function deprovision(ProgressReporterInterface $progressReporter, $personId, $dryRun = false);
+    public function deprovision(
+        ProgressReporterInterface $progressReporter,
+        $personId,
+        $dryRun = false,
+    );
 
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.
      *
-     * @param ProgressReporterInterface $progressReporter
      * @param bool $dryRun
      * @return BatchInformationResponseCollectionInterface
      */
-    public function batchDeprovision(ProgressReporterInterface $progressReporter, $dryRun = false);
+    public function batchDeprovision(
+        ProgressReporterInterface $progressReporter,
+        $dryRun = false,
+    );
 }

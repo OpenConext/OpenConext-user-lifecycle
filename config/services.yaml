@@ -1,11 +1,104 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
-parameters:
-    container.dumper.inline_class_loader: true
-    locale: en
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+imports:
+    - { resource: 'openconext/parameters.yaml' }
 
 services:
+    # default configuration for services in *this* file
     _defaults:
-        autowire: true
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+#    OpenConext\UserLifecycle\DataFixtures\:
+#        resource: '../src/DataFixtures/'
+#        autoconfigure: true
+#        autowire: true
+
+    OpenConext\UserLifecycle\Infrastructure\:
+        resource: '../src/OpenConext/UserLifecycle/Infrastructure/'
         autoconfigure: true
+        autowire: true
+
+    OpenConext\UserLifecycle\Application\:
+        resource: '../src/OpenConext/UserLifecycle/Application/'
+        autoconfigure: true
+        autowire: true
+
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Monolog\:
+        resource: '../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Monolog/'
+        autoconfigure: true
+        autowire: true
+
+    OpenConext\UserLifecycle\Domain\:
+        resource: '../src/OpenConext/UserLifecycle/Domain/'
+        autoconfigure: true
+        autowire: false
+
+    OpenConext\UserLifecycle\Application\Service\SanityCheckService:
+        arguments:
+            - '%user_quota%'
+            - '@logger'
+
+    OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod:
+        arguments:
+            - '%inactivity_period%'
+
+    OpenConext\UserLifecycle\Application\Service\LastLoginService:
+        arguments:
+            - '@OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod'
+            - '@OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandlerInterface'
+            - '@logger'
+
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\:
+        resource: '../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Controller'
+        autoconfigure: true
+        autowire: true
+        tags: ['controller.service_arguments']
+
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\InformationCommand:
+        arguments:
+            - '@OpenConext\UserLifecycle\Application\Service\InformationService'
+            - '@OpenConext\UserLifecycle\Application\Service\SummaryService'
+            - '@logger'
+        tags:
+            - 'console.command'
+
+    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command\DeprovisionCommand:
+        arguments:
+            - '@OpenConext\UserLifecycle\Application\Service\DeprovisionService'
+            - '@OpenConext\UserLifecycle\Application\Service\SummaryService'
+            - '@OpenConext\UserLifecycle\Application\Service\ProgressReporter'
+            - '@logger'
+        tags:
+            - 'console.command'
+
+    OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - OpenConext\UserLifecycle\Domain\Entity\LastLogin
+
+    OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClientCollection
+
+    OpenConext\UserLifecycle\Domain\Client\InformationResponseFactoryInterface: '@OpenConext\UserLifecycle\Application\Client\InformationResponseFactory'
+
+    OpenConext\UserLifecycle\Domain\Service\StopwatchInterface:
+        class: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service\Stopwatch
+        arguments:
+            $stopwatch: '@Symfony\Component\Stopwatch\Stopwatch'
+
+    open_conext.user_lifecycle.deprovision_client.guzzle_stack:
         public: false
+        class: 'GuzzleHttp\HandlerStack'
+        factory: ['GuzzleHttp\HandlerStack', create]
+        calls:
+            - [setHandler, ['@open_conext.user_lifecycle.deprovision_client.guzzle_handler']]
+
+    open_conext.user_lifecycle.deprovision_client.guzzle_handler:
+        public: false
+        class: 'GuzzleHttp\Handler\CurlMultiHandler'
+

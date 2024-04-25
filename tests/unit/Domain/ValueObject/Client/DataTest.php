@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -18,9 +20,7 @@
 
 namespace OpenConext\UserLifecycle\Tests\Unit\Domain\ValueObject\Client;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\Exception\InvalidDataException;
 use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
 use PHPUnit\Framework\TestCase;
@@ -29,13 +29,13 @@ class DataTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function test_build_empty()
+    public function test_build_empty(): void
     {
         $data = new Data([]);
         $this->assertEmpty($data->getData());
     }
 
-    public function test_add_entry()
+    public function test_add_entry(): void
     {
         $entry = ['name' => 'collabPersonId', 'value' => 'urn:collab:person:jesse.james'];
         $entryTeams = ['name' => 'teams', 'value' => 'admins'];
@@ -43,14 +43,14 @@ class DataTest extends TestCase
         $this->assertEquals([$entry, $entryTeams], $data->getData());
     }
 
-    public function test_it_reject_invalid_data_expects_array_of_entries()
+    public function test_it_reject_invalid_data_expects_array_of_entries(): void
     {
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionMessage('The data must be of the type array');
         new Data(['name' => 'my name', 'value' => 'my value']);
     }
 
-    public function test_it_reject_invalid_data_expects_valid_entries()
+    public function test_it_reject_invalid_data_expects_valid_entries(): void
     {
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionMessage('Expected one of: "name", "value"');

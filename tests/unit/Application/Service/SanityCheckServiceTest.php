@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -47,11 +49,11 @@ class SanityCheckServiceTest extends TestCase
         $this->logger = m::mock(LoggerInterface::class);
         $this->service = new SanityCheckService(
             2,
-            $this->logger
+            $this->logger,
         );
     }
 
-    public function test_check()
+    public function test_check(): void
     {
         $lastLoginCollection = m::mock(LastLoginCollectionInterface::class);
 
@@ -66,7 +68,7 @@ class SanityCheckServiceTest extends TestCase
         $this->assertNull($this->service->check($lastLoginCollection));
     }
 
-    public function test_check_empty()
+    public function test_check_empty(): void
     {
         $this->expectExceptionMessage("No candidates found for deprovisioning");
         $this->expectException(EmptyLastLoginCollectionException::class);
@@ -78,10 +80,10 @@ class SanityCheckServiceTest extends TestCase
         $this->service->check($lastLoginCollection);
     }
 
-    public function test_check_too_many()
+    public function test_check_too_many(): void
     {
         $this->expectExceptionMessage(
-            "Too much candidates found for deprovisioning. 100 exceeds the limit set at 2 by 98."
+            "Too much candidates found for deprovisioning. 100 exceeds the limit set at 2 by 98.",
         );
         $this->expectException(InvalidLastLoginCollectionException::class);
         $lastLoginCollection = m::mock(LastLoginCollectionInterface::class);

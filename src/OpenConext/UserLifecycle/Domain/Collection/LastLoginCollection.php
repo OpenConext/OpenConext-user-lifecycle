@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,13 +24,11 @@ use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 
 class LastLoginCollection implements LastLoginCollectionInterface
 {
-    /**
-     * @var array
-     */
-    private $data = [];
+    private array $data = [];
 
-    public static function from(array $results)
-    {
+    public static function from(
+        array $results,
+    ): LastLoginCollectionInterface {
         $collection = new self();
         foreach ($results as $lastLogin) {
             $collection->add($lastLogin);
@@ -37,26 +37,21 @@ class LastLoginCollection implements LastLoginCollectionInterface
         return $collection;
     }
 
-    /**
-     * @param LastLogin $lastLogin
-     */
-    public function add(LastLogin $lastLogin)
-    {
+    public function add(
+        LastLogin $lastLogin,
+    ): void {
         $this->data[] = $lastLogin;
     }
 
     /**
      * @return LastLogin[]
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
 
-    /**
-     * @return int
-     */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
