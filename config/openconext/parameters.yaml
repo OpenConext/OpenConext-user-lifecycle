@@ -1,0 +1,22 @@
+# This file is auto-generated during the composer install
+parameters:
+    app_env: dev
+    app_debug: true
+    app_secret: NotSoSecretReplaceMe!
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: user-lifecycle
+    database_user: user-lifecycle-rw
+    database_password: secret
+    secret: ThisTokenIsNotSoSecretChangeIt
+    open_conext_user_lifecycle_clients:
+        my_service_name:
+            url: 'https://my-service-url/api/'
+            username: my-user-name
+            password: secret
+            verify_ssl: false
+    user_quota: 1500
+    inactivity_period: 37
+    deprovision_api_settings_enabled: false
+    deprovision_api_settings_username: userlifecycle
+    deprovision_api_settings_password: secret
