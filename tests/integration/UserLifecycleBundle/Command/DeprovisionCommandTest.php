@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -73,18 +75,18 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
 
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name'),
         );
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name'),
         );
 
         // Expose the mock handlers, so the test methods can determine what the 'api' should return
         $this->handlerMyService = self::$container->get(
-            'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name'
+            'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name',
         );
         $this->handlerMySecondService = self::$container->get(
-            'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name'
+            'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name',
         );
 
         // Create the application and add the information command
@@ -99,7 +101,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $deprovisionService = self::$container->get(DeprovisionService::class);
         $progressReporter = new ProgressReporter(
             new Stopwatch(new FrameworkStopwatch()),
-            m::mock(LoggerInterface::class)
+            m::mock(LoggerInterface::class),
         );
         $summaryService = new SummaryService($progressReporter);
 
@@ -108,25 +110,25 @@ class DeprovisionCommandTest extends DatabaseTestCase
 
 
         $this->application->add(
-            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger)
+            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger),
         );
 
         // Load the database fixtures
         $this->loadFixtures();
     }
 
-    public function test_execute()
+    public function test_execute(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId)),
         );
 
         $command = $this->application->find('deprovision');
@@ -149,18 +151,18 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(3, $this->repository->findAll());
     }
 
-    public function test_execute_cancels_when_no_is_confirmed()
+    public function test_execute_cancels_when_no_is_confirmed(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId)),
         );
 
         $command = $this->application->find('deprovision');
@@ -177,18 +179,18 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
     }
 
-    public function test_execute_dry_run()
+    public function test_execute_dry_run(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId)),
         );
 
         $command = $this->application->find('deprovision');
@@ -204,18 +206,18 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(4, $this->repository->findAll());
     }
 
-    public function test_execute_no_interaction()
+    public function test_execute_no_interaction(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId)),
         );
 
         $command = $this->application->find('deprovision');
@@ -230,18 +232,18 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(3, $this->repository->findAll());
     }
 
-    public function test_execute_silently()
+    public function test_execute_silently(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId)),
         );
 
         $command = $this->application->find('deprovision');
@@ -254,7 +256,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->assertJson($output);
     }
 
-    public function test_execute_silently_required_no_interaction_option()
+    public function test_execute_silently_required_no_interaction_option(): void
     {
         $this->expectExceptionMessage("The --json option must be used in combination with --no-interaction (-n).");
         $this->expectException(RuntimeException::class);
@@ -266,12 +268,14 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $commandTester->execute(['user' => $collabPersonId, '--json' => true]);
     }
 
-    private function getOkStatus($serviceName, $collabPersonId)
-    {
+    private function getOkStatus(
+        $serviceName,
+        $collabPersonId,
+    ) {
         return sprintf(
             '{"status": "OK", "name": "%s", "data": [ { "name": "foobar", "value": "%s" } ] }',
             $serviceName,
-            $collabPersonId
+            $collabPersonId,
         );
     }
 }

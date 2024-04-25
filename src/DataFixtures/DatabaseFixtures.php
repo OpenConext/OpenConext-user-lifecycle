@@ -18,7 +18,7 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Tests\Integration\DataFixtures\ORM;
+namespace OpenConext\UserLifecycle\DataFixtures;
 
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -26,7 +26,7 @@ use Doctrine\Persistence\ObjectManager;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
-class DatabaseTestFixtures extends Fixture
+class DatabaseFixtures extends Fixture
 {
     public function load(
         ObjectManager $manager,

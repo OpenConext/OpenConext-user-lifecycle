@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -18,15 +20,14 @@
 
 namespace OpenConext\UserLifecycle\Domain\Client;
 
-use JsonSerializable;
 use Countable;
+use JsonSerializable;
 
 interface InformationResponseCollectionInterface extends JsonSerializable, Countable
 {
-    /**
-     * @param InformationResponseInterface $informationResponse
-     */
-    public function addInformationResponse(InformationResponseInterface $informationResponse): void;
+    public function addInformationResponse(
+        InformationResponseInterface $informationResponse,
+    ): void;
 
     /**
      * @return InformationResponseInterface[]
@@ -43,7 +44,7 @@ interface InformationResponseCollectionInterface extends JsonSerializable, Count
     public function count(): int;
 
     /**
-     * @return int[]
+     * @return array<string, int>
      */
     public function successesPerClient(): array;
 }

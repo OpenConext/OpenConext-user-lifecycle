@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -32,14 +34,14 @@ class InformationResponseCollectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function test_can_be_created()
+    public function test_can_be_created(): void
     {
         $collection = new InformationResponseCollection();
         $this->assertEmpty($collection->getInformationResponses());
         $this->assertEmpty($collection->getErrorMessages());
     }
 
-    public function test_can_be_set_with_information_responses()
+    public function test_can_be_set_with_information_responses(): void
     {
         $info1 = $this->buildMockInformationResponse('OK', 'engine', [['name' => 'user', 'value' => 'JK']]);
         $info2 = $this->buildMockInformationResponse('OK', 'teams', [['name' => 'user', 'value' => 'JK']]);
@@ -52,13 +54,13 @@ class InformationResponseCollectionTest extends TestCase
         $this->assertEmpty($collection->getErrorMessages());
     }
 
-    public function test_it_sets_last_error_message()
+    public function test_it_sets_last_error_message(): void
     {
         $info1 = $this->buildMockInformationResponse(
             'FAILED',
             'teams',
             [['name' => 'user', 'value' => 'JK']],
-            'Service unavailable'
+            'Service unavailable',
         );
         $info2 = $this->buildMockInformationResponse('OK', 'engine', [['name' => 'user', 'value' => 'JK']]);
 
@@ -73,8 +75,12 @@ class InformationResponseCollectionTest extends TestCase
         $this->assertEquals('Service unavailable', $errorMessages['teams']);
     }
 
-    private function buildMockInformationResponse($status, $name, $data, $errorMessage = null)
-    {
+    private function buildMockInformationResponse(
+        $status,
+        $name,
+        $data,
+        $errorMessage = null,
+    ) {
         $informationResponse = m::mock(InformationResponseInterface::class);
 
         $statusMock = m::mock(ResponseStatus::class);

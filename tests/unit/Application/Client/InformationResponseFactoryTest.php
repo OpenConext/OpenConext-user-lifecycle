@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -37,7 +39,7 @@ class InformationResponseFactoryTest extends TestCase
         $this->informationResponseFactory = new InformationResponseFactory();
     }
 
-    public function test_build_from_ok_api_response()
+    public function test_build_from_ok_api_response(): void
     {
         $data = [['name' => 'fieldname', 'value' => 'fieldvalue']];
         $response = $this->informationResponseFactory->fromApiResponse(
@@ -45,8 +47,8 @@ class InformationResponseFactoryTest extends TestCase
                 'my-service-name',
                 'OK',
                 $data,
-                ''
-            )
+                '',
+            ),
         );
         $this->assertInstanceOf(InformationResponse::class, $response);
         $this->assertEquals('my-service-name', $response->getName());
@@ -55,15 +57,15 @@ class InformationResponseFactoryTest extends TestCase
         $this->assertFalse($response->getErrorMessage()->hasErrorMessage());
     }
 
-    public function test_build_from_failed_api_response()
+    public function test_build_from_failed_api_response(): void
     {
         $response = $this->informationResponseFactory->fromApiResponse(
             $this->buildResponse(
                 'my-service-name',
                 'FAILED',
                 [],
-                'my message'
-            )
+                'my message',
+            ),
         );
         $this->assertInstanceOf(InformationResponse::class, $response);
         $this->assertEquals('my-service-name', (string) $response->getName());
@@ -72,7 +74,7 @@ class InformationResponseFactoryTest extends TestCase
         $this->assertEquals('my message', (string) $response->getErrorMessage());
     }
 
-    public function test_build_from_failed_api_response_nested_data()
+    public function test_build_from_failed_api_response_nested_data(): void
     {
         $data = [[
             'name' => 'my_field_value',
@@ -87,8 +89,8 @@ class InformationResponseFactoryTest extends TestCase
                 'my-service-name',
                 'OK',
                 $data,
-                null
-            )
+                null,
+            ),
         );
         $this->assertInstanceOf(InformationResponse::class, $response);
         $this->assertEquals('my-service-name', (string) $response->getName());
@@ -97,7 +99,7 @@ class InformationResponseFactoryTest extends TestCase
         $this->assertFalse($response->getErrorMessage()->hasErrorMessage());
     }
 
-    public function test_multible_error_messages_are_allowed()
+    public function test_multible_error_messages_are_allowed(): void
     {
         $data = [['name' => 'fieldname', 'value' => 'fieldvalue']];
         $response = $this->informationResponseFactory->fromApiResponse(
@@ -105,8 +107,8 @@ class InformationResponseFactoryTest extends TestCase
                 'my-service-name',
                 'FAILED',
                 $data,
-                ['message 1', 'message 2']
-            )
+                ['message 1', 'message 2'],
+            ),
         );
         $this->assertEquals(ResponseStatus::STATUS_FAILED, (string) $response->getStatus());
         $this->assertEquals('message 1, message 2', (string) $response->getErrorMessage());
@@ -116,8 +118,8 @@ class InformationResponseFactoryTest extends TestCase
                 'my-service-name',
                 'FAILED',
                 $data,
-                ['singular message wrapped in array']
-            )
+                ['singular message wrapped in array'],
+            ),
         );
         $this->assertEquals(ResponseStatus::STATUS_FAILED, (string) $response->getStatus());
         $this->assertEquals('singular message wrapped in array', (string) $response->getErrorMessage());
@@ -126,8 +128,9 @@ class InformationResponseFactoryTest extends TestCase
     /**
      * @dataProvider buildInvalidResponses
      */
-    public function test_fails_on_invalid_response($invalidResponse)
-    {
+    public function test_fails_on_invalid_response(
+        $invalidResponse,
+    ): void {
         $this->expectException(InvalidArgumentException::class);
         $this->informationResponseFactory->fromApiResponse($invalidResponse);
     }
@@ -141,18 +144,12 @@ class InformationResponseFactoryTest extends TestCase
                     '',
                     'OK',
                     [['name' => 'test', 'value' => 'foobar'], ['name' => 'test2', 'value' => 'foobar2']],
-                    null
+                    null,
                 )
             ],
-            [$this->buildResponse(123, 'OK', [['name' => 'test', 'value' => 'foobar']], null)],
-            [$this->buildResponse([], 'FAILED', [], 'foobar')],
-            [$this->buildResponse(true, 'FAILED', [], 'foobar')],
 
             // invalid status
             [$this->buildResponse('my-service', 'ALLRIGHT', [], null)],
-            [$this->buildResponse('my-service', 200, [], null)],
-            [$this->buildResponse('my-service', true, [], null)],
-            [$this->buildResponse('my-service', null, [], null)],
 
             // invalid data
             [$this->buildResponse('my-service', 'OK', null, null)],
@@ -164,7 +161,7 @@ class InformationResponseFactoryTest extends TestCase
                     'my-service',
                     'OK',
                     ['name' => 'ffoop', ['name' => 'test', 'value' => 'foobar']],
-                    null
+                    null,
                 )
             ],
             // invalid message
@@ -179,8 +176,12 @@ class InformationResponseFactoryTest extends TestCase
         ];
     }
 
-    private function buildResponse($name, $status, $data, $message)
-    {
+    private function buildResponse(
+        $name,
+        $status,
+        $data,
+        $message,
+    ) {
         return [
             'name' => $name,
             'status' => $status,

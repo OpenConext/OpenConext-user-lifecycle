@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -72,18 +74,18 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
 
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name'),
         );
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name'),
         );
 
         // Expose the mock handlers, so the test methods can determine what the 'api' should return
         $this->handlerMyService = self::$container->get(
-            'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name'
+            'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name',
         );
         $this->handlerMySecondService = self::$container->get(
-            'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name'
+            'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name',
         );
 
         // Create the application and add the information command
@@ -94,7 +96,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
         $progressReporter = new ProgressReporter(
             new Stopwatch(new FrameworkStopwatch()),
-            m::mock(LoggerInterface::class)->shouldIgnoreMissing()
+            m::mock(LoggerInterface::class)->shouldIgnoreMissing(),
         );
         $summaryService = new SummaryService($progressReporter);
 
@@ -109,14 +111,14 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
 
 
         $this->application->add(
-            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger)
+            new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger),
         );
 
         // Load the database fixtures
         $this->loadFixtures();
     }
 
-    public function test_execute()
+    public function test_execute(): void
     {
         // Ascertain we start of with 4 entries in the last login repository
         $this->assertCount(4, $this->repository->findAll());
@@ -124,12 +126,12 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId)),
         );
 
         $command = $this->application->find('deprovision');
@@ -147,7 +149,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(3, $this->repository->findAll());
     }
 
-    public function test_execute_multiple_users()
+    public function test_execute_multiple_users(): void
     {
         // Set the repository time in the future, ensuring deprovisioning of all users in the last login table
         $this->repository->setNow(new DateTime('2028-01-01'));
@@ -160,7 +162,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:james_watson')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:john_doe')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:jimi_hendrix')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:jason_mraz'))
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:surf.nl:jason_mraz')),
         );
 
         $this->handlerMySecondService->append(
@@ -168,7 +170,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:james_watson')),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:jimi_hendrix')),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:jason_mraz')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:john_doe'))
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:surf.nl:john_doe')),
         );
 
         $command = $this->application->find('deprovision');
@@ -184,14 +186,14 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertStringContainsString('"last-login-removals":4', $output);
         $this->assertStringContainsString(
             '"deprovisioned-per-client":{"my_service_name":4,"my_second_name":4}',
-            $output
+            $output,
         );
         $this->assertEquals(0, $commandTester->getStatusCode());
         // After deprovisioning the user should have been removed from the last login table
         $this->assertCount(0, $this->repository->findAll());
     }
 
-    public function test_execute_multiple_users_one_failure()
+    public function test_execute_multiple_users_one_failure(): void
     {
         // Set the repository time in the future, ensuring deprovisioning of all users in the last login table
         $this->repository->setNow(new DateTime('2028-01-01'));
@@ -204,7 +206,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user1')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user2')),
             new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user3')),
-            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user4'))
+            new Response(200, [], $this->getOkStatus('my_service_name', 'urn:collab:person:user4')),
         );
 
         $this->handlerMySecondService->append(
@@ -212,7 +214,7 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user1')),
             new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user2')),
             new Response(200, [], $this->getFailedStatus('my_second_name', 'urn:collab:person:user3')),
-            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user4'))
+            new Response(200, [], $this->getOkStatus('my_second_name', 'urn:collab:person:user4')),
         );
 
         $command = $this->application->find('deprovision');
@@ -227,26 +229,30 @@ class BatchDeprovisionCommandTest extends DatabaseTestCase
         $this->assertCount(1, $this->repository->findAll());
         $this->assertStringContainsString(
             '"Something went awfully wrong" for user "urn:collab:person:surf.nl:jason_mraz"',
-            $output
+            $output,
         );
     }
 
-    private function getOkStatus($serviceName, $collabPersonId)
-    {
+    private function getOkStatus(
+        $serviceName,
+        $collabPersonId,
+    ): string {
         return sprintf(
             '{"status": "OK", "name": "%s", "data": [ { "name": "foobar", "value": "%s" } ] }',
             $serviceName,
-            $collabPersonId
+            $collabPersonId,
         );
     }
 
-    private function getFailedStatus($serviceName, $collabPersonId)
-    {
+    private function getFailedStatus(
+        $serviceName,
+        $collabPersonId,
+    ): string {
         return sprintf(
             '{"status": "FAILED", "message": "Something went awfully wrong", "name": "%s", ' .
             '"data": [ { "name": "foobar", "value": "%s" } ] }',
             $serviceName,
-            $collabPersonId
+            $collabPersonId,
         );
     }
 }

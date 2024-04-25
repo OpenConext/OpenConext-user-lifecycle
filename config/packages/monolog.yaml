@@ -4,8 +4,18 @@ monolog:
             type: stream
             level: INFO # Logs all messages at info level and higher severities
             handler: syslog
-            channels: ['!event', '!doctrine']
+            channels: [ '!event', '!doctrine' ]
+            path: "php://stderr"
         syslog:
+            path: "php://stderr"
             type: syslog
             ident: userlifecycle_stats
             formatter: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Monolog\Formatter\JsonFormatter
+
+when@test: &non-prod
+    monolog:
+        handlers:
+            main:
+                level: DEBUG
+
+when@dev: *non-prod

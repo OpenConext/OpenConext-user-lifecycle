@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -24,24 +26,17 @@ use Psr\Log\LoggerInterface;
 
 class RemovalCheckService implements RemovalCheckServiceInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     /**
      * Analyze a collection and report if deprovisioning was a success
-     *
-     * @param InformationResponseCollectionInterface $collection
-     * @return bool
      */
-    public function mayBeRemoved(InformationResponseCollectionInterface $collection)
-    {
+    public function mayBeRemoved(
+        InformationResponseCollectionInterface $collection,
+    ): bool {
         if (empty($collection->getErrorMessages())) {
             $this->logger->debug('The user may be deprovisioned.');
             return true;

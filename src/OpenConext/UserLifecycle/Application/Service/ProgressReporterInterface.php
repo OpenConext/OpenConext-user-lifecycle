@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,10 +25,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 interface ProgressReporterInterface extends BaseProgressReporterInterface
 {
-    /**
-     * @param OutputInterface $output
-     */
-    public function setConsoleOutput(OutputInterface $output);
+    public function setConsoleOutput(
+        OutputInterface $output,
+    );
 
-    public function progress(string $message, int $total, int $current): void;
+    public function progress(
+        string $message,
+        int $total,
+        int $current,
+    ): void;
 }

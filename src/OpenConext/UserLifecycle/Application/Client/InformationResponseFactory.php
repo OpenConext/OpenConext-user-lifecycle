@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -41,8 +43,9 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
      *
      * @throws InvalidArgumentException
      */
-    public function fromApiResponse(array $response)
-    {
+    public function fromApiResponse(
+        array $response,
+    ): InformationResponse {
         // Test if the required fields are set in the response
         $requiredFields = ['name', 'status', 'data'];
         $errorMessage = null;
@@ -68,20 +71,25 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
      * @param Exception $exception
      * @return InformationResponse
      */
-    public function fromException(Exception $exception, $applicationName)
-    {
+    public function fromException(
+        Exception $exception,
+        $applicationName,
+    ): InformationResponse {
         $status = new ResponseStatus(ResponseStatus::STATUS_FAILED);
         $name = new Name($applicationName);
         $data = new Data([]);
 
         $errorMessage = new ErrorMessage(
-            $exception->getMessage()
+            $exception->getMessage(),
         );
 
         return new InformationResponse($status, $name, $data, $errorMessage);
     }
 
-    private function buildErrorMessage(array $response, ResponseStatus $status)
+    private function buildErrorMessage(
+        array $response,
+        ResponseStatus $status,
+    ): ErrorMessage
     {
         // If status failed, we need an error message
         if ($status->getStatus() === ResponseStatus::STATUS_FAILED) {

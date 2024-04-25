@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -33,8 +35,9 @@ class DeprovisionClientCollectionPass implements CompilerPassInterface
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) $tags is never used in the foreach
      * @param ContainerBuilder $container
      */
-    public function process(ContainerBuilder $container)
-    {
+    public function process(
+        ContainerBuilder $container,
+    ): void {
         if (!$container->has(DeprovisionClientCollectionInterface::class)) {
             return;
         }
@@ -45,7 +48,7 @@ class DeprovisionClientCollectionPass implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds('open_conext.user_lifecycle.deprovision_client');
 
         foreach ($taggedServices as $id => $tags) {
-            $definition->addMethodCall('addClient', array(new Reference($id)));
+            $definition->addMethodCall('addClient', [new Reference($id)]);
         }
     }
 }

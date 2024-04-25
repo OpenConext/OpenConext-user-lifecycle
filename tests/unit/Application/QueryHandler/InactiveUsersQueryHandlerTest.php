@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -48,10 +50,10 @@ class InactiveUsersQueryHandlerTest extends TestCase
         $this->queryHandler = new InactiveUsersQueryHandler($this->repository);
     }
 
-    public function test_handle()
+    public function test_handle(): void
     {
 
-        $period = m::mock(InactivityPeriod::class);
+        $period = new InactivityPeriod(6);
         $query = new InactiveUsersQuery($period);
 
         $collection = m::mock(LastLoginCollectionInterface::class);

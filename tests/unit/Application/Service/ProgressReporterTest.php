@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -30,15 +32,15 @@ class ProgressReporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function test_reporter_does_nothing_without_console_output_object()
+    public function test_reporter_does_nothing_without_console_output_object(): void
     {
         $reporter = new ProgressReporter(m::mock(StopwatchInterface::class), m::mock(LoggerInterface::class));
         $this->assertNull(
-            $reporter->progress('test', 1, 100)
+            $reporter->progress('test', 1, 100),
         );
     }
 
-    public function test_reporter_prints_progress_to_console()
+    public function test_reporter_prints_progress_to_console(): void
     {
         $output = m::mock(OutputInterface::class);
         $output
@@ -60,7 +62,7 @@ class ProgressReporterTest extends TestCase
         $reporter->progress('test', 4, 2);
 
         $this->assertNull(
-            $reporter->progress('test', 4, 4)
+            $reporter->progress('test', 4, 4),
         );
     }
 }

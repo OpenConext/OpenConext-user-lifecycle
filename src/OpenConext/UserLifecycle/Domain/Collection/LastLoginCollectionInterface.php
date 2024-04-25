@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,24 +25,18 @@ use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 
 interface LastLoginCollectionInterface extends Countable
 {
-    /**
-     * @param array $results
-     * @return LastLoginCollectionInterface
-     */
-    public static function from(array $results);
+    public static function from(
+        array $results,
+    ): LastLoginCollectionInterface;
 
-    /**
-     * @param LastLogin $lastLogin
-     */
-    public function add(LastLogin $lastLogin);
+    public function add(
+        LastLogin $lastLogin,
+    );
 
     /**
      * @return LastLogin[]
      */
-    public function getData();
+    public function getData(): array;
 
-    /**
-     * @return int
-     */
-    public function count();
+    public function count(): int;
 }

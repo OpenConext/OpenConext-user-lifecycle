@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -26,24 +28,27 @@ interface SummaryServiceInterface
     /**
      * Summarize the information response from an information call.
      *
-     * @param InformationResponseCollectionInterface $collection
      * @return string
      */
-    public function summarizeInformationResponse(InformationResponseCollectionInterface $collection);
+    public function summarizeInformationResponse(
+        InformationResponseCollectionInterface $collection,
+    );
 
     /**
      * Summarize the information response from a deprovision call.
      *
-     * @param InformationResponseCollectionInterface $collection
      * @return string
      */
-    public function summarizeDeprovisionResponse(InformationResponseCollectionInterface $collection);
+    public function summarizeDeprovisionResponse(
+        InformationResponseCollectionInterface $collection,
+    );
 
     /**
      * Summarize the information response from a batch deprovision call.
      *
-     * @param BatchInformationResponseCollectionInterface $collection
      * @return string
      */
-    public function summarizeBatchResponse(BatchInformationResponseCollectionInterface $collection);
+    public function summarizeBatchResponse(
+        BatchInformationResponseCollectionInterface $collection,
+    );
 }

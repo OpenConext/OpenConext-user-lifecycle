@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,6 +27,7 @@ use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
 use OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandler;
 use OpenConext\UserLifecycle\Application\Service\LastLoginService;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -51,18 +54,18 @@ class LastLoginServiceTest extends TestCase
     {
         $this->queryHandler = m::mock(InactiveUsersQueryHandler::class);
         $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->service = new LastLoginService(2, $this->queryHandler, $this->logger);
+        $this->service = new LastLoginService(new InactivityPeriod(2), $this->queryHandler, $this->logger);
     }
 
-    public function test_read_information_for()
+    public function test_read_information_for(): void
     {
         $this->queryHandler
             ->shouldReceive('handle')
             ->andReturnUsing(
                 function (InactiveUsersQuery $query) {
-                    $this->assertEquals(2, $query->getInactivityPeriod());
+                    $this->assertEquals(2, $query->getInactivityPeriod()->getInactivityPeriodInMonths());
                     return m::mock(LastLoginCollectionInterface::class);
-                }
+                },
             );
 
         $this->logger

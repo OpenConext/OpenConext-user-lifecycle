@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,70 +21,51 @@
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Command;
 
 use Exception;
-use OpenConext\UserLifecycle\Application\Service\InformationService;
-use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 use OpenConext\UserLifecycle\Domain\Service\SummaryServiceInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('information')]
 class InformationCommand extends Command
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var InformationService&ClientHealthCheckerInterface
-     */
-    private $service;
-
-    /**
-     * @var SummaryServiceInterface
-     */
-    private $summaryService;
-
     public function __construct(
-        InformationServiceInterface $informationDeprovisionService,
-        SummaryServiceInterface $summaryService,
-        LoggerInterface $logger
+        private readonly InformationServiceInterface $service,
+        private readonly SummaryServiceInterface $summaryService,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct(null);
-        $this->service = $informationDeprovisionService;
-        $this->summaryService = $summaryService;
-        $this->logger = $logger;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('information')
             ->setDescription('Read privacy information for a given user identified by a collabPersonId.')
             ->setHelp(
                 'This command allows you to read information of a given user identified by a collabPersonId. '.
-                'The command will ask all registered applications what information is available for the user.'
+                'The command will ask all registered applications what information is available for the user.',
             )
             ->addArgument(
                 'user',
                 InputArgument::REQUIRED,
-                'The collabPersonId of the user to deprovision.'
+                'The collabPersonId of the user to deprovision.',
             )
             ->addOption(
                 'json',
                 null,
                 InputOption::VALUE_NONE,
-                'Output only JSON to StdOut. Requires --no-interaction to work.'
+                'Output only JSON to StdOut. Requires --no-interaction to work.',
             )
             ->addOption(
                 'pretty',
                 null,
                 InputOption::VALUE_NONE,
-                'Pretty-print JSON output.'
+                'Pretty-print JSON output.',
             );
     }
 
@@ -95,8 +78,10 @@ class InformationCommand extends Command
      *
      * In case of an error, the command will output the error in text format
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output,
+    ): int {
         $userIdInput = $input->getArgument('user');
         $outputOnlyJson = $input->getOption('json');
         $prettyJson = $input->getOption('pretty');
@@ -119,7 +104,7 @@ class InformationCommand extends Command
 
             $output->write(
                 json_encode($information, $jsonOptions),
-                true
+                true,
             );
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));

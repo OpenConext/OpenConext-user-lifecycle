@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,17 +21,19 @@
 namespace OpenConext\UserLifecycle\Domain\Repository;
 
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
+use OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod;
 
 interface LastLoginRepositoryInterface
 {
-    /**
-     * @param int $inactivityPeriod the period in months
-     * @return LastLoginCollectionInterface
-     */
-    public function findDeprovisionCandidates($inactivityPeriod);
+
+    public function findDeprovisionCandidates(
+        InactivityPeriod $inactivityPeriod,
+    ): LastLoginCollectionInterface;
 
     /**
      * Delete an entry from the last login table identified by collabPersonId
      */
-    public function delete(string $collabPersonId);
+    public function delete(
+        string $collabPersonId,
+    );
 }

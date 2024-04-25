@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,5 +24,7 @@ use OpenConext\UserLifecycle\Application\Command\CommandInterface;
 
 interface CommandHandlerInterface
 {
-    public function handle(CommandInterface $command);
+    public function handle(
+        CommandInterface $command,
+    );
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,24 +22,17 @@ namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
 use OpenConext\UserLifecycle\Domain\Exception\InvalidResponseStatusException;
 
-class ResponseStatus
+class ResponseStatus implements \Stringable
 {
-    const STATUS_OK = 'OK';
-    const STATUS_FAILED = 'FAILED';
+    public const STATUS_OK = 'OK';
+    public const STATUS_FAILED = 'FAILED';
 
-    /**
-     * @var string
-     */
-    private $status;
-
-    /**
-     * @param string $status
-     */
-    public function __construct($status)
-    {
-        if (!is_string($status) || empty(trim($status))) {
+    public function __construct(
+        private readonly string $status,
+    ) {
+        if (empty(trim($status))) {
             throw new InvalidResponseStatusException(
-                'ResponseStatus must be of the type string, and can not be empty.'
+                'ResponseStatus must be of the type string, and can not be empty.',
             );
         }
         $validStatuses = [ResponseStatus::STATUS_FAILED, ResponseStatus::STATUS_OK];
@@ -45,16 +40,14 @@ class ResponseStatus
         if (!in_array($status, $validStatuses)) {
             throw new InvalidResponseStatusException('The ResponseStatus must be either "OK" or "FAILED".');
         }
-
-        $this->status = $status;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getStatus();
     }

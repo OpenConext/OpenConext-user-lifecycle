@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,12 +22,18 @@ namespace OpenConext\UserLifecycle\Domain\Service;
 
 interface ProgressReporterInterface
 {
-    public function progress(string $message, int $total, int $current): void;
+    public function progress(
+        string $message,
+        int $total,
+        int $current,
+    ): void;
     
     public function startStopwatch(): void;
     public function stopStopwatch(): void;
 
-    public function reportDeprovisionedFromService(array $statistics): void;
+    public function reportDeprovisionedFromService(
+        array $statistics,
+    ): void;
     public function reportRemovedFromLastLogin(): void;
 
     public function printDeprovisionStatistics();

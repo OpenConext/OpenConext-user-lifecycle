@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,18 +25,14 @@ use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 
 class InactiveUsersQueryHandler implements InactiveUsersQueryHandlerInterface
 {
-    /**
-     * @var LastLoginRepositoryInterface
-     */
-    private $lastLoginRepository;
-
-    public function __construct(LastLoginRepositoryInterface $lastLoginRepository)
-    {
-        $this->lastLoginRepository = $lastLoginRepository;
+    public function __construct(
+        private readonly LastLoginRepositoryInterface $lastLoginRepository,
+    ) {
     }
 
-    public function handle(InactiveUsersQuery $query)
-    {
+    public function handle(
+        InactiveUsersQuery $query,
+    ) {
         return $this->lastLoginRepository->findDeprovisionCandidates($query->getInactivityPeriod());
     }
 }
