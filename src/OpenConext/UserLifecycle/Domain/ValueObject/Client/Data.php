@@ -48,15 +48,11 @@ class Data
 
     /**
      * Tests if the entry is valid. If not an exception is thrown.
-     * @param $entry
      * @throws InvalidDataException
      */
     private function assertValidEntry(
-        $entry,
+        array $entry,
     ): void {
-        if (!is_array($entry)) {
-            throw new InvalidDataException('The data must be of the type array');
-        }
         if (!array_key_exists(self::VALID_DATA_FIELD_NAME, $entry) ||
             !array_key_exists(self::VALID_DATA_FIELD_VALUE, $entry)
         ) {

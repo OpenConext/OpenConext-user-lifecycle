@@ -43,13 +43,6 @@ class DataTest extends TestCase
         $this->assertEquals([$entry, $entryTeams], $data->getData());
     }
 
-    public function test_it_reject_invalid_data_expects_array_of_entries(): void
-    {
-        $this->expectException(InvalidDataException::class);
-        $this->expectExceptionMessage('The data must be of the type array');
-        new Data(['name' => 'my name', 'value' => 'my value']);
-    }
-
     public function test_it_reject_invalid_data_expects_valid_entries(): void
     {
         $this->expectException(InvalidDataException::class);
