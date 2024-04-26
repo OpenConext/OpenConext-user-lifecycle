@@ -31,9 +31,6 @@ class RemoveFromLastLoginCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    /**
-     * @param CommandInterface|RemoveFromLastLoginCommand $command
-     */
     public function handle(
         CommandInterface $command,
     ): void {

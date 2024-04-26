@@ -35,9 +35,9 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
     /**
      * Build an InformationResponse object from api response
      *
-     * Input validation is applied based on there rules:
-     *  - name must be set (non empty string)
-     *  - status can be OK or FAILED (non empty string)
+     * Input validation is applied based on their rules:
+     *  - name must be set (non-empty string)
+     *  - status can be OK or FAILED (non-empty string)
      *  - data must be an array filled with at least name and value keys
      *  - message must be set if status FAILED and must not be set if status OK
      *
@@ -67,9 +67,6 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
 
     /**
      * Build an InformationResponse object from an exception.
-     *
-     * @param Exception $exception
-     * @return InformationResponse
      */
     public function fromException(
         Exception $exception,
@@ -100,7 +97,7 @@ class InformationResponseFactory implements InformationResponseFactoryInterface
             Assert::nullOrIsEmpty($response['message']);
         }
 
-        if (isset($response['message']) && !empty($response['message'])) {
+        if (!empty($response['message'])) {
             return new ErrorMessage($response['message']);
         }
         // If the message is not set, return an empty error message object

@@ -25,25 +25,17 @@ use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterfac
 
 interface DeprovisionServiceInterface
 {
-    /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return InformationResponseCollectionInterface
-     */
     public function deprovision(
         ProgressReporterInterface $progressReporter,
-        $personId,
-        $dryRun = false,
+        string $personId,
+        bool $dryRun = false,
     );
 
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.
-     *
-     * @param bool $dryRun
-     * @return BatchInformationResponseCollectionInterface
      */
     public function batchDeprovision(
         ProgressReporterInterface $progressReporter,
-        $dryRun = false,
-    );
+        bool $dryRun = false,
+    ): BatchInformationResponseCollectionInterface;
 }

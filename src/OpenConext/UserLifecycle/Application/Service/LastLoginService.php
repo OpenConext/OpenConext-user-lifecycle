@@ -30,9 +30,9 @@ use Psr\Log\LoggerInterface;
 class LastLoginService implements LastLoginServiceInterface
 {
     public function __construct(
-        private readonly InactivityPeriod                                $inactivityPeriod,
+        private readonly InactivityPeriod $inactivityPeriod,
         private readonly InactiveUsersQueryHandlerInterface $queryHandler,
-        private readonly LoggerInterface                    $logger,
+        private readonly LoggerInterface $logger,
     ) {
     }
 

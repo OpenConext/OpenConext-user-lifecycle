@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace OpenConext\UserLifecycle\Application\QueryHandler;
 
 use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
+use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 
 class InactiveUsersQueryHandler implements InactiveUsersQueryHandlerInterface
@@ -32,7 +33,8 @@ class InactiveUsersQueryHandler implements InactiveUsersQueryHandlerInterface
 
     public function handle(
         InactiveUsersQuery $query,
-    ) {
+    ): LastLoginCollectionInterface
+    {
         return $this->lastLoginRepository->findDeprovisionCandidates($query->getInactivityPeriod());
     }
 }

@@ -29,7 +29,7 @@ class InactiveUsersQuery
     ) {
     }
 
-    public function getInactivityPeriod()
+    public function getInactivityPeriod(): InactivityPeriod
     {
         return $this->inactivityPeriod;
     }

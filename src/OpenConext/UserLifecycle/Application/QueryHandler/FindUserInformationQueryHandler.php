@@ -31,13 +31,10 @@ class FindUserInformationQueryHandler implements FindUserInformationQueryHandler
     ) {
     }
 
-    /**
-     * @param FindUserInformationQuery $query
-     * @return InformationResponseInterface
-     */
     public function handle(
         FindUserInformationQuery $query,
-    ) {
+    ): InformationResponseInterface
+    {
         return $this->informationService->readInformationFor($query->getCollabPersonId());
     }
 }

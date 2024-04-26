@@ -51,16 +51,12 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
     ) {
     }
 
-    /**
-     * @param string $personId
-     * @param bool $dryRun
-     * @return InformationResponseCollectionInterface
-     */
     public function deprovision(
         ProgressReporterInterface $progressReporter,
-        $personId,
-        $dryRun = false,
-    ) {
+        string $personId,
+        bool $dryRun = false,
+    ): InformationResponseCollectionInterface
+    {
         $this->logger->debug('Received a request to deprovision a user.');
 
         $collabPersonId = $this->buildCollabPersonId($personId);
@@ -84,14 +80,10 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
 
     /**
      * Finds the users marked for deprovisioning, and deprovisions them.
-     *
-     * @param \OpenConext\UserLifecycle\OpenConext\UserLifecycle\Application\Service\ProgressReporterInterface $progressReporter
-     * @param bool $dryRun
-     * @return BatchInformationResponseCollectionInterface
      */
     public function batchDeprovision(
         ProgressReporterInterface $progressReporter,
-        $dryRun = false,
+        bool $dryRun = false,
     ): BatchInformationResponseCollection {
         $this->logger->debug('Retrieve the users that are marked for deprovisioning.');
         $users = $this->lastLoginService->findUsersForDeprovision();
@@ -133,7 +125,7 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
     }
 
     private function buildCollabPersonId(
-        $personId,
+        string $personId,
     ): CollabPersonId {
         Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
 

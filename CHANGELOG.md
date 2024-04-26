@@ -1,3 +1,9 @@
+## 1.0.0
+- Upgrade to Symfony 7
+- Upgrade to PHP8.2
+- Upgrade dependencies
+- Introduce type safety where possible
+
 ## 0.1.3
 - Log using stream handler by default #57
 - Creating an error message with multiple messages causes fatal error #62

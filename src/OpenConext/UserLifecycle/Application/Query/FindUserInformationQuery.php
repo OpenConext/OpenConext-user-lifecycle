@@ -32,10 +32,7 @@ class FindUserInformationQuery
         $this->collabPersonId = new CollabPersonId($collabPersonId);
     }
 
-    /**
-     * @return CollabPersonId
-     */
-    public function getCollabPersonId()
+    public function getCollabPersonId(): string
     {
         return $this->collabPersonId->getCollabPersonId();
     }
