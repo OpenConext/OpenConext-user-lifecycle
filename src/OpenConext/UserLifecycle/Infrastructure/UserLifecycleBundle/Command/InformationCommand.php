@@ -109,8 +109,8 @@ class InformationCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
-            return 1;
+            return Command::FAILURE;
         }
-        return 0;
+        return Command::SUCCESS;
     }
 }

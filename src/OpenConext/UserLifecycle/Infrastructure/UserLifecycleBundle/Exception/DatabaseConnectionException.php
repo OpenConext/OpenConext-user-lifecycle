@@ -26,8 +26,8 @@ use Throwable;
 class DatabaseConnectionException extends CoreRuntimeException
 {
     public function __construct(
-        $message = "No connection possible to the database",
-        $code = 0,
+        string $message = "No connection possible to the database",
+        int $code = 0,
         Throwable $previous = null,
     ) {
         parent::__construct($message, $code, $previous);

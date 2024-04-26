@@ -82,9 +82,6 @@ class DeprovisionCommand extends Command
             );
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.ElseExpression)
-     */
     protected function execute(
         InputInterface $input,
         OutputInterface $output,
@@ -101,7 +98,7 @@ class DeprovisionCommand extends Command
         }
 
         if (is_null($userIdInput)) {
-            $exitCode = $this->executeBatch(
+            return $this->executeBatch(
                 $input,
                 $output,
                 $dryRun,
@@ -109,8 +106,8 @@ class DeprovisionCommand extends Command
                 $outputOnlyJson,
                 $prettyJson,
             );
-        } else {
-            $exitCode = $this->executeSingleUser(
+        }
+        return $this->executeSingleUser(
                 $input,
                 $output,
                 $userIdInput,
@@ -119,8 +116,6 @@ class DeprovisionCommand extends Command
                 $outputOnlyJson,
                 $prettyJson,
             );
-        }
-        return $exitCode;
     }
 
     private function executeBatch(
@@ -131,7 +126,7 @@ class DeprovisionCommand extends Command
         $outputOnlyJson,
         $prettyJson,
     ): int {
-        $exitCode = 0;
+        $exitCode = COMMAND::SUCCESS;
         if (!$noInteraction) {
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
@@ -140,7 +135,7 @@ class DeprovisionCommand extends Command
             );
 
             if (!$helper->ask($input, $output, $question)) {
-                return 1;
+                return Command::FAILURE;
             }
         }
         $this->logger->info(
@@ -161,7 +156,7 @@ class DeprovisionCommand extends Command
 
             // If deprovisioning yielded one or more errors, change the exit code to 1
             if (count($information->getErrorMessages()) > 0) {
-                $exitCode = 1;
+                $exitCode = Command::FAILURE;
             }
             if (!$outputOnlyJson) {
                 $output->writeln('');
@@ -172,7 +167,7 @@ class DeprovisionCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
-            return 1;
+            return Command::FAILURE;
         }
         return $exitCode;
     }
@@ -194,7 +189,7 @@ class DeprovisionCommand extends Command
             );
 
             if (!$helper->ask($input, $output, $question)) {
-                return 1;
+                return Command::FAILURE;
             }
         }
 
@@ -218,18 +213,15 @@ class DeprovisionCommand extends Command
         } catch (Exception $e) {
             $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()));
             $this->logger->error($e->getMessage());
-            return 1;
+            return Command::FAILURE;
         }
-        return 0;
+        return Command::SUCCESS;
     }
 
-    /**
-     * @param bool $prettyJson
-     */
     private function printJson(
-        OutputInterface $output,
+        OutputInterface  $output,
         JsonSerializable $information,
-        $prettyJson,
+        bool $prettyJson,
     ): void {
         $jsonOptions = 0;
 

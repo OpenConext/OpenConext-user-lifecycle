@@ -55,8 +55,6 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
 
     /**
      * Delete an entry from the last login table identified by collabPersonId
-     *
-     * @param string $collabPersonId
      */
     public function delete(
         string $collabPersonId,

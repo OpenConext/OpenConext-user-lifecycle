@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace OpenConext\UserLifecycle\Domain\ValueObject;
 
 use OpenConext\UserLifecycle\Domain\Exception\InvalidInactivityPeriodException;
+use Webmozart\Assert\Assert;
 
 class InactivityPeriod
 {
@@ -28,9 +29,8 @@ class InactivityPeriod
     public function __construct(
         private readonly int $inactivityPeriodInMonths,
     ) {
-        if ($inactivityPeriodInMonths <= 0) {
-            throw new InvalidInactivityPeriodException('The inactivity period must be an positive integer value');
-        }
+        Assert::greaterThan($inactivityPeriodInMonths, 0, 'The inactivity period must be an positive integer value');
+
     }
 
     /**
