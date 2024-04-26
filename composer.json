@@ -71,6 +71,7 @@
             "@phplint",
             "@phpmd",
             "@phpcs",
+            "@create-db",
             "@license-headers",
             "@phpstan",
             "@test"
@@ -79,6 +80,7 @@
         "license-headers": "./ci/qa/docheader",
         "phpmd": "./ci/qa/phpmd",
         "phpcs": "./ci/qa/phpcs",
+        "create-db": "ci/qa/create-test-db",
         "phpstan": "./ci/qa/phpstan",
         "phpcbf": "./ci/qa/phpcbf",
         "test": "APP_ENV=test ./ci/qa/phpunit"
