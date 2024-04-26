@@ -60,7 +60,7 @@ class UserLifecycleExtension extends Extension
 
             $toggleDefinition->setArgument(0, $apiEnabled);
             $container->setDefinition(
-                \OpenConext\UserLifecycle\OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle::class,
+                DeprovisionApiFeatureToggle::class,
                 $toggleDefinition,
             );
         }

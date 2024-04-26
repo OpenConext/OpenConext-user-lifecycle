@@ -24,7 +24,7 @@ use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 class FindUserInformationQuery
 {
-    private readonly \OpenConext\UserLifecycle\OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId $collabPersonId;
+    private readonly CollabPersonId $collabPersonId;
 
     public function __construct(
         $collabPersonId,
