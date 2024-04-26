@@ -6,3 +6,11 @@ framework:
   http_method_override: true
   php_errors:
     log: true
+
+when@test:
+  imports:
+    - { resource: ../services_test.yaml }
+    - { resource: ../openconext/parameters.test.yaml }
+
+  framework:
+    test: ~
