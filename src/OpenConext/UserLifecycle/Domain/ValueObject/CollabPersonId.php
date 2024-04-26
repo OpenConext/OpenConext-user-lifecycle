@@ -29,12 +29,12 @@ class CollabPersonId implements \Stringable
     private readonly string $collabPersonId;
 
     public function __construct(
-        $collabUserId,
+        string $collabUserId,
     ) {
-        if (is_string($collabUserId)) {
-            $collabUserId = trim($collabUserId);
-        }
-        if (empty($collabUserId) || !is_string($collabUserId)) {
+
+       $collabUserId = trim($collabUserId);
+
+        if (empty($collabUserId)) {
             throw new InvalidCollabPersonIdException('The collabPersonId must be a non empty string');
         }
         if (preg_match(self::$pattern, $collabUserId) !== 1) {

@@ -28,28 +28,13 @@ use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 
 interface InformationResponseInterface extends JsonSerializable
 {
-    /**
-     * @return ResponseStatus
-     */
     public function getStatus(): ResponseStatus;
 
-    /**
-     * @return Name
-     */
     public function getName(): Name;
 
-    /**
-     * @return Data
-     */
     public function getData(): Data;
 
-    /**
-     * @return ErrorMessage
-     */
     public function getErrorMessage(): ErrorMessage;
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): mixed;
+    public function jsonSerialize(): array;
 }

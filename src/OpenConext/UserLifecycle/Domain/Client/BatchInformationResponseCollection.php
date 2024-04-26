@@ -36,15 +36,12 @@ class BatchInformationResponseCollection implements BatchInformationResponseColl
         $this->data[$personId->getCollabPersonId()] = $collection;
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->data);
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return $this->data;
     }

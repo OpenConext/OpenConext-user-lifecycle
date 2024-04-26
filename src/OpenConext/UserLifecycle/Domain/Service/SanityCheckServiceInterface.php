@@ -38,5 +38,5 @@ interface SanityCheckServiceInterface
      */
     public function check(
         LastLoginCollectionInterface $lastLoginCollection,
-    );
+    ): void;
 }

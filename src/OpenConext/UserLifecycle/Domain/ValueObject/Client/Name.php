@@ -21,15 +21,15 @@ declare(strict_types = 1);
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
 use OpenConext\UserLifecycle\Domain\Exception\InvalidNameException;
+use Webmozart\Assert\Assert;
 
 class Name implements \Stringable
 {
     public function __construct(
         private readonly string $name,
     ) {
-        if (empty(trim($name))) {
-            throw new InvalidNameException('Name must be of the type string, and can not be empty.');
-        }
+        Assert::notEmpty(trim($name), 'Name can not be empty.');
+
     }
 
     public function getName(): string

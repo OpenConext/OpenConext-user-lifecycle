@@ -55,7 +55,7 @@ class InformationResponse implements InformationResponseInterface
         return $this->errorMessage;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         $response = [
             'name' => (string) $this->getName(),

@@ -65,10 +65,6 @@ class CollabPersonIdTest extends TestCase
         return [
             [''],
             [' '],
-            [[]],
-            [null],
-            [true],
-            [['urn:mace:example.com:jan']]
         ];
     }
 

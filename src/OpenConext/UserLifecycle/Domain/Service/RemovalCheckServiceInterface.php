@@ -26,10 +26,8 @@ interface RemovalCheckServiceInterface
 {
     /**
      * Analyze a collection and report if deprovisioning was a success
-     *
-     * @return bool
      */
     public function mayBeRemoved(
         InformationResponseCollectionInterface $collection,
-    );
+    ): bool;
 }

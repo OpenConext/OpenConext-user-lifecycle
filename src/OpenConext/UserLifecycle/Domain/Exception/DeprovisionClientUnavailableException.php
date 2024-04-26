@@ -27,7 +27,7 @@ class DeprovisionClientUnavailableException extends RuntimeException
 {
     public function __construct(
         string $clientName,
-        $code = 0,
+        int $code = 0,
         Throwable $previous = null,
     ) {
         $message = sprintf("Connection failed to backend '%s'", $clientName);

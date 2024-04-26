@@ -29,23 +29,15 @@ interface BatchInformationResponseCollectionInterface extends JsonSerializable, 
     /**
      * Collects InformationResponseCollection objects indexed on the
      * person id of the user that represents the deprovision response
-     *
-     * @return
      */
     public function add(
         CollabPersonId $personId,
         InformationResponseCollectionInterface $collection,
-    );
+    ): void;
 
-    /**
-     * @return int
-     */
     public function count(): int;
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): mixed;
+    public function jsonSerialize(): array;
 
     /**
      * Get an array of error messages in string format

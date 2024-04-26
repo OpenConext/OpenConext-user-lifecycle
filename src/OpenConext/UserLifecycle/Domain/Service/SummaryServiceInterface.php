@@ -27,28 +27,22 @@ interface SummaryServiceInterface
 {
     /**
      * Summarize the information response from an information call.
-     *
-     * @return string
      */
     public function summarizeInformationResponse(
         InformationResponseCollectionInterface $collection,
-    );
+    ): string;
 
     /**
      * Summarize the information response from a deprovision call.
-     *
-     * @return string
      */
     public function summarizeDeprovisionResponse(
         InformationResponseCollectionInterface $collection,
-    );
+    ): string;
 
     /**
      * Summarize the information response from a batch deprovision call.
-     *
-     * @return string
      */
     public function summarizeBatchResponse(
         BatchInformationResponseCollectionInterface $collection,
-    );
+    ): string;
 }

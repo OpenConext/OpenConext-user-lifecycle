@@ -32,7 +32,7 @@ class ResponseStatus implements \Stringable
     ) {
         if (empty(trim($status))) {
             throw new InvalidResponseStatusException(
-                'ResponseStatus must be of the type string, and can not be empty.',
+                'ResponseStatus can not be empty.',
             );
         }
         $validStatuses = [ResponseStatus::STATUS_FAILED, ResponseStatus::STATUS_OK];
