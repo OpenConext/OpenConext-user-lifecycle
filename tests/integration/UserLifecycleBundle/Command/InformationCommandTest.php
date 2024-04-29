@@ -35,7 +35,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Stopwatch\Stopwatch as FrameworkStopwatch;
 
-class LastLoginRepositoryTest extends DatabaseTestCase
+class InformationCommandTest extends DatabaseTestCase
 {
     /**
      * @var ContainerInterface
