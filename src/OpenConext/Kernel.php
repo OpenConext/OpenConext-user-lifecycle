@@ -32,7 +32,7 @@ class Kernel extends BaseKernel
         return dirname(__DIR__, 2);
     }
 
-    // This is overriden to use the cache dir as the log dir
+    // This file is overridden to use the cache dir as the log dir
     // because otherwise SF tries to create the log dirs which aren't used
     public function getLogDir(): string
     {
