@@ -1,4 +1,6 @@
 {
+    "name": "openconext/user-lifecycle",
+    "description": "OpenConext user deprovisioning tool",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
