@@ -26,7 +26,6 @@ use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 class DeprovisionClientCollection implements DeprovisionClientCollectionInterface
 {
@@ -34,17 +33,6 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
      * @var DeprovisionClientInterface[]
      */
     private ?array $clients = null;
-
-    public function __construct(
-        #[TaggedIterator('open_conext.user_lifecycle.deprovision_client')]
-        /** @var $taggedClients DeprovisionClientInterface[] */
-        array $taggedClients = [],
-    )
-    {
-        foreach ($taggedClients as $taggedClient) {
-            $this->addClient($taggedClient);
-        }
-    }
 
     public function deprovision(
         CollabPersonId $user,
