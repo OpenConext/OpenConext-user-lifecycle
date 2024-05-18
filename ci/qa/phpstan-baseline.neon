@@ -1,2 +1,346 @@
 parameters:
 	ignoreErrors:
+		-
+			message: "#^Cannot access offset 'app_debug' on mixed\\.$#"
+			count: 1
+			path: ../../config/bootstrap.php
+
+		-
+			message: "#^Cannot access offset 'app_env' on mixed\\.$#"
+			count: 1
+			path: ../../config/bootstrap.php
+
+		-
+			message: "#^Cannot access offset 'app_secret' on mixed\\.$#"
+			count: 1
+			path: ../../config/bootstrap.php
+
+		-
+			message: "#^Cannot access offset 'parameters' on mixed\\.$#"
+			count: 1
+			path: ../../config/bootstrap.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_keys expects array, mixed given\\.$#"
+			count: 1
+			path: ../../config/bootstrap.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Application\\\\Client\\\\InformationResponseFactory\\:\\:buildErrorMessage\\(\\) has parameter \\$response with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Application/Client/InformationResponseFactory.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Application\\\\Client\\\\InformationResponseFactory\\:\\:fromApiResponse\\(\\) has parameter \\$response with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Application/Client/InformationResponseFactory.php
+
+		-
+			message: "#^Call to an undefined method OpenConext\\\\UserLifecycle\\\\Application\\\\Command\\\\CommandInterface\\:\\:getCollabPersonId\\(\\)\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Application/CommandHandler/RemoveFromLastLoginCommandHandler.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Application\\\\Query\\\\FindUserInformationQuery\\:\\:__construct\\(\\) has parameter \\$collabPersonId with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Application/Query/FindUserInformationQuery.php
+
+		-
+			message: "#^Cannot call method writeln\\(\\) on Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\|null\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Application/Service/ProgressReporter.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Application\\\\Service\\\\ProgressReporter\\:\\:reportDeprovisionedFromService\\(\\) has parameter \\$statistics with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Application/Service/ProgressReporter.php
+
+		-
+			message: "#^Parameter \\#1 \\$message of method Psr\\\\Log\\\\LoggerInterface\\:\\:info\\(\\) expects string\\|Stringable, string\\|false given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Application/Service/ProgressReporter.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\BatchInformationResponseCollection\\:\\:jsonSerialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/BatchInformationResponseCollection.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\BatchInformationResponseCollectionInterface\\:\\:jsonSerialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/BatchInformationResponseCollectionInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\DeprovisionClientCollectionInterface\\:\\:addClient\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/DeprovisionClientCollectionInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\DeprovisionClientCollectionInterface\\:\\:healthCheck\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/DeprovisionClientCollectionInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponse\\:\\:getErrorMessage\\(\\) should return OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\Client\\\\ErrorMessage but returns OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\Client\\\\ErrorMessage\\|null\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/InformationResponse.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponse\\:\\:jsonSerialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/InformationResponse.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseCollection\\:\\:jsonSerialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/InformationResponseCollection.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseCollectionInterface\\:\\:jsonSerialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/InformationResponseCollectionInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseFactoryInterface\\:\\:fromApiResponse\\(\\) has parameter \\$response with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/InformationResponseFactoryInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseInterface\\:\\:jsonSerialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Client/InformationResponseInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Collection\\\\LastLoginCollection\\:\\:from\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Collection/LastLoginCollection.php
+
+		-
+			message: "#^Property OpenConext\\\\UserLifecycle\\\\Domain\\\\Collection\\\\LastLoginCollection\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Collection/LastLoginCollection.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Collection\\\\LastLoginCollectionInterface\\:\\:add\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Collection/LastLoginCollectionInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Collection\\\\LastLoginCollectionInterface\\:\\:from\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Collection/LastLoginCollectionInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Repository\\\\LastLoginRepositoryInterface\\:\\:delete\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Repository/LastLoginRepositoryInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\DeprovisionServiceInterface\\:\\:deprovision\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Service/DeprovisionServiceInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\ProgressReporterInterface\\:\\:printDeprovisionStatistics\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Service/ProgressReporterInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\ProgressReporterInterface\\:\\:reportDeprovisionedFromService\\(\\) has parameter \\$statistics with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/Service/ProgressReporterInterface.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\Client\\\\Data\\:\\:__construct\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/ValueObject/Client/Data.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\Client\\\\Data\\:\\:assertValidEntry\\(\\) has parameter \\$entry with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/ValueObject/Client/Data.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\Client\\\\Data\\:\\:getData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/ValueObject/Client/Data.php
+
+		-
+			message: "#^Property OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\Client\\\\Data\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/ValueObject/Client/Data.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\Client\\\\ErrorMessage\\:\\:getErrorMessage\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/ValueObject/Client/ErrorMessage.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Domain\\\\ValueObject\\\\DeprovisionStatistics\\:\\:addDeprovisionedPerClient\\(\\) has parameter \\$deprovisionStatistics with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Domain/ValueObject/DeprovisionStatistics.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Client\\\\DeprovisionClient\\:\\:buildResourcePath\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClient.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Client\\\\DeprovisionClient\\:\\:delete\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClient.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Client\\\\DeprovisionClient\\:\\:read\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClient.php
+
+		-
+			message: "#^Parameter \\#1 \\$response of method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseFactoryInterface\\:\\:fromApiResponse\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClient.php
+
+		-
+			message: "#^Argument of an invalid type array\\<OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\DeprovisionClientInterface\\>\\|null supplied for foreach, only iterables are supported\\.$#"
+			count: 3
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClientCollection.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClientCollection.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Client\\\\DeprovisionClientCollection\\:\\:collectResponses\\(\\) has parameter \\$promises with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClientCollection.php
+
+		-
+			message: "#^Parameter \\#1 \\$informationResponse of method OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseCollection\\:\\:addInformationResponse\\(\\) expects OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseInterface, mixed given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Client/DeprovisionClientCollection.php
+
+		-
+			message: "#^Call to an undefined method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\DeprovisionServiceInterface\\:\\:healthCheck\\(\\)\\.$#"
+			count: 2
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Console\\\\Helper\\\\HelperInterface\\:\\:ask\\(\\)\\.$#"
+			count: 2
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeBatch\\(\\) has parameter \\$dryRun with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeBatch\\(\\) has parameter \\$noInteraction with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeBatch\\(\\) has parameter \\$outputOnlyJson with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeBatch\\(\\) has parameter \\$prettyJson with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeSingleUser\\(\\) has parameter \\$dryRun with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeSingleUser\\(\\) has parameter \\$noInteraction with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeSingleUser\\(\\) has parameter \\$outputOnlyJson with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeSingleUser\\(\\) has parameter \\$prettyJson with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Command\\\\DeprovisionCommand\\:\\:executeSingleUser\\(\\) has parameter \\$userIdInput with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:write\\(\\) expects iterable\\<string\\>\\|string, string\\|false given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/DeprovisionCommand.php
+
+		-
+			message: "#^Call to an undefined method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\InformationServiceInterface\\:\\:healthCheck\\(\\)\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$collection of method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\SummaryServiceInterface\\:\\:summarizeInformationResponse\\(\\) expects OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseCollectionInterface, OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseInterface given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:write\\(\\) expects iterable\\<string\\>\\|string, string\\|false given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$personId of method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\InformationServiceInterface\\:\\:readInformationFor\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php
+
+		-
+			message: "#^Cannot access offset 'clients' on mixed\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
+
+		-
+			message: "#^Cannot access offset 'deprovision_api' on mixed\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
+
+		-
+			message: "#^Cannot access offset 'enabled' on mixed\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\DependencyInjection\\\\UserLifecycleExtension\\:\\:buildGuzzleClientDefinition\\(\\) has parameter \\$config with no type specified\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
+
+		-
+			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\DependencyInjection\\\\UserLifecycleExtension\\:\\:loadDeprovisionClients\\(\\) has parameter \\$clients with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$clients of method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\DependencyInjection\\\\UserLifecycleExtension\\:\\:loadDeprovisionClients\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
+
+		-
+			message: "#^Class OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\Repository\\\\LastLoginRepository extends generic class Doctrine\\\\ORM\\\\EntityRepository but does not specify its types\\: T$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Repository/LastLoginRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\$results of static method OpenConext\\\\UserLifecycle\\\\Domain\\\\Collection\\\\LastLoginCollection\\:\\:from\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Repository/LastLoginRepository.php

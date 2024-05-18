@@ -10,7 +10,7 @@ rules:
 parameters:
     checkUninitializedProperties: true
     treatPhpDocTypesAsCertain: false
-    level: 0
+    level: max
     paths:
         - ../../src
         - ../../config
