@@ -1,6 +1,4 @@
-/.vagrant/
-/ansible/*.retry
-/config/legacy/parameters.yml
+/config/openconext/parameters.yaml
 /var/*
 !/var/cache
 /var/cache/*
