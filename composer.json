@@ -92,6 +92,9 @@
         "symfony/symfony": "*"
     },
     "extra": {
+        "runtime": {
+            "disable_dotenv": true
+        },
         "symfony": {
             "allow-contrib": false,
             "require": "7.0.*"
