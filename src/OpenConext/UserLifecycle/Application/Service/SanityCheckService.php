@@ -25,6 +25,7 @@ use OpenConext\UserLifecycle\Domain\Exception\EmptyLastLoginCollectionException;
 use OpenConext\UserLifecycle\Domain\Exception\InvalidLastLoginCollectionException;
 use OpenConext\UserLifecycle\Domain\Service\SanityCheckServiceInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class SanityCheckService implements SanityCheckServiceInterface
 {
@@ -33,6 +34,7 @@ class SanityCheckService implements SanityCheckServiceInterface
      * deprovisioned at one time.
      */
     public function __construct(
+        #[Autowire(param: 'user_quota')]
         private readonly int             $userQuota,
         private readonly LoggerInterface $logger,
     ) {

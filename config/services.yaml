@@ -12,45 +12,12 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-#    OpenConext\UserLifecycle\DataFixtures\:
-#        resource: '../src/DataFixtures/'
-#        autoconfigure: true
-#        autowire: true
-
-    OpenConext\UserLifecycle\Infrastructure\:
-        resource: '../src/OpenConext/UserLifecycle/Infrastructure/'
-        autoconfigure: true
-        autowire: true
-
-    OpenConext\UserLifecycle\Application\:
-        resource: '../src/OpenConext/UserLifecycle/Application/'
-        autoconfigure: true
-        autowire: true
-
-    OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Monolog\:
-        resource: '../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Monolog/'
-        autoconfigure: true
-        autowire: true
-
-    OpenConext\UserLifecycle\Domain\:
-        resource: '../src/OpenConext/UserLifecycle/Domain/'
-        autoconfigure: true
-        autowire: false
-
-    OpenConext\UserLifecycle\Application\Service\SanityCheckService:
-        arguments:
-            - '%user_quota%'
-            - '@logger'
-
-    OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod:
-        arguments:
-            - '%inactivity_period%'
-
-    OpenConext\UserLifecycle\Application\Service\LastLoginService:
-        arguments:
-            - '@OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod'
-            - '@OpenConext\UserLifecycle\Application\QueryHandler\InactiveUsersQueryHandlerInterface'
-            - '@logger'
+    OpenConext\:
+        resource: '../src/OpenConext/'
+        exclude:
+            - '../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/'
+            - '../src/OpenConext/UserLifecycle/Domain/Entity/'
+            - '../src/OpenConext/UserLifecycle/Kernel.php'
 
     OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller\:
         resource: '../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Controller'
