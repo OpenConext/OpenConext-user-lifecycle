@@ -3,3 +3,7 @@ controllers:
         path: ../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Controller/
         namespace: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller
     type: attribute
+
+openconext_monitor:
+    resource: "@OpenConextMonitorBundle/Resources/config/routing.yml"
+    prefix: /
