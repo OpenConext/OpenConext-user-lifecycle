@@ -1,0 +1,5 @@
+controllers:
+    resource:
+        path: ../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Controller/
+        namespace: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Controller
+    type: attribute
