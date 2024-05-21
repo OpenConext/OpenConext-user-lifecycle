@@ -22,7 +22,6 @@ namespace OpenConext\UserLifecycle\Domain\ValueObject;
 
 use OpenConext\UserLifecycle\Domain\Exception\InvalidInactivityPeriodException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Webmozart\Assert\Assert;
 
 class InactivityPeriod
 {
@@ -31,7 +30,9 @@ class InactivityPeriod
         #[Autowire(param: 'inactivity_period')]
         private readonly int $inactivityPeriodInMonths,
     ) {
-        Assert::greaterThan($inactivityPeriodInMonths, 0, 'The inactivity period must be an positive integer value');
+        if ($inactivityPeriodInMonths <= 0) {
+            throw new InvalidInactivityPeriodException('The inactivity period must be an positive integer value');
+        }
 
     }
 
