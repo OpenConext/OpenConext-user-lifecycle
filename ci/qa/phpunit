@@ -4,4 +4,4 @@ cd $(dirname $0)/../../
 
 # PHPUnit Bridge should always be used in Symfony applications. (https://symfony.com/doc/current/components/phpunit_bridge.html)
 # This will create a phpunit executable in /bin/ instead of /vendor/bin/
-XDEBUG_MODE=off ./vendor/bin/phpunit --configuration=ci/qa/phpunit.xml --coverage-text
+./vendor/bin/phpunit --configuration=ci/qa/phpunit.xml --coverage-text
