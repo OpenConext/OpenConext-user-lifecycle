@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,21 +22,19 @@ namespace OpenConext\UserLifecycle\Domain\ValueObject;
 
 use OpenConext\UserLifecycle\Domain\Exception\InvalidCollabPersonIdException;
 
-class CollabPersonId
+class CollabPersonId implements \Stringable
 {
-    private static $pattern = '/^urn:collab:person:.+$/';
+    private static string $pattern = '/^urn:collab:person:.+$/';
 
-    /**
-     * @var string
-     */
-    private $collabPersonId;
+    private readonly string $collabPersonId;
 
-    public function __construct($collabUserId)
-    {
-        if (is_string($collabUserId)) {
-            $collabUserId = trim($collabUserId);
-        }
-        if (empty($collabUserId) || !is_string($collabUserId)) {
+    public function __construct(
+        string $collabUserId,
+    ) {
+
+       $collabUserId = trim($collabUserId);
+
+        if (empty($collabUserId)) {
             throw new InvalidCollabPersonIdException('The collabPersonId must be a non empty string');
         }
         if (preg_match(self::$pattern, $collabUserId) !== 1) {
@@ -43,15 +43,12 @@ class CollabPersonId
         $this->collabPersonId = $collabUserId;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCollabPersonId()
+    public function getCollabPersonId(): string
     {
         return $this->collabPersonId;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->collabPersonId;
     }

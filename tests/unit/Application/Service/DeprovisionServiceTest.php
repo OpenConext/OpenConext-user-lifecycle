@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -78,7 +80,7 @@ class DeprovisionServiceTest extends TestCase
     {
         $this->apiCollection = m::mock(
             DeprovisionClientCollection::class,
-            DeprovisionClientHealthCheckerInterface::class
+            DeprovisionClientHealthCheckerInterface::class,
         );
         $this->apiCollection
             ->shouldReceive('healthCheck');
@@ -93,14 +95,14 @@ class DeprovisionServiceTest extends TestCase
             $this->lastLoginService,
             $this->removalCheckService,
             $this->removeFromLastLoginCommandHandler,
-            $logger
+            $logger,
         );
         $this->progressReporter = m::mock(ProgressReporterInterface::class);
         $this->progressReporter->shouldReceive('setConsoleOutput');
         $this->progressReporter->shouldReceive('progress');
     }
 
-    public function test_deprovision()
+    public function test_deprovision(): void
     {
         // Setup the test using test doubles
         $personId = 'urn:collab:person:jay-leno';
@@ -117,7 +119,7 @@ class DeprovisionServiceTest extends TestCase
                     $this->assertFalse($expectedDryRunState);
 
                     return $collection;
-                }
+                },
             );
 
         $this->removalCheckService
@@ -135,7 +137,7 @@ class DeprovisionServiceTest extends TestCase
         $this->assertInstanceOf(InformationResponseCollectionInterface::class, $response);
     }
 
-    public function test_deprovision_dry_run()
+    public function test_deprovision_dry_run(): void
     {
         // Setup the test using test doubles
         $personId = 'urn:collab:person:jeff-beck';
@@ -158,7 +160,7 @@ class DeprovisionServiceTest extends TestCase
         $this->assertInstanceOf(InformationResponseCollectionInterface::class, $response);
     }
 
-    public function test_deprovision_empty_person_id()
+    public function test_deprovision_empty_person_id(): void
     {
         // Setup the test using test doubles
         $personId = '';
@@ -168,7 +170,7 @@ class DeprovisionServiceTest extends TestCase
         $this->service->deprovision($this->progressReporter, $personId);
     }
 
-    public function test_batch_deprovision()
+    public function test_batch_deprovision(): void
     {
         $mockCollection = m::mock(LastLoginCollectionInterface::class);
         $mockUser1 = $this->buildMockLastLoginEntry('urn:collab:person:jack-black');
@@ -211,12 +213,12 @@ class DeprovisionServiceTest extends TestCase
                 function ($expectedCollabPersonId, $expectedDryRunState) use ($mockCollection, $collection) {
                     $this->assertContains(
                         $expectedCollabPersonId->getCollabPersonId(),
-                        ['urn:collab:person:jack-black', 'urn:collab:person:jan-berry']
+                        ['urn:collab:person:jack-black', 'urn:collab:person:jan-berry'],
                     );
                     $this->assertFalse($expectedDryRunState);
 
                     return $collection;
-                }
+                },
             );
 
         $this->removalCheckService
@@ -231,7 +233,7 @@ class DeprovisionServiceTest extends TestCase
         $this->service->batchDeprovision($this->progressReporter);
     }
 
-    public function test_batch_deprovision_dry_run()
+    public function test_batch_deprovision_dry_run(): void
     {
         $mockCollection = m::mock(LastLoginCollectionInterface::class);
         $mockUser1 = $this->buildMockLastLoginEntry('urn:collab:person:jack-black');
@@ -270,19 +272,20 @@ class DeprovisionServiceTest extends TestCase
                 function ($expectedCollabPersonId, $expectedDryRunState) use ($mockCollection, $collection) {
                     $this->assertContains(
                         $expectedCollabPersonId->getCollabPersonId(),
-                        ['urn:collab:person:jack-black', 'urn:collab:person:jan-berry']
+                        ['urn:collab:person:jack-black', 'urn:collab:person:jan-berry'],
                     );
                     $this->assertTrue($expectedDryRunState);
 
                     return $collection;
-                }
+                },
             );
 
         $this->service->batchDeprovision($this->progressReporter, true);
     }
 
-    private function buildMockLastLoginEntry($personId)
-    {
+    private function buildMockLastLoginEntry(
+        $personId,
+    ) {
         $lastLogin = m::mock(LastLogin::class);
         $lastLogin
             ->shouldReceive('getCollabPersonId')

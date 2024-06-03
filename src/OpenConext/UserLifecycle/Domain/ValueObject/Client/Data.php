@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,19 +24,14 @@ use OpenConext\UserLifecycle\Domain\Exception\InvalidDataException;
 
 class Data
 {
-    const VALID_DATA_FIELD_NAME = 'name';
-    const VALID_DATA_FIELD_VALUE = 'value';
+    public const VALID_DATA_FIELD_NAME = 'name';
+    public const VALID_DATA_FIELD_VALUE = 'value';
 
-    /**
-     * @var array
-     */
-    private $data;
+    private readonly array $data;
 
-    /**
-     * @param array $data
-     */
-    public function __construct(array $data)
-    {
+    public function __construct(
+        array $data,
+    ) {
         if (!empty($data)) {
             foreach ($data as $entry) {
                 $this->assertValidEntry($entry);
@@ -44,21 +41,18 @@ class Data
         $this->data = $data;
     }
 
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
 
     /**
      * Tests if the entry is valid. If not an exception is thrown.
-     * @param $entry
      * @throws InvalidDataException
      */
-    private function assertValidEntry($entry)
-    {
-        if (!is_array($entry)) {
-            throw new InvalidDataException('The data must be of the type array');
-        }
+    private function assertValidEntry(
+        array $entry,
+    ): void {
         if (!array_key_exists(self::VALID_DATA_FIELD_NAME, $entry) ||
             !array_key_exists(self::VALID_DATA_FIELD_VALUE, $entry)
         ) {

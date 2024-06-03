@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -18,7 +20,6 @@
 
 namespace OpenConext\UserLifecycle\Application\Service;
 
-use InvalidArgumentException;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Service\ClientHealthCheckerInterface;
@@ -29,31 +30,19 @@ use Webmozart\Assert\Assert;
 
 class InformationService implements InformationServiceInterface, ClientHealthCheckerInterface
 {
-    /**
-     * @var DeprovisionClientCollectionInterface&ClientHealthCheckerInterface
-     */
-    private $deprovisionClientCollection;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        DeprovisionClientCollectionInterface $deprovisionClientCollection,
-        LoggerInterface $logger
+        private readonly DeprovisionClientCollectionInterface $deprovisionClientCollection,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->deprovisionClientCollection = $deprovisionClientCollection;
-        $this->logger = $logger;
     }
 
     /**
      * @param string $personId
-     * @throws InvalidArgumentException
      * @return InformationResponseCollectionInterface
      */
-    public function readInformationFor($personId)
-    {
+    public function readInformationFor(
+        string $personId,
+    ): InformationResponseCollectionInterface {
         $this->logger->debug('Received a request for user information');
 
         Assert::stringNotEmpty($personId, 'Please pass a non empty collabPersonId');
@@ -64,7 +53,7 @@ class InformationService implements InformationServiceInterface, ClientHealthChe
 
         $this->logger->info(
             sprintf('Received information for user "%s" with the following data.', $personId),
-            ['information_response' => json_encode($information)]
+            ['information_response' => json_encode($information)],
         );
 
         return $information;

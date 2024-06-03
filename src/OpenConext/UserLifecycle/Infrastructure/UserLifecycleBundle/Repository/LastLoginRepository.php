@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -21,22 +23,21 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository
 use DateTime;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\QueryException;
 use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollection;
+use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
+use OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\DatabaseConnectionException;
 use Webmozart\Assert\Assert;
 
 class LastLoginRepository extends EntityRepository implements LastLoginRepositoryInterface
 {
-    /**
-     * @var DateTime|null
-     */
-    private $now = null;
+    private ?\DateTime $now = null;
 
-    public function findDeprovisionCandidates($inactivityPeriod)
-    {
-        $expirationDate = $this->getNow()->modify(sprintf('-%d months', $inactivityPeriod));
+    public function findDeprovisionCandidates(
+        InactivityPeriod $inactivityPeriod,
+    ): LastLoginCollectionInterface {
+        $expirationDate = $this->getNow()->modify(sprintf('-%d months', $inactivityPeriod->getInactivityPeriodInMonths()));
 
         $qb = $this->createQueryBuilder('ll');
         try {
@@ -46,7 +47,7 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
                 ->setParameter('expirationDate', $expirationDate)
                 ->getQuery()
                 ->getResult();
-        } catch (ConnectionException $e) {
+        } catch (ConnectionException) {
             throw new DatabaseConnectionException();
         }
         return LastLoginCollection::from($results);
@@ -54,11 +55,10 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
 
     /**
      * Delete an entry from the last login table identified by collabPersonId
-     *
-     * @param string $collabPersonId
      */
-    public function delete(string $collabPersonId)
-    {
+    public function delete(
+        string $collabPersonId,
+    ): void {
         Assert::stringNotEmpty($collabPersonId);
 
         $this->createQueryBuilder('ll')
@@ -72,17 +72,16 @@ class LastLoginRepository extends EntityRepository implements LastLoginRepositor
     /**
      * For now only used for testing purposes but can be used in the future to
      * deprovision/retrieve info of users at a given date.
-     *
-     * @param DateTime $now
      */
-    public function setNow(DateTime $now)
-    {
+    public function setNow(
+        DateTime $now,
+    ): void {
         $this->now = $now;
     }
 
-    private function getNow()
+    private function getNow(): DateTime
     {
-        if ($this->now && $this->now instanceof DateTime) {
+        if ($this->now instanceof DateTime) {
             return $this->now;
         }
         return new DateTime();

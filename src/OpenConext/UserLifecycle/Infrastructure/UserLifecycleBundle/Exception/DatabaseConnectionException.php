@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -18,15 +20,15 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception;
 
-use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
 use RuntimeException as CoreRuntimeException;
+use Throwable;
 
 class DatabaseConnectionException extends CoreRuntimeException
 {
     public function __construct(
-        $message = "No connection possible to the database",
-        $code = 0,
-        Throwable $previous = null
+        string $message = "No connection possible to the database",
+        int $code = 0,
+        Throwable $previous = null,
     ) {
         parent::__construct($message, $code, $previous);
     }

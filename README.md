@@ -149,12 +149,5 @@ A great log solution, but this did not fit for UserLifecyle. Here we log data we
 the fingers crossed strategy here was not practical. So the regular `stream` log strategy is used, logging everything
 surpassing the configured log level (`notice`).
 
-### Docker logging
-When using the provided docker container for test or development. Logs are forwarded to the /dev/log (syslog) of the
-host machine. This diverges from the industry standard of outputting to `stderr`, that way you can lever the docker log
-mechanism.
-
-If you want to view the dev logs: check the syslog on your own machine.
-
 ## For developers
 See the `/docs` folder for more details information about the application.

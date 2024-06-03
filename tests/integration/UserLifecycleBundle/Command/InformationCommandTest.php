@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -21,7 +23,6 @@ namespace OpenConext\UserLifecycle\Tests\Integration\UserLifecycleBundle\Command
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
-use Monolog\Logger;
 use OpenConext\UserLifecycle\Application\Service\InformationService;
 use OpenConext\UserLifecycle\Application\Service\ProgressReporter;
 use OpenConext\UserLifecycle\Application\Service\SummaryService;
@@ -34,7 +35,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Stopwatch\Stopwatch as FrameworkStopwatch;
 
-class LastLoginRepositoryTest extends DatabaseTestCase
+class InformationCommandTest extends DatabaseTestCase
 {
     /**
      * @var ContainerInterface
@@ -65,18 +66,18 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
 
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name'),
         );
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name')
+            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name'),
         );
 
         // Expose the mock handlers, so the test methods can determine what the 'api' should return
         $this->handlerMyService = self::$container->get(
-            'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name'
+            'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name',
         );
         $this->handlerMySecondService = self::$container->get(
-            'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name'
+            'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name',
         );
 
         // Create the application and add the information command
@@ -86,7 +87,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
 
         $progressReporter = new ProgressReporter(
             new Stopwatch(new FrameworkStopwatch()),
-            m::mock(LoggerInterface::class)
+            m::mock(LoggerInterface::class),
         );
         $summaryService = new SummaryService($progressReporter);
 
@@ -99,18 +100,18 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->loadFixtures();
     }
 
-    public function test_execute()
+    public function test_execute(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_second_name', $collabPersonId)),
         );
 
         $command = $this->application->find('information');
@@ -123,19 +124,19 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->assertStringContainsString('OK', $output);
     }
 
-    public function test_execute_second_service_returned_failed_response()
+    public function test_execute_second_service_returned_failed_response(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $errorMessage = 'Internal server error';
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
+            new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage)),
         );
         $command = $this->application->find('information');
         $commandTester = new CommandTester($command);
@@ -149,7 +150,7 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->assertStringContainsString($errorMessage, $output);
     }
 
-    public function test_execute_no_arguments()
+    public function test_execute_no_arguments(): void
     {
         $this->expectExceptionMessage("Not enough arguments (missing: \"user\").");
         $this->expectException(\Symfony\Component\Console\Exception\RuntimeException::class);
@@ -159,19 +160,19 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $commandTester->execute([]);
     }
 
-    public function test_execute_silently()
+    public function test_execute_silently(): void
     {
         $collabPersonId = 'urn:collab:person:surf.nl:jimi_hendrix';
 
         $this->handlerMyService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId))
+            new Response(200, [], $this->getOkStatus('my_service_name', $collabPersonId)),
         );
 
         $errorMessage = 'Internal server error';
         $this->handlerMySecondService->append(
             new Response(200, [], '{"status":"UP"}'),
-            new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage))
+            new Response(200, [], $this->getFailedStatus('my_second_name', $errorMessage)),
         );
         $command = $this->application->find('information');
         $commandTester = new CommandTester($command);
@@ -181,21 +182,25 @@ class LastLoginRepositoryTest extends DatabaseTestCase
         $this->assertJson($output, 'The output must be JSON');
     }
 
-    private function getOkStatus($serviceName, $collabPersonId)
-    {
+    private function getOkStatus(
+        $serviceName,
+        $collabPersonId,
+    ) {
         return sprintf(
             '{"status": "OK", "name": "%s", "data": [ { "name": "foobar", "value": "%s" } ] }',
             $serviceName,
-            $collabPersonId
+            $collabPersonId,
         );
     }
 
-    private function getFailedStatus($serviceName, $message)
-    {
+    private function getFailedStatus(
+        $serviceName,
+        $message,
+    ) {
         return sprintf(
             '{"status": "FAILED", "name": "%s", "message": "%s", "data": []}',
             $serviceName,
-            $message
+            $message,
         );
     }
 }

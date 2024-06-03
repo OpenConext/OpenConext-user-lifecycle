@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,11 +24,6 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use OpenConext\UserLifecycle\Domain\Client\BatchInformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Data;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ErrorMessage;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\Name;
-use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 use PHPUnit\Framework\TestCase;
 
@@ -34,14 +31,14 @@ class BatchInformationResponseCollectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function test_can_be_created()
+    public function test_can_be_created(): void
     {
         $collection = new BatchInformationResponseCollection();
         $this->assertEquals(0, $collection->count());
         $this->assertEmpty($collection->getErrorMessages());
     }
 
-    public function test_it_composes_readable_error_messages()
+    public function test_it_composes_readable_error_messages(): void
     {
         $user1 = m::mock(CollabPersonId::class);
         $user1

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,31 +21,23 @@
 namespace OpenConext\UserLifecycle\Domain\ValueObject\Client;
 
 use OpenConext\UserLifecycle\Domain\Exception\InvalidNameException;
+use Webmozart\Assert\Assert;
 
-class Name
+class Name implements \Stringable
 {
-    /**
-     * @var string
-     */
-    private $name;
+    public function __construct(
+        private readonly string $name,
+    ) {
+        Assert::notEmpty(trim($name), 'Name can not be empty.');
 
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        if (!is_string($name) || empty(trim($name))) {
-            throw new InvalidNameException('Name must be of the type string, and can not be empty.');
-        }
-        $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }

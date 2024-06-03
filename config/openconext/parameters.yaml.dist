@@ -34,3 +34,7 @@ parameters:
     deprovision_api_settings_enabled: false
     deprovision_api_settings_username: userlifecycle
     deprovision_api_settings_password: secret
+
+    app_env: prod
+    app_debug: false
+    app_secret: NotSoSecretReplaceMe!

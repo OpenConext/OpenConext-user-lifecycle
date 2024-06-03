@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,8 +21,11 @@
 namespace OpenConext\UserLifecycle\Application\QueryHandler;
 
 use OpenConext\UserLifecycle\Application\Query\InactiveUsersQuery;
+use OpenConext\UserLifecycle\Domain\Collection\LastLoginCollectionInterface;
 
 interface InactiveUsersQueryHandlerInterface
 {
-    public function handle(InactiveUsersQuery $query);
+    public function handle(
+        InactiveUsersQuery $query,
+    ): LastLoginCollectionInterface;
 }

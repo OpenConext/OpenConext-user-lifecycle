@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -27,26 +29,19 @@ interface BatchInformationResponseCollectionInterface extends JsonSerializable, 
     /**
      * Collects InformationResponseCollection objects indexed on the
      * person id of the user that represents the deprovision response
-     *
-     * @param CollabPersonId $personId
-     * @param InformationResponseCollectionInterface $collection
-     * @return
      */
-    public function add(CollabPersonId $personId, InformationResponseCollectionInterface $collection);
+    public function add(
+        CollabPersonId $personId,
+        InformationResponseCollectionInterface $collection,
+    ): void;
 
-    /**
-     * @return int
-     */
-    public function count();
+    public function count(): int;
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize();
+    public function jsonSerialize(): array;
 
     /**
      * Get an array of error messages in string format
      * @return string[]
      */
-    public function getErrorMessages();
+    public function getErrorMessages(): array;
 }

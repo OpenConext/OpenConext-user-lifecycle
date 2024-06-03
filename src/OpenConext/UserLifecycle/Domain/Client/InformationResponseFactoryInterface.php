@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,15 +25,18 @@ use Exception;
 interface InformationResponseFactoryInterface
 {
     /**
-     * @param array $response
      * @return InformationResponseInterface
      */
-    public function fromApiResponse(array $response);
+    public function fromApiResponse(
+        array $response,
+    );
 
     /**
-     * @param Exception $e
      * @param string $applicationName
      * @return InformationResponseInterface
      */
-    public function fromException(Exception $e, $applicationName);
+    public function fromException(
+        Exception $e,
+        $applicationName,
+    );
 }

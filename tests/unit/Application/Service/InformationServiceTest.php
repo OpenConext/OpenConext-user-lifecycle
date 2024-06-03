@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -48,7 +50,7 @@ class InformationServiceTest extends TestCase
     {
         $this->apiCollection = m::mock(
             DeprovisionClientCollection::class,
-            DeprovisionClientHealthCheckerInterface::class
+            DeprovisionClientHealthCheckerInterface::class,
         );
         $this->apiCollection
             ->shouldReceive('healthCheck');
@@ -56,7 +58,7 @@ class InformationServiceTest extends TestCase
         $this->service = new InformationService($this->apiCollection, $logger);
     }
 
-    public function test_read_information_for()
+    public function test_read_information_for(): void
     {
         // Setup the test using test doubles
         $personId = 'urn:collab:person:jay-leno';
@@ -75,7 +77,7 @@ class InformationServiceTest extends TestCase
         $this->assertInstanceOf(InformationResponseCollection::class, $response);
     }
 
-    public function test_read_information_empty_person_id()
+    public function test_read_information_empty_person_id(): void
     {
         // Setup the test using test doubles
         $personId = '';

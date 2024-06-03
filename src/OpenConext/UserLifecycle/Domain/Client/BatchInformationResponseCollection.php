@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,22 +27,21 @@ class BatchInformationResponseCollection implements BatchInformationResponseColl
     /**
      * @var InformationResponseCollectionInterface[]
      */
-    private $data = [];
+    private array $data = [];
 
-    public function add(CollabPersonId $personId, InformationResponseCollectionInterface $collection)
-    {
+    public function add(
+        CollabPersonId $personId,
+        InformationResponseCollectionInterface $collection,
+    ): void {
         $this->data[$personId->getCollabPersonId()] = $collection;
     }
 
-    /**
-     * @return int
-     */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->data;
     }
@@ -49,7 +50,7 @@ class BatchInformationResponseCollection implements BatchInformationResponseColl
      * Get an array of error messages in string format
      * @return string[]
      */
-    public function getErrorMessages()
+    public function getErrorMessages(): array
     {
         $messages = [];
         foreach ($this->data as $collabPersonId => $collection) {

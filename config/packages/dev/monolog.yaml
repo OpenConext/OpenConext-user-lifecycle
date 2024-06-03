@@ -1,5 +1,0 @@
-monolog:
-  handlers:
-    main:
-      path: '%kernel.logs_dir%/%kernel.environment%.log'
-      level: DEBUG

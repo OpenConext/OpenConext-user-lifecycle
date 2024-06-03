@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -18,13 +20,11 @@
 
 namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client;
 
-use GuzzleHttp\Promise;
-use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\DeprovisionClientInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollection;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
-use OpenConext\UserLifecycle\Domain\Exception\DeprovisionClientUnavailableException;
 use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 class DeprovisionClientCollection implements DeprovisionClientCollectionInterface
@@ -32,15 +32,12 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
     /**
      * @var DeprovisionClientInterface[]
      */
-    private $clients;
+    private ?array $clients = null;
 
-    /**
-     * @param CollabPersonId $user
-     * @param bool $dryRun
-     * @return InformationResponseCollectionInterface
-     */
-    public function deprovision(CollabPersonId $user, $dryRun = false)
-    {
+    public function deprovision(
+        CollabPersonId $user,
+        bool $dryRun = false,
+    ): InformationResponseCollectionInterface {
         $promises = [];
         foreach ($this->clients as $client) {
             $promises[] = $client->deprovision($user, $dryRun);
@@ -49,12 +46,9 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
         return $this->collectResponses($promises);
     }
 
-    /**
-     * @param CollabPersonId $user
-     * @return InformationResponseCollectionInterface
-     */
-    public function information(CollabPersonId $user)
-    {
+    public function information(
+        CollabPersonId $user,
+    ): InformationResponseCollectionInterface {
         $promises = [];
         foreach ($this->clients as $client) {
             $promises[] = $client->information($user);
@@ -63,20 +57,18 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
         return $this->collectResponses($promises);
     }
 
-    public function addClient(DeprovisionClientInterface $client)
-    {
+    public function addClient(
+        DeprovisionClientInterface $client,
+    ): void {
         $this->clients[$client->getName()] = $client;
     }
 
-    /**
-     * @param PromiseInterface[] $promises
-     * @return InformationResponseCollectionInterface
-     */
-    private function collectResponses(array $promises)
-    {
+    private function collectResponses(
+        array $promises,
+    ): InformationResponseCollectionInterface {
         $collection = new InformationResponseCollection();
 
-        $informationResponses = Promise\all($promises)
+        $informationResponses = Utils::all($promises)
             ->wait();
 
         foreach ($informationResponses as $informationResponse) {
@@ -86,7 +78,7 @@ class DeprovisionClientCollection implements DeprovisionClientCollectionInterfac
         return $collection;
     }
 
-    public function healthCheck()
+    public function healthCheck(): void
     {
         foreach ($this->clients as $client) {
             $client->health();

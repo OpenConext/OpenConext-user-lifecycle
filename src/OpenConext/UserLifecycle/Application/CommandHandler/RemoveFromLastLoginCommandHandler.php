@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -24,21 +26,14 @@ use OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface;
 
 class RemoveFromLastLoginCommandHandler implements CommandHandlerInterface
 {
-    /**
-     * @var LastLoginRepositoryInterface
-     */
-    private $lastLoginRepository;
-
-    public function __construct(LastLoginRepositoryInterface $lastLoginRepository)
-    {
-        $this->lastLoginRepository = $lastLoginRepository;
+    public function __construct(
+        private readonly LastLoginRepositoryInterface $lastLoginRepository,
+    ) {
     }
 
-    /**
-     * @param CommandInterface|RemoveFromLastLoginCommand $command
-     */
-    public function handle(CommandInterface $command)
-    {
+    public function handle(
+        CommandInterface $command,
+    ): void {
         $this->lastLoginRepository->delete((string) $command->getCollabPersonId());
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -25,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use OpenConext\UserLifecycle\Domain\Entity\LastLogin;
 use OpenConext\UserLifecycle\Tests\Integration\DataFixtures\ORM\DatabaseTestFixtures;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * The DatabaseTestCase exposes the Kernel and enables
@@ -37,17 +38,13 @@ abstract class DatabaseTestCase extends KernelTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var KernelInterface
-     */
-    protected static $kernel;
 
     protected function setUp(): void
     {
         self::$kernel = self::bootKernel();
     }
     
-    protected function loadFixtures()
+    protected function loadFixtures(): void
     {
         $em = $this->getEntitytManager();
 
@@ -73,8 +70,8 @@ abstract class DatabaseTestCase extends KernelTestCase
         return $this->getEntitytManager()->getRepository(LastLogin::class);
     }
 
-    private function getEntitytManager()
+    private function getEntitytManager(): ?object
     {
-        return self::$kernel->getContainer()->get('doctrine.orm.default_entity_manager');
+        return self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
     }
 }

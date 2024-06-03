@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -37,8 +39,9 @@ class CollabPersonIdTest extends TestCase
      * @dataProvider invalidArguments
      * @param $invalidArgument
      */
-    public function test_must_be_non_empty_string($invalidArgument)
-    {
+    public function test_must_be_non_empty_string(
+        $invalidArgument,
+    ): void {
         $this->expectException(InvalidCollabPersonIdException::class);
         $this->expectExceptionMessage('The collabPersonId must be a non empty string');
 
@@ -48,8 +51,9 @@ class CollabPersonIdTest extends TestCase
     /**
      * @dataProvider invalidUrnCollabPersonIds
      */
-    public function test_only_urn_collab_person_id_prefixed_ids_are_allowed(string $invalidArgument): void
-    {
+    public function test_only_urn_collab_person_id_prefixed_ids_are_allowed(
+        string $invalidArgument,
+    ): void {
         $this->expectException(InvalidCollabPersonIdException::class);
         $this->expectExceptionMessage('The collabPersonId must start with urn:collab:person:');
 
@@ -61,10 +65,6 @@ class CollabPersonIdTest extends TestCase
         return [
             [''],
             [' '],
-            [[]],
-            [null],
-            [true],
-            [['urn:mace:example.com:jan']]
         ];
     }
 

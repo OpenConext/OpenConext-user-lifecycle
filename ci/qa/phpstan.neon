@@ -1,0 +1,11 @@
+includes:
+    - ./phpstan-baseline.neon
+    - ../../vendor/phpstan/phpstan-symfony/extension.neon
+    - ../../vendor/phpstan/phpstan-deprecation-rules/rules.neon
+parameters:
+    checkUninitializedProperties: true
+    treatPhpDocTypesAsCertain: false
+    level: max
+    paths:
+        - ../../src
+        - ../../config

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -18,19 +20,16 @@
 
 namespace OpenConext\UserLifecycle\Application\Query;
 
+use OpenConext\UserLifecycle\Domain\ValueObject\InactivityPeriod;
+
 class InactiveUsersQuery
 {
-    /**
-     * @var int
-     */
-    private $inactivityPeriod;
-
-    public function __construct($inactivityPeriod)
-    {
-        $this->inactivityPeriod = $inactivityPeriod;
+    public function __construct(
+        private readonly InactivityPeriod $inactivityPeriod,
+    ) {
     }
 
-    public function getInactivityPeriod()
+    public function getInactivityPeriod(): InactivityPeriod
     {
         return $this->inactivityPeriod;
     }

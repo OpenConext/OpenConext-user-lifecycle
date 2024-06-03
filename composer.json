@@ -1,63 +1,66 @@
 {
     "name": "openconext/user-lifecycle",
-    "description": "OpenConext User Lifecycle, a project used to trigger deprovisioning of OpenConext users from the OpenConext suite.",
-    "license": "Apache-2.0",
+    "description": "OpenConext user deprovisioning tool",
     "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "doctrine/doctrine-bundle": "^2.12",
+        "doctrine/doctrine-fixtures-bundle": "^3.5",
+        "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/orm": "^3.1",
+        "guzzlehttp/guzzle": "^7.0",
+        "incenteev/composer-parameter-handler": "^2.2",
+        "openconext/monitor-bundle": "^4.2",
+        "symfony/console": "7.0.*",
+        "symfony/flex": "^2",
+        "symfony/framework-bundle": "7.0.*",
+        "symfony/monolog-bundle": "*",
+        "symfony/phpunit-bridge": "^7.0",
+        "symfony/runtime": "7.0.*",
+        "symfony/security-bundle": "7.0.*",
+        "symfony/yaml": "7.0.*"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "symfony/flex": true,
+            "symfony/runtime": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "OpenConext\\": "src/OpenConext"
-        },
-        "classmap": [
-            "src/Kernel.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "OpenConext\\": "src\\OpenConext",
-            "OpenConext\\UserLifecycle\\Tests\\Integration\\": "tests/integration"
+            "OpenConext\\": "src/OpenConext",
+            "OpenConext\\UserLifecycle\\Tests\\Integration\\": "tests/integration",
+            "OpenConext\\UserLifecycle\\Tests\\Unit\\": "tests/unit"
         }
     },
-    "require": {
-        "php": "^7.2",
-        "doctrine/doctrine-bundle": "~2.0",
-        "doctrine/doctrine-cache-bundle": "^1.4",
-        "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "doctrine/orm": "^2.10",
-        "guzzlehttp/guzzle": "^6.3",
-        "incenteev/composer-parameter-handler": "^2.0",
-        "openconext/monitor-bundle": "^3.0",
-        "sensio/framework-extra-bundle": "^6.0",
-        "symfony/cache": "4.4.*",
-        "symfony/console": "4.4.*",
-        "symfony/dotenv": "4.4.*",
-        "symfony/flex": "^1.18",
-        "symfony/framework-bundle": "4.4.*",
-        "symfony/http-kernel": "4.4.*",
-        "symfony/monolog-bundle": "^3.1.0",
-        "symfony/security-bundle": "4.4.*",
-        "symfony/stopwatch": "4.4.*"
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*",
+        "symfony/polyfill-php82": "*"
     },
-    "require-dev": {
-        "malukenho/docheader": "^0.1.6",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.3",
-        "mockery/mockery": "^1.1",
-        "php-parallel-lint/php-parallel-lint": "^1.3",
-        "phpmd/phpmd": "^2.6",
-        "phpunit/phpcov": "^6.0",
-        "phpunit/phpunit": "^8.5",
-        "squizlabs/php_codesniffer": "^3.4",
-        "symfony/phpunit-bridge": "^3.0",
-        "symfony/var-dumper": "4.4.*"
-    },
-
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
-        "symfony-scripts": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
-        ],
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "@auto-scripts"
@@ -66,41 +69,51 @@
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "@auto-scripts"
         ],
-        "test": [
+        "check": [
             "@phplint",
-            "@docheader",
             "@phpmd",
             "@phpcs",
             "@create-db",
-            "@security-tests",
-            "@phpunit"
+            "@license-headers",
+            "@phpstan",
+            "@test"
         ],
         "phplint": "./ci/qa/phplint",
-        "docheader": "ci/qa/docheader",
+        "license-headers": "./ci/qa/docheader",
         "phpmd": "./ci/qa/phpmd",
         "phpcs": "./ci/qa/phpcs",
-        "create-db": "ci/qa/create-test-db",
-        "security-tests": "./ci/qa/security-tests",
-        "phpunit": "./ci/qa/phpunit"
+        "create-db": "./ci/qa/create-test-db",
+        "phpstan": "./ci/qa/phpstan",
+        "phpcbf": "./ci/qa/phpcbf",
+        "test": "APP_ENV=test ./ci/qa/phpunit"
     },
-    "config": {
-        "optimize-autoloader": true,
-        "platform": {
-            "php": "7.2.5"
-        },
-        "sort-packages": true,
-        "allow-plugins": {
-            "symfony/flex": true
-        }
+
+    "conflict": {
+        "symfony/symfony": "*"
     },
     "extra": {
+        "runtime": {
+            "disable_dotenv": true
+        },
         "symfony": {
             "allow-contrib": false,
-            "require": "4.4.*"
+            "require": "7.0.*"
         },
-        "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "config/legacy/parameters.yml"
+            "file": "config/openconext/parameters.yaml"
         }
+    },
+    "require-dev": {
+        "malukenho/docheader": "^1.1",
+        "matthiasnoback/symfony-dependency-injection-test": "^5.1",
+        "mockery/mockery": "^1.6",
+        "overtrue/phplint": "^9.1",
+        "phpmd/phpmd": "^2.15",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpstan/phpstan-symfony": "^1.3",
+        "phpunit/phpunit": "9.6",
+        "rector/rector": "^1.0",
+        "slevomat/coding-standard": "^8.15",
+        "squizlabs/php_codesniffer": "^3.9"
     }
 }

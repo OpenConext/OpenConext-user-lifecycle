@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,24 +24,20 @@ use GuzzleHttp\Client;
 use OpenConext\UserLifecycle\Application\Client\InformationResponseFactory;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Webmozart\Assert\Assert;
 
 class UserLifecycleExtension extends Extension
 {
-    public function load(array $config, ContainerBuilder $container)
-    {
-        $loader = new YamlFileLoader($container, new FileLocator(
-            __DIR__.'/../Resources/config'
-        ));
-        $loader->load('services.yml');
+    public function load(
+        array $configs,
+        ContainerBuilder $container,
+    ): void {
 
-        foreach ($config as $configSet) {
+        foreach ($configs as $configSet) {
             // Do not evaluate empty configurations
             if (empty($configSet)) {
                 continue;
@@ -62,8 +60,8 @@ class UserLifecycleExtension extends Extension
 
             $toggleDefinition->setArgument(0, $apiEnabled);
             $container->setDefinition(
-                'OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle',
-                $toggleDefinition
+                DeprovisionApiFeatureToggle::class,
+                $toggleDefinition,
             );
         }
     }
@@ -72,12 +70,11 @@ class UserLifecycleExtension extends Extension
      * Loads the DeprovisionClients into the DI container.
      * Each client is tagged so it can later be added to a
      * collection class
-     *
-     * @param array $clients
-     * @param ContainerBuilder $container
      */
-    private function loadDeprovisionClients(array $clients, ContainerBuilder $container)
-    {
+    private function loadDeprovisionClients(
+        array $clients,
+        ContainerBuilder $container,
+    ): void {
         foreach ($clients as $clientName => $clientConfiguration) {
             $definition = new Definition(DeprovisionClient::class);
             $definition->addTag('open_conext.user_lifecycle.deprovision_client');
@@ -96,7 +93,7 @@ class UserLifecycleExtension extends Extension
 
             $container->setDefinition(
                 sprintf("open_conext.user_lifecycle.deprovision_client.%s", $clientName),
-                $definition
+                $definition,
             );
         }
     }
@@ -107,12 +104,14 @@ class UserLifecycleExtension extends Extension
      *
      * @param $config
      * @param $clientName
-     * @param ContainerBuilder $container
      *
      * @return Definition
      */
-    private function buildGuzzleClientDefinition($config, $clientName, ContainerBuilder $container)
-    {
+    private function buildGuzzleClientDefinition(
+        $config,
+        int|string $clientName,
+        ContainerBuilder $container,
+    ): Definition {
         $definition = new Definition(Client::class);
 
         // Perform input validation on the config
@@ -122,14 +121,14 @@ class UserLifecycleExtension extends Extension
             Assert::keyExists(
                 $config,
                 $key,
-                sprintf($message, $key, $clientName)
+                sprintf($message, $key, $clientName),
             );
         }
 
         // Configure Guzzle
         $definition->setArgument(0, [
             'base_uri' => $config['url'],
-            'verify' => isset($config['verify_ssl']) ? $config['verify_ssl'] : true,
+            'verify' => $config['verify_ssl'] ?? true,
             'auth' => [
                 $config['username'],
                 $config['password'],
@@ -143,7 +142,7 @@ class UserLifecycleExtension extends Extension
 
         $container->setDefinition(
             sprintf("open_conext.user_lifecycle.guzzle_client.%s", $clientName),
-            $definition
+            $definition,
         );
 
         return $definition;

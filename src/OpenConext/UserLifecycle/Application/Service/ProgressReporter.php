@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,45 +27,28 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProgressReporter implements ProgressReporterInterface
 {
-    /**
-     * @var StopwatchInterface
-     */
-    private $stopwatch;
+    private ?OutputInterface $output = null;
 
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    private readonly DeprovisionStatistics $deprovisionStatistics;
 
-    /**
-     * @var DeprovisionStatistics
-     */
-    private $deprovisionStatistics;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(StopwatchInterface $stopwatch, LoggerInterface $logger)
-    {
-        $this->stopwatch = $stopwatch;
+    public function __construct(
+        private readonly StopwatchInterface $stopwatch,
+        private readonly LoggerInterface $logger,
+    ) {
         $this->deprovisionStatistics = new DeprovisionStatistics();
-        $this->logger = $logger;
     }
 
-    public function setConsoleOutput(OutputInterface $output)
-    {
+    public function setConsoleOutput(
+        OutputInterface $output,
+    ): void {
         $this->output = $output;
     }
 
-    /**
-     * @param string $message
-     * @param int $total
-     * @param int $current
-     */
-    public function progress(string $message, int $total, int $current): void
-    {
+    public function progress(
+        string $message,
+        int $total,
+        int $current,
+    ): void {
         if ($this->output === null) {
             return;
         }
@@ -74,14 +59,14 @@ class ProgressReporter implements ProgressReporterInterface
             sprintf(
                 '[%s%% of %d users]',
                 str_pad((string) $progress, 3, ' ', STR_PAD_LEFT),
-                $total
+                $total,
             ),
             20,
-            ' '
+            ' ',
         );
 
         $this->output->writeln(
-            sprintf('%s %s', $paddedProgress, $message)
+            sprintf('%s %s', $paddedProgress, $message),
         );
     }
 
@@ -95,8 +80,9 @@ class ProgressReporter implements ProgressReporterInterface
         $this->stopwatch->stop();
     }
 
-    public function reportDeprovisionedFromService(array $statistics): void
-    {
+    public function reportDeprovisionedFromService(
+        array $statistics,
+    ): void {
         $this->deprovisionStatistics->addDeprovisionedPerClient($statistics);
     }
 
@@ -105,9 +91,14 @@ class ProgressReporter implements ProgressReporterInterface
         $this->deprovisionStatistics->addLastLoginRemoval();
     }
 
-    public function printDeprovisionStatistics()
+    public function printDeprovisionStatistics(): void
     {
-        $this->deprovisionStatistics->setRuntime((int) $this->stopwatch->elapsedTime() / 1000);
+        $this->deprovisionStatistics->setRuntime(
+            // Convert milliseconds to seconds as an integer, rounded down
+            // to keep behaviour. Maybe we should round() instead?
+            // This was an int casting, but that is deprecated in PHP 8.0
+            (int) floor($this->stopwatch->elapsedTime() / 1000),
+        );
 
         $stats = json_encode($this->deprovisionStatistics->jsonSerialize());
         $this->logger->info($stats);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -24,21 +26,14 @@ use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 
 class FindUserInformationQueryHandler implements FindUserInformationQueryHandlerInterface
 {
-    /**
-     * @var InformationServiceInterface
-     */
-    private $informationService;
-
-    public function __construct(InformationServiceInterface $service)
-    {
-        $this->informationService = $service;
+    public function __construct(
+        private readonly InformationServiceInterface $informationService,
+    ) {
     }
 
-    /**
-     * @param FindUserInformationQuery $query
-     * @return InformationResponseInterface
-     */
-    public function handle(FindUserInformationQuery $query)
+    public function handle(
+        FindUserInformationQuery $query,
+    ): InformationResponseInterface
     {
         return $this->informationService->readInformationFor($query->getCollabPersonId());
     }

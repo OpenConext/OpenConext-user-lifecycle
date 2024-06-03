@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -47,7 +49,7 @@ class RemovalCheckServiceTest extends TestCase
         $this->service = new RemovalCheckService($this->logger);
     }
 
-    public function test_may_be_removed()
+    public function test_may_be_removed(): void
     {
 
         $this->logger
@@ -64,7 +66,7 @@ class RemovalCheckServiceTest extends TestCase
         $this->assertTrue($this->service->mayBeRemoved($collection));
     }
 
-    public function test_may_not_be_removed()
+    public function test_may_not_be_removed(): void
     {
 
         $this->logger

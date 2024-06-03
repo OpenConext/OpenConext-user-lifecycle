@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,20 +24,15 @@ use OpenConext\UserLifecycle\Domain\ValueObject\CollabPersonId;
 
 class FindUserInformationQuery
 {
-    /**
-     * @var CollabPersonId
-     */
-    private $collabPersonId;
+    private readonly CollabPersonId $collabPersonId;
 
-    public function __construct($collabPersonId)
-    {
+    public function __construct(
+        $collabPersonId,
+    ) {
         $this->collabPersonId = new CollabPersonId($collabPersonId);
     }
 
-    /**
-     * @return CollabPersonId
-     */
-    public function getCollabPersonId()
+    public function getCollabPersonId(): string
     {
         return $this->collabPersonId->getCollabPersonId();
     }

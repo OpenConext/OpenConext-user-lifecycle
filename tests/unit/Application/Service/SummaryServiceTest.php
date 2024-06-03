@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -43,7 +45,7 @@ class SummaryServiceTest extends TestCase
         $this->service = new SummaryService($this->reporter);
     }
 
-    public function test_summarize_information_collection()
+    public function test_summarize_information_collection(): void
     {
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
@@ -60,7 +62,7 @@ class SummaryServiceTest extends TestCase
         $this->assertStringNotContainsString('See error messages below:', $summary);
     }
 
-    public function test_summarize_information_collection_with_errors()
+    public function test_summarize_information_collection_with_errors(): void
     {
         $collection = m::mock(InformationResponseCollectionInterface::class);
         $collection
@@ -78,7 +80,7 @@ class SummaryServiceTest extends TestCase
         $this->assertStringContainsString(' * EngineBlock: Fake error message', $summary);
     }
 
-    public function test_summarize_batch_information_collection()
+    public function test_summarize_batch_information_collection(): void
     {
         $collection = m::mock(BatchInformationResponseCollectionInterface::class);
         $collection
@@ -97,7 +99,7 @@ class SummaryServiceTest extends TestCase
         $this->assertStringNotContainsString('See error messages below:', $summary);
     }
 
-    public function test_summarize_batch_information_collection_with_errors()
+    public function test_summarize_batch_information_collection_with_errors(): void
     {
         $collection = m::mock(BatchInformationResponseCollectionInterface::class);
         $collection
@@ -119,20 +121,20 @@ class SummaryServiceTest extends TestCase
 
         $this->assertStringContainsString(
             '3 deprovision calls to services failed. See error messages below:',
-            $summary
+            $summary,
         );
         $this->assertStringContainsString(' * Service name: "Error message" for user "collabPersonId"', $summary);
         $this->assertStringContainsString(
             ' * EngineBlock: "Service not available" for user "urn:collab:jane_doe"',
-            $summary
+            $summary,
         );
         $this->assertStringContainsString(
             ' * DropjesService: "Server has gone away" for user "urn:collab:jack_black"',
-            $summary
+            $summary,
         );
     }
 
-    public function test_summarize_information_collection_information_context()
+    public function test_summarize_information_collection_information_context(): void
     {
 
         $collection = m::mock(InformationResponseCollectionInterface::class);

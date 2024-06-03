@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,55 +27,35 @@ use OpenConext\UserLifecycle\Domain\ValueObject\Client\ResponseStatus;
 
 class InformationResponse implements InformationResponseInterface
 {
-    /**
-     * @var ResponseStatus
-     */
-    private $status;
-
-    /**
-     * @var Name
-     */
-    private $name;
-
-    /**
-     * @var Data
-     */
-    private $data;
-
-    /**
-     * @var ErrorMessage
-     */
-    private $errorMessage;
-
-    public function __construct(ResponseStatus $status, Name $name, Data $data, ErrorMessage $errorMessage = null)
-    {
-        $this->status = $status;
-        $this->name = $name;
-        $this->data = $data;
-        $this->errorMessage = $errorMessage;
+    public function __construct(
+        private readonly ResponseStatus $status,
+        private readonly Name           $name,
+        private readonly Data           $data,
+        private readonly ?ErrorMessage  $errorMessage = null,
+    ) {
     }
 
-    public function getStatus()
+    public function getStatus(): ResponseStatus
     {
         return $this->status;
     }
 
-    public function getName()
+    public function getName(): Name
     {
         return $this->name;
     }
 
-    public function getData()
+    public function getData(): Data
     {
         return $this->data;
     }
 
-    public function getErrorMessage()
+    public function getErrorMessage(): ErrorMessage
     {
         return $this->errorMessage;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $response = [
             'name' => (string) $this->getName(),

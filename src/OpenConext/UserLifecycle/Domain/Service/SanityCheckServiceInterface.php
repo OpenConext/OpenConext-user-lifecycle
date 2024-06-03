@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -31,9 +33,10 @@ interface SanityCheckServiceInterface
      * method will throw the InvalidLastLoginCollectionException. This
      * should halt the deprovisioning run.
      *
-     * @param LastLoginCollectionInterface $lastLoginCollection
      * @throws InvalidLastLoginCollectionException
      * @throws EmptyLastLoginCollectionException
      */
-    public function check(LastLoginCollectionInterface $lastLoginCollection);
+    public function check(
+        LastLoginCollectionInterface $lastLoginCollection,
+    ): void;
 }

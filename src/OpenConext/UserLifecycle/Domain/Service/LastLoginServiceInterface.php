@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -24,8 +26,6 @@ interface LastLoginServiceInterface
 {
     /**
      * Search for users that are up for deprovisioning
-     *
-     * @return LastLoginCollectionInterface
      */
-    public function findUsersForDeprovision();
+    public function findUsersForDeprovision(): LastLoginCollectionInterface;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,10 +27,11 @@ class InformationResponseCollection implements InformationResponseCollectionInte
     /**
      * @var InformationResponseInterface[]
      */
-    private $data = [];
+    private array $data = [];
 
-    public function addInformationResponse(InformationResponseInterface $informationResponse): void
-    {
+    public function addInformationResponse(
+        InformationResponseInterface $informationResponse,
+    ): void {
         $this->data[] = $informationResponse;
     }
 
@@ -64,6 +67,9 @@ class InformationResponseCollection implements InformationResponseCollectionInte
         return count($this->data);
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function successesPerClient(): array
     {
         $report = [];

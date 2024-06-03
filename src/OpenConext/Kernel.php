@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +18,25 @@
  * limitations under the License.
  */
 
-namespace OpenConext\UserLifecycle\Domain\Exception;
+namespace OpenConext;
 
-use InvalidArgumentException;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
-class InformationResponseNotFoundException extends InvalidArgumentException
+class Kernel extends BaseKernel
 {
+    use MicroKernelTrait;
+
+    public function getProjectDir(): string
+    {
+        return dirname(__DIR__, 2);
+    }
+
+    // This file is overridden to use the cache dir as the log dir
+    // because otherwise SF tries to create the log dirs which aren't used
+    public function getLogDir(): string
+    {
+        return $this->getCacheDir();
+    }
 
 }

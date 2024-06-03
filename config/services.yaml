@@ -1,11 +1,36 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
-parameters:
-    container.dumper.inline_class_loader: true
-    locale: en
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+imports:
+    - { resource: 'openconext/parameters.yaml' }
 
 services:
     _defaults:
-        autowire: true
-        autoconfigure: true
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    OpenConext\:
+        resource: '../src/OpenConext/'
+        exclude:
+            - '../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/'
+            - '../src/OpenConext/UserLifecycle/Domain/Entity/'
+            - '../src/OpenConext/UserLifecycle/Kernel.php'
+
+    OpenConext\UserLifecycle\Domain\Repository\LastLoginRepositoryInterface:
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - OpenConext\UserLifecycle\Domain\Entity\LastLogin
+
+    open_conext.user_lifecycle.deprovision_client.guzzle_stack:
         public: false
+        class: 'GuzzleHttp\HandlerStack'
+        factory: ['GuzzleHttp\HandlerStack', create]
+        calls:
+            - [setHandler, ['@open_conext.user_lifecycle.deprovision_client.guzzle_handler']]
+
+    open_conext.user_lifecycle.deprovision_client.guzzle_handler:
+        public: false
+        class: 'GuzzleHttp\Handler\CurlMultiHandler'
+

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -22,12 +24,17 @@ use JsonSerializable;
 
 class DeprovisionStatistics implements JsonSerializable
 {
-    private $runtime = 0;
-    private $deprovisionedPerClient = [];
-    private $lastLoginRemovals = 0;
+    private int $runtime = 0;
 
-    public function addDeprovisionedPerClient(array $deprovisionStatistics): void
-    {
+    /**
+     * @var array<string, int>
+     */
+    private array $deprovisionedPerClient = [];
+    private int $lastLoginRemovals = 0;
+
+    public function addDeprovisionedPerClient(
+        array $deprovisionStatistics,
+    ): void {
         foreach ($deprovisionStatistics as $serviceName => $numberOfRemovals) {
             if (!array_key_exists($serviceName, $this->deprovisionedPerClient)) {
                 $this->deprovisionedPerClient[$serviceName] = 0;
@@ -44,11 +51,15 @@ class DeprovisionStatistics implements JsonSerializable
     /**
      * Runtime should be in seconds
      */
-    public function setRuntime(int $runtime): void
-    {
+    public function setRuntime(
+        int $runtime,
+    ): void {
         $this->runtime = $runtime;
     }
 
+    /**
+     * @return array<string, int|array<string, int>>
+     */
     public function jsonSerialize(): array
     {
         return [
