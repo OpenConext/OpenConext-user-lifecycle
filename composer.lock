@@ -1396,6 +1396,66 @@
             "time": "2024-05-08T08:12:09+00:00"
         },
         {
+            "name": "endroid/installer",
+            "version": "1.4.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endroid/installer.git",
+                "reference": "308051404c8370b9641cd61d86a464f2c6938265"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endroid/installer/zipball/308051404c8370b9641cd61d86a464f2c6938265",
+                "reference": "308051404c8370b9641cd61d86a464f2c6938265",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0",
+                "endroid/quality": "dev-main"
+            },
+            "suggest": {
+                "roave/security-advisories": "Avoids installation of package versions with vulnerabilities"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                },
+                "class": "Endroid\\Installer\\Installer"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Endroid\\Installer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl"
+                }
+            ],
+            "description": "Composer plugin for installing configuration files",
+            "support": {
+                "issues": "https://github.com/endroid/installer/issues",
+                "source": "https://github.com/endroid/installer/tree/1.4.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/endroid",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-11-07T12:11:36+00:00"
+        },
+        {
             "name": "guzzlehttp/guzzle",
             "version": "7.8.1",
             "source": {
@@ -1880,33 +1940,31 @@
         },
         {
             "name": "openconext/monitor-bundle",
-            "version": "4.2.0",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Monitor-bundle.git",
-                "reference": "6167c618146da13300eacf8997e957b1f3c25f49"
+                "reference": "efcb68ff02243c60b16acb1394e0e78b33fc875a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/6167c618146da13300eacf8997e957b1f3c25f49",
-                "reference": "6167c618146da13300eacf8997e957b1f3c25f49",
+                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/efcb68ff02243c60b16acb1394e0e78b33fc875a",
+                "reference": "efcb68ff02243c60b16acb1394e0e78b33fc875a",
                 "shasum": ""
             },
             "require": {
-                "doctrine/orm": "^2.9|^3.0",
+                "doctrine/dbal": "^3.1|^4.0",
+                "endroid/installer": "^1.4",
                 "php": ">=8.2, <9.0-dev",
-                "symfony/dependency-injection": "^5.4|^6.3|^7.0",
-                "symfony/framework-bundle": "^5.4|^6.3|^7.0",
+                "symfony/dependency-injection": "^6.3|^7.0",
+                "symfony/framework-bundle": "^6.3|^7.0",
                 "webmozart/assert": "^1.10"
             },
             "require-dev": {
                 "malukenho/docheader": "^1.0",
-                "matthiasnoback/symfony-config-test": "^4.3",
                 "mockery/mockery": "^1.3.5|^1.4.4",
                 "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpdocumentor/reflection-docblock": "^5.2",
                 "phpmd/phpmd": "^2.13",
-                "phpunit/php-token-stream": "^3.1.3|^4.0.4",
                 "phpunit/phpunit": "^9.6|^10.4",
                 "sebastian/phpcpd": "^4.1|^5.0|^6.0",
                 "squizlabs/php_codesniffer": "^3.6"
@@ -1914,14 +1972,14 @@
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
-                    "OpenConext\\MonitorBundle\\": "src"
+                    "OpenConext\\MonitorBundle\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
-            "description": "A Symfony 5/6/7 bundle that facilitates health and info endpoints to a Symfony application.",
+            "description": "A Symfony 6/7 bundle that facilitates health and info endpoints to a Symfony application.",
             "keywords": [
                 "OpenConext",
                 "health",
@@ -1931,9 +1989,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OpenConext/Monitor-bundle/issues",
-                "source": "https://github.com/OpenConext/Monitor-bundle/tree/4.2.0"
+                "source": "https://github.com/OpenConext/Monitor-bundle/tree/4.3.1"
             },
-            "time": "2024-04-09T08:51:19+00:00"
+            "time": "2024-06-17T08:59:20+00:00"
         },
         {
             "name": "psr/cache",
