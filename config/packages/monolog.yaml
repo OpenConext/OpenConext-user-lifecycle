@@ -1,21 +1,29 @@
 monolog:
     handlers:
-        main:
+        prod-signaler:
+            type: fingers_crossed
+            action_level: ERROR
+            passthru_level: NOTICE # this means that all message of level NOTICE or higher are always logged
+            handler: main_syslog
+            bubble: false # if we handle it, nothing else should
+            channels: [ "!deprecation" ]
+        main_syslog:
             type: stream
-            level: INFO # Logs all messages at info level and higher severities
-            handler: syslog
-            channels: [ '!event', '!doctrine' ]
             path: "php://stderr"
-        syslog:
-            path: "php://stderr"
-            type: syslog
-            ident: userlifecycle_stats
-            formatter: OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Monolog\Formatter\JsonFormatter
+            formatter: monolog.formatter.json
+            channels: [ "!deprecation" ]
 
-when@test: &non-prod
+when@dev: &override
     monolog:
         handlers:
-            main:
-                level: DEBUG
-
-when@dev: *non-prod
+            main_syslog:
+                type: stream
+                path: php://stderr
+                level: error
+                channels: ["!event", "!doctrine", "!deprecation", "!console"]
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine", "!deprecation", "!console"]
+when@test: *override
+when@smoketest: *override
