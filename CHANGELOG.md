@@ -1,3 +1,8 @@
+# 1.0.1 .. 1.0.2
+- Rename the password hasher to target InMemoryUser
+- Inject the DeprovisionApiFeature enabled flag
+- Remove unused .env.* files
+
 ## 1.0.0
 - Upgrade to Symfony 7
 - Upgrade to PHP8.2
