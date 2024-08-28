@@ -311,16 +311,6 @@ parameters:
 			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
 
 		-
-			message: "#^Cannot access offset 'deprovision_api' on mixed\\.$#"
-			count: 1
-			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
-
-		-
-			message: "#^Cannot access offset 'enabled' on mixed\\.$#"
-			count: 1
-			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php
-
-		-
 			message: "#^Method OpenConext\\\\UserLifecycle\\\\Infrastructure\\\\UserLifecycleBundle\\\\DependencyInjection\\\\UserLifecycleExtension\\:\\:buildGuzzleClientDefinition\\(\\) has parameter \\$config with no type specified\\.$#"
 			count: 1
 			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/DependencyInjection/UserLifecycleExtension.php

@@ -49,20 +49,6 @@ class UserLifecycleExtension extends Extension
                 $clientConfig = $configSet['clients'];
                 $this->loadDeprovisionClients($clientConfig, $container);
             }
-
-            $apiEnabled = false;
-            $toggleDefinition = new Definition(DeprovisionApiFeatureToggle::class);
-
-            if (isset($configSet['deprovision_api'])) {
-                $apiConfig = $configSet['deprovision_api'];
-                $apiEnabled = $apiConfig['enabled'];
-            }
-
-            $toggleDefinition->setArgument(0, $apiEnabled);
-            $container->setDefinition(
-                DeprovisionApiFeatureToggle::class,
-                $toggleDefinition,
-            );
         }
     }
 

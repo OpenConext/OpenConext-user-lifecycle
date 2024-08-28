@@ -23,12 +23,12 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api;
 class DeprovisionApiFeatureToggle
 {
     public function __construct(
-        private readonly bool $isEnabled = false,
+        private readonly bool $isDeprovisionApi = false,
     ) {
     }
 
     public function isEnabled(): bool
     {
-        return $this->isEnabled;
+        return $this->isDeprovisionApi;
     }
 }
