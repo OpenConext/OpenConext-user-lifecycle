@@ -29,7 +29,6 @@ class Name implements \Stringable
         private readonly string $name,
     ) {
         Assert::notEmpty(trim($name), 'Name can not be empty.');
-
     }
 
     public function getName(): string

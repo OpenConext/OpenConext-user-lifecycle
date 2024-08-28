@@ -55,8 +55,7 @@ class DeprovisionService implements DeprovisionServiceInterface, ClientHealthChe
         ProgressReporterInterface $progressReporter,
         string $personId,
         bool $dryRun = false,
-    ): InformationResponseCollectionInterface
-    {
+    ): InformationResponseCollectionInterface {
         $this->logger->debug('Received a request to deprovision a user.');
 
         $collabPersonId = $this->buildCollabPersonId($personId);
