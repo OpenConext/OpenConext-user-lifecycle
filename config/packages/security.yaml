@@ -7,7 +7,7 @@ security:
                         password: "%deprovision_api_settings_password%"
                         roles: 'ROLE_ADMIN'
     password_hashers:
-        Symfony\Component\Security\Core\User\User: plaintext
+        Symfony\Component\Security\Core\User\InMemoryUser: plaintext
 
     firewalls:
         dev:
