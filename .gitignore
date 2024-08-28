@@ -13,7 +13,6 @@
 /vendor/
 /web/bundles/
 /.idea
-.env
 docker-compose.override.yml
 /phpunit.xml.dist
 
@@ -23,9 +22,6 @@ docker-compose.override.yml
 ###< phpunit/phpunit ###
 
 ###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
