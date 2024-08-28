@@ -31,9 +31,7 @@ class CollabPersonId implements \Stringable
     public function __construct(
         string $collabUserId,
     ) {
-
-       $collabUserId = trim($collabUserId);
-
+        $collabUserId = trim($collabUserId);
         if (empty($collabUserId)) {
             throw new InvalidCollabPersonIdException('The collabPersonId must be a non empty string');
         }

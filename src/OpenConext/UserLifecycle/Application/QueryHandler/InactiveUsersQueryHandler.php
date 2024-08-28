@@ -33,8 +33,7 @@ class InactiveUsersQueryHandler implements InactiveUsersQueryHandlerInterface
 
     public function handle(
         InactiveUsersQuery $query,
-    ): LastLoginCollectionInterface
-    {
+    ): LastLoginCollectionInterface {
         return $this->lastLoginRepository->findDeprovisionCandidates($query->getInactivityPeriod());
     }
 }

@@ -25,7 +25,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class InactivityPeriod
 {
-
     public function __construct(
         #[Autowire(param: 'inactivity_period')]
         private readonly int $inactivityPeriodInMonths,
@@ -33,7 +32,6 @@ class InactivityPeriod
         if ($inactivityPeriodInMonths <= 0) {
             throw new InvalidInactivityPeriodException('The inactivity period must be an positive integer value');
         }
-
     }
 
     public function getInactivityPeriodInMonths(): int

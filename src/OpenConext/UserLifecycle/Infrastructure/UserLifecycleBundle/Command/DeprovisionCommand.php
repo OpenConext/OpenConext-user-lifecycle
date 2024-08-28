@@ -44,7 +44,7 @@ class DeprovisionCommand extends Command
         private readonly ProgressReporterInterface $progressReporter,
         private readonly LoggerInterface $logger,
     ) {
-        parent::__construct(null);
+        parent::__construct();
     }
 
     protected function configure(): void
@@ -108,14 +108,14 @@ class DeprovisionCommand extends Command
             );
         }
         return $this->executeSingleUser(
-                $input,
-                $output,
-                $userIdInput,
-                $dryRun,
-                $noInteraction,
-                $outputOnlyJson,
-                $prettyJson,
-            );
+            $input,
+            $output,
+            $userIdInput,
+            $dryRun,
+            $noInteraction,
+            $outputOnlyJson,
+            $prettyJson,
+        );
     }
 
     private function executeBatch(
