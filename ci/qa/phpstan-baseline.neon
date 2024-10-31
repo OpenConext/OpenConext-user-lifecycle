@@ -286,11 +286,6 @@ parameters:
 			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$collection of method OpenConext\\\\UserLifecycle\\\\Domain\\\\Service\\\\SummaryServiceInterface\\:\\:summarizeInformationResponse\\(\\) expects OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseCollectionInterface, OpenConext\\\\UserLifecycle\\\\Domain\\\\Client\\\\InformationResponseInterface given\\.$#"
-			count: 1
-			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:write\\(\\) expects iterable\\<string\\>\\|string, string\\|false given\\.$#"
 			count: 1
 			path: ../../src/OpenConext/UserLifecycle/Infrastructure/UserLifecycleBundle/Command/InformationCommand.php

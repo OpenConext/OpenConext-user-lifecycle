@@ -20,14 +20,11 @@ declare(strict_types = 1);
 
 namespace OpenConext\UserLifecycle\Domain\Service;
 
-use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 
 interface InformationServiceInterface
 {
-    /**
-     * @return InformationResponseInterface
-     */
     public function readInformationFor(
         string $personId,
-    );
+    ): InformationResponseCollectionInterface;
 }

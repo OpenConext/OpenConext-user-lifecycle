@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace OpenConext\UserLifecycle\Application\QueryHandler;
 
 use OpenConext\UserLifecycle\Application\Query\FindUserInformationQuery;
+use OpenConext\UserLifecycle\Domain\Client\InformationResponseCollectionInterface;
 use OpenConext\UserLifecycle\Domain\Client\InformationResponseInterface;
 use OpenConext\UserLifecycle\Domain\Service\InformationServiceInterface;
 
@@ -33,7 +34,7 @@ class FindUserInformationQueryHandler implements FindUserInformationQueryHandler
 
     public function handle(
         FindUserInformationQuery $query,
-    ): InformationResponseInterface {
+    ): InformationResponseCollectionInterface {
         return $this->informationService->readInformationFor($query->getCollabPersonId());
     }
 }
