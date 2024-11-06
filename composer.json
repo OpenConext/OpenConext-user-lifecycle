@@ -21,7 +21,7 @@
         "symfony/framework-bundle": "7.0.*",
         "symfony/monolog-bundle": "*",
         "symfony/phpunit-bridge": "^7.0",
-        "symfony/runtime": "7.0.*",
+        "symfony/runtime": "7.1.*",
         "symfony/security-bundle": "7.0.*",
         "symfony/yaml": "7.0.*"
     },
