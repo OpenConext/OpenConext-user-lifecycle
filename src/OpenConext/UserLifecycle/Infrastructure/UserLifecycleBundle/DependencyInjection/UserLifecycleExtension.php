@@ -22,12 +22,11 @@ namespace OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Dependency
 
 use GuzzleHttp\Client;
 use OpenConext\UserLifecycle\Application\Client\InformationResponseFactory;
-use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Api\DeprovisionApiFeatureToggle;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Client\DeprovisionClient;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Webmozart\Assert\Assert;
 
 class UserLifecycleExtension extends Extension
