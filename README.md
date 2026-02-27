@@ -85,7 +85,6 @@ Continue with deprovisioning? (y/n)
 
 ```bash
 $ userlifecycle deprovision --dry-run --no-interaction
-Continue with deprovisioning? (y/n)
 # Will start a dry run without asking for confirmation.
 ```
 
@@ -135,7 +134,7 @@ The API can be called in the following manner for a given user's collabPersonId:
 and will return the deprovision information in JSON format.
 
 There are some rules on how the user data should be structured. User Lifecycle will only accept properly formatted
-user data. The contract can be found in the [docs/deprovision-information.md]().
+user data. The contract can be found in the [docs/deprovision-information.md](/docs/deprovision-information.md).
 
 ## Logging
 
