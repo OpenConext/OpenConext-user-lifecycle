@@ -94,7 +94,7 @@ class InformationCommandTest extends DatabaseTestCase
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldIgnoreMissing();
 
-        $this->application->add(new InformationCommand($lastLoginService, $summaryService, $logger));
+        $this->application->addCommand(new InformationCommand($lastLoginService, $summaryService, $logger));
 
         // Load the database fixtures
         $this->loadFixtures();

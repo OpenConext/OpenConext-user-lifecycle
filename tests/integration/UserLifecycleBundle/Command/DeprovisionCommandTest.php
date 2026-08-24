@@ -109,7 +109,7 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $logger->shouldIgnoreMissing();
 
 
-        $this->application->add(
+        $this->application->addCommand(
             new DeprovisionCommand($deprovisionService, $summaryService, $progressReporter, $logger),
         );
 

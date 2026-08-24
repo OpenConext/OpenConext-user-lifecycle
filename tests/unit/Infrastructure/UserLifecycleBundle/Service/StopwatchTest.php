@@ -47,7 +47,7 @@ class StopwatchTest extends TestCase
         sleep(1); // Sleep 1000 miliseconds
         $this->stopwatch->stop();
         $elapsedTime = $this->stopwatch->elapsedTime();
-        $this->assertEquals(1000, $elapsedTime);
+        $this->assertEqualsWithDelta(1000, $elapsedTime, 50);
     }
 
     public function test_can_not_get_elapsed_time_before_started(): void

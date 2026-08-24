@@ -5,6 +5,7 @@ framework:
   fragments: false
   profiler:
     collect: false
+    collect_serializer_data: true
   http_method_override: true
   php_errors:
     log: true
