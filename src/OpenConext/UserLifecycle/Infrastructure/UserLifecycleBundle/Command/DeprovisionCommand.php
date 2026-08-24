@@ -35,7 +35,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-#[AsCommand('deprovision')]
+#[AsCommand('deprovision', help:
+    'This command allows you to deprovision a given user identified by a collabPersonId. ' .
+    'The command will delegate the deprovisioning to all registered applications and report back ' .
+    'on the actually removed data. Optionally leave the user argument blank to deprovision all users that ' .
+    'meet the automatic deprovision criteria as configured with the `deprovision_after` parameter.')]
 class DeprovisionCommand extends Command
 {
     public function __construct(
@@ -51,12 +55,6 @@ class DeprovisionCommand extends Command
     {
         $this
             ->setDescription('Deprovision a user from the platform. The user is identified by a collabPersonId.')
-            ->setHelp(
-                'This command allows you to deprovision a given user identified by a collabPersonId. '.
-                'The command will delegate the deprovisioning to all registered applications and report back '.
-                'on the actually removed data. Optionally leave the user argument blank to deprovision all users that '.
-                'meet the automatic deprovision criteria as configured with the `deprovision_after` parameter.',
-            )
             ->addArgument(
                 'user',
                 InputArgument::OPTIONAL,

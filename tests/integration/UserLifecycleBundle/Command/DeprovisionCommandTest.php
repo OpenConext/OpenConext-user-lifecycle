@@ -33,7 +33,6 @@ use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Exception\Runtim
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Repository\LastLoginRepository;
 use OpenConext\UserLifecycle\Infrastructure\UserLifecycleBundle\Service\Stopwatch;
 use OpenConext\UserLifecycle\Tests\Integration\DatabaseTestCase;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -41,11 +40,6 @@ use Symfony\Component\Stopwatch\Stopwatch as FrameworkStopwatch;
 
 class DeprovisionCommandTest extends DatabaseTestCase
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected static $container;
-
     /**
      * @var MockHandler
      */
@@ -69,23 +63,22 @@ class DeprovisionCommandTest extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::$container = self::$kernel->getContainer();
 
         // Create a client collection that consists of mockable guzzle clients utilizing the Guzzle mock handler.
-        $clientCollection = self::$container->get('open_conext.user_lifecycle.test.deprovision_client_collection');
+        $clientCollection = self::$kernel->getContainer()->get('open_conext.user_lifecycle.test.deprovision_client_collection');
 
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name'),
+            self::$kernel->getContainer()->get('open_conext.user_lifecycle.deprovision_client.test.my_service_name'),
         );
         $clientCollection->addClient(
-            self::$container->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name'),
+            self::$kernel->getContainer()->get('open_conext.user_lifecycle.deprovision_client.test.my_second_name'),
         );
 
         // Expose the mock handlers, so the test methods can determine what the 'api' should return
-        $this->handlerMyService = self::$container->get(
+        $this->handlerMyService = self::$kernel->getContainer()->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_service_name',
         );
-        $this->handlerMySecondService = self::$container->get(
+        $this->handlerMySecondService = self::$kernel->getContainer()->get(
             'open_conext.user_lifecycle.guzzle_mock_handler.my_second_name',
         );
 
@@ -93,12 +86,12 @@ class DeprovisionCommandTest extends DatabaseTestCase
         $this->application = new Application();
 
         // Set the time on the LastLoginRepository
-        $this->repository = self::$container
+        $this->repository = self::$kernel->getContainer()
             ->get('doctrine.orm.default_entity_manager')
             ->getRepository(LastLogin::class);
         $this->repository->setNow(new DateTime('2018-01-01'));
 
-        $deprovisionService = self::$container->get(DeprovisionService::class);
+        $deprovisionService = self::$kernel->getContainer()->get(DeprovisionService::class);
         $progressReporter = new ProgressReporter(
             new Stopwatch(new FrameworkStopwatch()),
             m::mock(LoggerInterface::class),

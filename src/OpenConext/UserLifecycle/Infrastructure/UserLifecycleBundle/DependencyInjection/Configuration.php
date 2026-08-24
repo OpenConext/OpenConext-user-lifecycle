@@ -29,9 +29,6 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('user_lifecycle');
 
-        // arrayNode() is a valid NodeBuilder method; phpstan-symfony 1.x's generic stubs for
-        // NodeBuilder<ArrayNodeDefinition> don't recognize it after the symfony/config 7.4 upgrade.
-        // @phpstan-ignore-next-line
         $treeBuilder
             ->getRootNode()
             ->children()

@@ -41,7 +41,7 @@ class ApiController extends AbstractController
     #[Route(
         path: '/api/deprovision/{collabPersonId}',
         name: 'deprovision',
-        requirements: ['collabPersonId' => '.+'],
+        requirements: ['collabPersonId' => \Symfony\Component\Routing\Requirement\Requirement::CATCH_ALL],
         methods: ['GET'],
     )]
     public function deprovision(

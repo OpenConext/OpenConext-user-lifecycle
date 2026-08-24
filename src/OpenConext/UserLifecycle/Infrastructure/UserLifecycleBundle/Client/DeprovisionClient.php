@@ -139,7 +139,7 @@ class DeprovisionClient implements DeprovisionClientInterface
     ): string {
         $resource = $path;
         if (count($parameters) > 0) {
-            $resource = vsprintf($path, array_map('urlencode', $parameters));
+            $resource = vsprintf($path, array_map(urlencode(...), $parameters));
         }
 
         if (empty($resource)) {
