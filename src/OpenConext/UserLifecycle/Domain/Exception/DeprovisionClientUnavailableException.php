@@ -28,7 +28,7 @@ class DeprovisionClientUnavailableException extends RuntimeException
     public function __construct(
         string $clientName,
         int $code = 0,
-        Throwable $previous = null,
+        ?Throwable $previous = null,
     ) {
         $message = sprintf("Connection failed to backend '%s'", $clientName);
         parent::__construct($message, $code, $previous);

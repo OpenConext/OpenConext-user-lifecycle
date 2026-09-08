@@ -31,7 +31,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand('information')]
+#[AsCommand('information', help:
+    'This command allows you to read information of a given user identified by a collabPersonId. ' .
+    'The command will ask all registered applications what information is available for the user.')]
 class InformationCommand extends Command
 {
     public function __construct(
@@ -46,10 +48,6 @@ class InformationCommand extends Command
     {
         $this
             ->setDescription('Read privacy information for a given user identified by a collabPersonId.')
-            ->setHelp(
-                'This command allows you to read information of a given user identified by a collabPersonId. '.
-                'The command will ask all registered applications what information is available for the user.',
-            )
             ->addArgument(
                 'user',
                 InputArgument::REQUIRED,

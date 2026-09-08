@@ -28,7 +28,7 @@ class DatabaseConnectionException extends CoreRuntimeException
     public function __construct(
         string $message = "No connection possible to the database",
         int $code = 0,
-        Throwable $previous = null,
+        ?Throwable $previous = null,
     ) {
         parent::__construct($message, $code, $previous);
     }

@@ -9,3 +9,5 @@ parameters:
     paths:
         - ../../src
         - ../../config
+    excludePaths:
+        - ../../config/reference.php (?)

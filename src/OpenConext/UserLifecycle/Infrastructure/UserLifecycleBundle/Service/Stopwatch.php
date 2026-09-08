@@ -26,7 +26,7 @@ use Symfony\Component\Stopwatch\Stopwatch as SymfonyStopwatch;
 
 class Stopwatch implements StopwatchInterface
 {
-    private const TIMER = 'timer';
+    private const string TIMER = 'timer';
 
     private bool $isStarted = false;
     private bool $isStopped = false;
